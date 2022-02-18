@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -72,5 +73,20 @@ public class PatientController {
     public String deleteById(@PathVariable("id") Long id) {
         patientRepository.deleteById(id);
         return "redirect:/patients/all";
+    }
+
+    @PostMapping("/search")
+    public String search(@RequestParam String search, Model model) {
+        Iterable<Patient> patientsList = null;
+        String[] searchArray = search.split(" ");
+        if (search != null && !search.isEmpty()) {
+            if (searchArray.length == 2)
+            patientsList = patientRepository.findByNameIgnoreCaseAndSurnameIgnoreCase(searchArray[0],searchArray[1]);
+            if (searchArray.length == 1)
+                patientsList = patientRepository.findByNameIgnoreCaseOrSurnameIgnoreCase(searchArray[0],searchArray[0]);
+        }
+        else  patientsList = patientRepository.findAll();
+        model.addAttribute("patients", patientsList);
+        return "/patients/getAll";
     }
 }
