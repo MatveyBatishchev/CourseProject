@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <title th:text="'Profile ' + ${patient.getName()}"></title>
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container-xl px-4 mt-3">
+    <div class="row">
+        <div class="col-xl-8">
+            <div class="card mb-4">
+                <div class="card-header">Личные данные</div>
+                <div class="card-body">
+                    <form th:method="PUT" th:action="@{/patients/{id}(id=${patient.getId()})}" th:object="${patient}">
+                        <!--Ряд имя и фамилия-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputFirstName">Имя</label>
+                                <input class="form-control" id="inputFirstName" th:field="*{name}" type="text" th:value="${patient.getName()}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputLastName">Фамилия</label>
+                                <!--/*@thymesVar id="getSurname" type="com.example.models.Patient"*/-->
+                                <input class="form-control" id="inputLastName" type="text" th:field="*{surname}" th:value="${patient.getSurname()}">
+                            </div>
+                        </div>
+                        <!--Ряд дата и пол-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputBirthday">Дата рождения</label>
+                                <input class="form-control" id="inputBirthday" type="date" name="birthday" th:field="*{birthDate}" th:value="${patient.getBirthDate()}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="exampleFormControlSelect1">Пол</label>
+                                <select class="form-control" th:field="*{sex}" th:selected="${patient.getSex()}" id="exampleFormControlSelect1">
+                                    <option value="0" disabled>Не выбрано</option>
+                                    <option value="1">Мужчина</option>
+                                    <option value="2">Женщина</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--Ряд телефон и email и спрятанный пароль-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputPhone">Телефон</label>
+                                <input class="form-control" id="inputPhone" type="tel" th:field="*{telephone}" th:value="${patient.getTelephone()}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputEmail">Email</label>
+                                <input class="form-control" id="inputEmail" type="email" th:field="*{email}" th:value="${patient.getEmail()}">
+                            </div>
+                        </div>
+                        <input type="hidden" th:field="*{password}" th:value="${patient.getPassword()}">
+                        <!--Ряд кнопок-->
+                        <div class="col-md-6">
+                            <input class="btn btn-primary" type="submit" value="Подтвердить"/>
+                            <input class="btn btn-danger" type="submit" form="deleteForm" value="Удалить">
+                        </div>
+                    </form>
+                <form id="deleteForm" th:method="DELETE" th:action="@{/patients/{id}(id=${patient.getId()})}"></form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:insert="blocks/footer :: footer"></footer>
+</body>
+</html>

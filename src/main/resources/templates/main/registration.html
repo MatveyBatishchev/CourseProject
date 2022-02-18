@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <title>Регистрация</title>
+    <script type="text/javascript" src="/js/phoneinput.js"></script>
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container mt-5">
+    <div class="card mb-4">
+        <div class="card-header">Регистрация</div>
+        <div class="card-body">
+            <form th:method="POST" th:action="@{/patients/new}" th:object="${patient}">
+                <!--Ряд имени-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="inputName">Имя</label>
+                        <input class="form-control" id="inputName" th:field="*{name}" type="text" required>
+                    </div>
+                </div>
+                <!--Ряд фамилии-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="inputSurname">Фамилия</label>
+                        <input class="form-control" id="inputSurname" th:field="*{surname}" type="text" required>
+                    </div>
+                </div>
+                <!--Ряд даты-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="inputDate">Дата рождения</label>
+                        <input class="form-control" id="inputDate" th:field="*{birthDate}" type="date" required>
+                    </div>
+                </div>
+                <!--Ряд пола-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="inputSex">Пол</label>
+                        <select class="form-control" th:field="*{sex}" id="inputSex" th:required="true">
+                            <option value="0" disabled hidden>Не выбрано</option>
+                            <option value="1">Мужчина</option>
+                            <option value="2">Женщина</option>
+                        </select>
+                    </div>
+                </div>
+                <!--Ряд почты-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="inputEmail">Email</label>
+                        <input class="form-control" id="inputEmail" th:field="*{email}" type="email" required>
+                    </div>
+                </div>
+                <!--Ряд телефона-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="inputTelephone">Телефон</label>
+                        <input class="form-control" id="inputTelephone" th:field="*{telephone}" type="tel" required data-tel-input  maxlength="18" />
+                    </div>
+                </div>
+                <!--Ряд пароля-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="inputPassword">Пароль</label>
+                        <input class="form-control" id="inputPassword" th:field="*{password}" type="password" required>
+                    </div>
+                </div>
+                <!--Ряд подтверждения пароля-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="inputConfirmPassword">Пароль</label>
+                        <input class="form-control" id="inputConfirmPassword" type="password" required>
+                    </div>
+                </div>
+                <input class="btn btn-primary" type="submit" value="Зарегистрироваться"><br><br>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:insert="blocks/footer :: footer"></footer>
+</body>
+</html>
