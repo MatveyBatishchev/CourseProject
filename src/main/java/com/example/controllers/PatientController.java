@@ -1,18 +1,18 @@
 package com.example.controllers;
 
 import com.example.models.Patient;
+import com.example.models.Role;
 import com.example.repo.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/patients")
@@ -44,13 +44,21 @@ public class PatientController {
     }
 
     @GetMapping("/new")
-    public String addNewGet(@ModelAttribute("patient")  Patient patient) {
+    public String addNew(@ModelAttribute("patient")  Patient patient) {
         return "main/registration";
     }
 
     @PostMapping("/new")
-    public String addNewPost(@ModelAttribute("person") @Valid Patient person, BindingResult bindingResult) {
-        patientRepository.save(person);
+    public String addNew(@ModelAttribute("patient") @Valid Patient patient, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) return "main/registration";
+        Patient patientFromDb = patientRepository.findByEmail(patient.getEmail());
+        if (patientFromDb != null) {
+            model.addAttribute("message", "Пользователь с таким email уже существует!");
+            return "main/registration";
+        }
+        patient.setActive(true);
+        patient.setRoles(Collections.singleton(Role.USER));
+        patientRepository.save(patient);
         return "redirect:/medtouch/home";
     }
 
@@ -62,9 +70,10 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
-    public String updateById(@ModelAttribute("patient") @Valid Patient patient, Model model, BindingResult bindingResult) {
+    public String editById(@Valid @ModelAttribute("patient") Patient patient, Model model) {
+        patient.setActive(true);
+        patient.setRoles(Collections.singleton(Role.USER));
         patientRepository.save(patient);
-        System.out.println(patient.getSex());
         model.addAttribute("patient", patient);
         return "patients/getById";
     }
@@ -89,4 +98,5 @@ public class PatientController {
         model.addAttribute("patients", patientsList);
         return "/patients/getAll";
     }
+
 }

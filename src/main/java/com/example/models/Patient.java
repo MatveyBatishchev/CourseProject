@@ -1,13 +1,13 @@
 package com.example.models;
 
+import com.example.validation.ValidPassword;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.sql.Date;
+import java.util.Set;
 
 @Entity
 public class Patient {
@@ -23,17 +23,40 @@ public class Patient {
             }
     )
     private Long id;
-    @Size(min=2, max=30, message = "Имя должно быть 2-х до 30 букв")
+
+    @Size(min=2, max=30, message = "Имя должно быть от 2-х до 30 букв")
+    @NotBlank(message = "Это поле является обязательным")
     private String name;
-    @Size(min=2, max=30, message = "Фамилия должна быть 2-х до 30 букв")
+
+    @Size(min=2, max=30, message = "Фамилия должна быть от 2-х до 30 букв")
+    @NotBlank(message = "Это поле является обязательным")
     private String surname;
+
+    @NotNull(message = "Это поле является обязательным")
     private Date birthDate;
+
+    @Min(value=1, message="Недопустимое значение")
+    @NotNull(message = "Это поле является обязательным")
     private int sex;
+
+    @Size(min=17, max=18)
+    @NotBlank(message = "Это поле является обязательным")
     private String telephone;
+
     @Email(message = "Недопустимое значение")
+    @NotBlank(message = "Это поле является обязательным")
     private String email;
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$", message = "Пароль должен содержать минимум 8 символов разного регистра, минимум 1 цифру")
+
+    @ValidPassword
+    @NotBlank(message = "Это поле является обязательным")
     private String password;
+
+    private boolean active;
+
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "patient_role", joinColumns = @JoinColumn(name = "patient_id")) // описывает, что данное поле будет храниться в отдельной таблице, для кторой мы не описывали mapping
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles;
 
     public Patient() {}
 
@@ -47,14 +70,6 @@ public class Patient {
         this.telephone = telephone;
         this.email = email;
         this.password = password;
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "Customer[id=%d, name='%s', surname='%s', birthDate='%s'" +
-                        ", sex=%d, telephone='%s', email='%s', password='%s']",
-                id, name, surname, birthDate, sex, telephone, email, password);
     }
 
     public Long getId() {
@@ -80,7 +95,6 @@ public class Patient {
     public void setSurname(String surname) {
         this.surname = surname;
     }
-
 
     public Date getBirthDate() {
         return birthDate;
@@ -120,5 +134,21 @@ public class Patient {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

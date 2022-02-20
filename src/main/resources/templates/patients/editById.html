@@ -3,6 +3,8 @@
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
     <title th:text="'Profile ' + ${patient.getName()}"></title>
+    <div th:insert="blocks/webjars :: webjars"></div>
+    <script type="text/javascript" src="/js/phoneForm.js"></script>
 </head>
 <body>
 <header th:insert="blocks/header :: header"></header>
@@ -44,7 +46,7 @@
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputPhone">Телефон</label>
-                                <input class="form-control" id="inputPhone" type="tel" th:field="*{telephone}" th:value="${patient.getTelephone()}">
+                                <input class="form-control" id="inputPhone" type="tel" required data-tel-input th:field="*{telephone}" th:value="${patient.getTelephone()}">
                             </div>
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputEmail">Email</label>
