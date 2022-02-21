@@ -58,8 +58,9 @@ public class PatientController {
         }
         patient.setActive(true);
         patient.setRoles(Collections.singleton(Role.USER));
+        model.addAttribute("email", patient.getEmail());
         patientRepository.save(patient);
-        return "redirect:/medtouch/home";
+        return "main/login";
     }
 
     @GetMapping("/{id}/edit")
