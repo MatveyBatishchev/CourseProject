@@ -2,7 +2,7 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-    <title>Войти</title>
+    <title>Запись на приём</title>
     <div th:insert="blocks/webjars :: webjars"></div>
 </head>
 <body>
@@ -10,19 +10,14 @@
 <div class="container mt-5">
     <h1>Войти</h1>
     <div class="card mb-4">
-        <div th:if="${param.error}">
-            Invalid username and password.
-        </div>
-        <div th:if="${param.logout}">
-            You have been logged out.
-        </div>
-        <div class="card-header">Личные данные</div>
+        <div class="card-header">Форма</div>
         <div class="card-body">
-            <form th:action="@{/login}" method="post">
+            <form th:method="POST" th:action="@{/}" method="post">
+                <!--Ряд выбора специалиста-->
                 <div class="row gx-3 mb-3">
                     <div class="col-md-6">
-                        <label class="small mb-1" for="inputEmail">Email</label>
-                        <input class="form-control" name="username" id="inputEmail" type="text" th:value="${email}">
+                        <label class="small mb-1" for="inputDoctor">Email</label>
+                        <input class="form-control" id="inputDoctor" type="text">
                     </div>
                 </div>
                 <div class="row gx-3 mb-3">

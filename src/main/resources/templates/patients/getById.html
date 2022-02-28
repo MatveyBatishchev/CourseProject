@@ -14,6 +14,12 @@
         <div class="card-header">Личные данные</div>
         <div class="card-body">
           <form>
+            <!--Ряд фото-->
+            <div class="row gx-3 mb-3">
+              <div class="col-md-6">
+                <img class="img-fluid" width="50%" height="50%" th:if="${patient.getImage() != null && !patient.getImage().isEmpty()}" th:src="@{/usersFiles/patients/{id}/{image}(id=${patient.getId()}, image=${patient.getImage()})}">
+              </div>
+            </div>
             <!--Ряд имя и фамилия-->
             <div class="row gx-3 mb-3">
               <div class="col-md-6">

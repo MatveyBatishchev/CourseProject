@@ -57,6 +57,9 @@ public class Patient {
     @NotBlank(message = "Это поле является обязательным")
     private String password;
 
+    @Column(name="image", nullable=true)
+    private String image;
+
     private boolean active;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

@@ -1,5 +1,6 @@
 package com.example.models;
 
 public enum Role {
-    USER;
+    USER,
+    DOCTOR;
 }
