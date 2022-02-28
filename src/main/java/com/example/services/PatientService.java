@@ -6,13 +6,16 @@ import com.example.models.Role;
 import com.example.repo.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
 @Service
-public class PatientService {
+public class PatientService implements UserDetailsService {
 
     private final PatientRepository patientRepository;
 
@@ -74,4 +77,8 @@ public class PatientService {
         return new HashSet<>(patientsList);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return patientRepository.findByEmail(email);
+    }
 }

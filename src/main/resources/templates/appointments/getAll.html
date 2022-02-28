@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <title>Contacts</title>
+    <div th:insert="blocks/webjars :: webjars"></div>
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container mt-5 mr-2 ml-2">
+    <h1>Список приёмов</h1>
+    <table class="table table-striped table-hover mt-4">
+        <caption>Список приёмов</caption>
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Дата</th>
+            <th scope="col">Время</th>
+            <th scope="col">Имя пациента</th>
+            <th scope="col">Email пациента</th>
+        </tr>
+        </thead>
+        <tbody th:each= "appointment : ${appointments}">
+        <tr>
+            <th scope="row" th:text="${appointment.getId()}"></th>
+            <td th:text="${appointment.getDate() + ' ' + #dates.dayOfWeekName(appointment.getDate())}"></td>
+            <td th:text="${appointment.getTime()}"></td>
+            <td th:text="${appointment.getPatientName()}"></td>
+            <td th:text="${appointment.getPatientEmail()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:insert="blocks/footer :: footer"></footer>
+</body>
+</html>

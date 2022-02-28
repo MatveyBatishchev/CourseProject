@@ -2,35 +2,32 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-    <title>Запись на приём</title>
+    <title>About Us</title>
     <div th:insert="blocks/webjars :: webjars"></div>
 </head>
 <body>
 <header th:insert="blocks/header :: header"></header>
 <div class="container mt-5">
-    <h1>Войти</h1>
     <div class="card mb-4">
-        <div class="card-header">Форма</div>
+        <div class="card-header">Запись на приём</div>
         <div class="card-body">
-            <form th:method="POST" th:action="@{/}" method="post">
-                <!--Ряд выбора специалиста-->
+            <form th:method="POST" th:action="@{/appointments/new}" th:object="${appointment}">
+                <!--Ряд даты-->
                 <div class="row gx-3 mb-3">
                     <div class="col-md-6">
-                        <label class="small mb-1" for="inputDoctor">Email</label>
-                        <input class="form-control" id="inputDoctor" type="text">
+                        <label class="small mb-1" for="inputDate">Дата приёма</label>
+                        <input name="name" class="form-control" id="inputDate" th:field="*{date}" type="date" required>
                     </div>
                 </div>
+                <!--Ряд времени-->
                 <div class="row gx-3 mb-3">
                     <div class="col-md-6">
-                        <label class="small mb-1" for="inputPassword">Пароль</label>
-                        <input class="form-control" name="password" id="inputPassword" type="text">
+                        <label class="small mb-1" for="inputTime">Время приёма</label>
+                        <input name="time" class="form-control" id="inputTime" type="time" required>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Войти</button><br><br>
+                <input class="btn btn-primary" type="submit" value="Записаться"><br><br>
             </form>
-            <p>Нет аккаунта,
-                <a href="/patients/new">Зарегистрируйтесь</a>
-            </p>
         </div>
     </div>
 </div>

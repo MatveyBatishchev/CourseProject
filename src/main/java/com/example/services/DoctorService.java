@@ -40,7 +40,6 @@ public class DoctorService {
 
     public void saveDoctorWithFile(Doctor doctor, MultipartFile multipartFile) {
         doctorRepository.save(doctor);
-        System.out.println(doctor);
         if (!multipartFile.isEmpty()) {
             try {
                 String uploadDir = uploadPath + "/doctors/" + doctor.getId();

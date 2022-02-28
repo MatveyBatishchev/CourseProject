@@ -1,13 +1,16 @@
 package com.example.models;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.sql.Time;
-import java.util.Set;
+import java.time.LocalTime;
+
 
 @Data
 @AllArgsConstructor
@@ -28,12 +31,21 @@ public class Appointment {
     private Long id;
 
     @Column(name="date",nullable=false)
-    private Date sqlDate;
+    private Date date;
 
     @Column(name="time",nullable=false)
-    private Time sqlTime;
+    private LocalTime time;
 
-    @Column(name="cabinet",nullable=false)
-    private String cabinet;
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
+
+    public String getPatientName() {
+        return patient != null ? patient.getName() : "<none>";
+    }
+
+    public String getPatientEmail() {
+        return patient != null ? patient.getEmail() : "<none>";
+    }
 
 }
