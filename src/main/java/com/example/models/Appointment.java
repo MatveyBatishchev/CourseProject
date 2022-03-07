@@ -40,6 +40,10 @@ public class Appointment {
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
+
     public String getPatientName() {
         return patient != null ? patient.getName() : "<none>";
     }

@@ -2,16 +2,15 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-    <title th:text="'Profile#' + ${doctor.getId()}"></title>
+    <title>Профиль специалиста</title>
     <div th:insert="blocks/webjars :: webjars"></div>
 </head>
 <body>
-<header th:insert="blocks/header :: header"></header>
-<div class="container-xl px-4 mt-3">
-    <div class="row">
+    <header th:insert="blocks/header :: header"></header>
+    <div class="container-xl px-4 mt-3">
         <div class="col-xl-8">
             <div class="card mb-4">
-                <div class="card-header">Личные данные</div>
+                <div class="card-header">Данные профиля</div>
                 <div class="card-body">
                     <form>
                         <!--Ряд показа фото-->
@@ -20,7 +19,7 @@
                                 <img class="img-fluid" width="50%" height="50%" th:if="${doctor.getImage() != null && !doctor.getImage().isEmpty()}" th:src="@{/usersFiles/doctors/{id}/{image}(id=${doctor.getId()}, image=${doctor.getImage()})}">
                             </div>
                         </div>
-                        <!--Ряд имя и фамилия и отчество-->
+                        <!--Ряд ФИО-->
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputName">Имя</label>
@@ -35,15 +34,22 @@
                                 <input class="form-control" id="inputPatronymic" type="text" th:value="${doctor.getPatronymic()}" disabled>
                             </div>
                         </div>
+                        <!--Ряд почты-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputEmail">Email</label>
+                                <input class="form-control" id="inputEmail" type="text" th:value="${doctor.getEmail()}" disabled>
+                            </div>
+                        </div>
                         <!--Ряд стажа и специальностей-->
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputExperience">Стаж</label>
-                                <input class="form-control" type="number" id="inputExperience" th:value="${doctor.getExperience()}" disabled>
+                                <input class="form-control" id="inputExperience" type="number" th:value="${doctor.getExperience()}" disabled>
                             </div>
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputSpecialities">Специальности</label>
-                                <input class="form-control" type="text" id="inputSpecialities"
+                                <input class="form-control" id="inputSpecialities" type="text"
                                        th:value="${#strings.setJoin(doctor.getSpecialities(), ', ')}" disabled>
                             </div>
                         </div>
@@ -79,12 +85,11 @@
                             </div>
                         </div>
                     </form>
-                    <a class="btn btn-primary" th:href="@{/doctors/{id}/edit(id=${doctor.getId()})}"  role="button">Редактировать</a>
+                    <a class="btn btn-primary" role="button" th:href="@{/doctors/{id}/edit(id=${doctor.getId()})}">Редактировать</a>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<footer th:insert="blocks/footer :: footer"></footer>
+    <footer th:insert="blocks/footer :: footer"></footer>
 </body>
 </html>

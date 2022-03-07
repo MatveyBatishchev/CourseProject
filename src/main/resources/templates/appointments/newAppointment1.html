@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <title>Запись</title>
+    <div th:insert="blocks/webjars :: webjars"></div>
+</head>
+<body>
+    <header th:insert="blocks/header :: header"></header>
+    <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">Запись на приём</div>
+                <div class="card-body">
+                    <form th:method="GET" th:action="@{/doctors/by_speciality}">
+                        <!--Ряд специальности-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputSpeciality">Специальность</label>
+                                <select class="form-control" id="inputSpeciality" th:name="speciality">
+                                    <option th:each="speciality : ${T(com.example.models.Speciality).values()}"
+                                            th:value="${{speciality}}" th:text="${speciality.label}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <input class="btn btn-primary" type="submit" value="Подтвердить"><br><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <footer th:insert="blocks/footer :: footer"></footer>
+</body>
+</html>

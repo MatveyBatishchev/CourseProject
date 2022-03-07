@@ -1,7 +1,6 @@
 package com.example.controllers;
 
 import com.example.models.Patient;
-import com.example.repo.PatientRepository;
 import com.example.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,9 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 @Controller
 @RequestMapping("/patients")
@@ -37,7 +33,7 @@ public class PatientController {
         Patient patientById = patientService.findPatientById(id);
         if (patientById == null) {
             model.addAttribute("object", "Пациент");
-            return "mistakes/notfound";
+            return "mistakes/notFound";
         }
         model.addAttribute("patient", patientById);
         return "patients/getById";
@@ -54,7 +50,7 @@ public class PatientController {
         if (bindingResult.hasErrors()) return "main/registration";
 
         if (patientService.findPatientByEmail(patient.getEmail()) != null) {
-            model.addAttribute("message", "Пользователь с таким email уже существует!");
+            model.addAttribute("emailMessage", "Пользователь с таким email уже существует!");
             return "main/registration";
         }
 
@@ -68,7 +64,7 @@ public class PatientController {
         Patient patientById = patientService.findPatientById(id);
         if (patientById == null) {
             model.addAttribute("object", "Пациент");
-            return "mistakes/notfound";
+            return "mistakes/notFound";
         }
         model.addAttribute("patient", patientById);
         return "patients/editById";
@@ -76,10 +72,10 @@ public class PatientController {
 
     @PutMapping("/{id}")
     public String editPatientById(@ModelAttribute("patient") @Valid Patient patient, BindingResult bindingResult,
-                                  @RequestParam("avatar") MultipartFile multipartFile) {
+                                  @RequestParam("profileImage") MultipartFile multipartFile) {
         if (bindingResult.hasErrors()) return "/patients/editById";
-
-        patientService.savePatientWithFile(patient, multipartFile);
+        if (multipartFile.isEmpty()) patientService.savePatient(patient);
+        else patientService.savePatientWithFile(patient, multipartFile);
         return "redirect:/patients/" + patient.getId();
     }
 

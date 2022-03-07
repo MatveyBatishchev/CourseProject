@@ -1,26 +1,25 @@
 package com.example.services;
 
-import com.example.models.Appointment;
-import com.example.models.Patient;
+import com.example.models.*;
 import com.example.repo.AppointmentRepository;
+import com.example.repo.TimeTableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.sql.Time;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
+    private final TimeTableRepository timeTableRepository;
 
     @Autowired
-    public AppointmentService(AppointmentRepository appointmentRepository) {
+    public AppointmentService(AppointmentRepository appointmentRepository, TimeTableRepository timeTableRepository) {
         this.appointmentRepository = appointmentRepository;
+        this.timeTableRepository = timeTableRepository;
     }
 
     public List<Appointment> findAllAppointmentsAsc() {
@@ -36,9 +35,12 @@ public class AppointmentService {
         appointmentRepository.save(appointment);
     }
 
-    public void saveAppointment(Appointment appointment, Patient patient, String time) {
+    public void saveAppointment(Appointment appointment, Patient patient, Long timeTableId) {
+        TimeTable timeTable = timeTableRepository.findById(timeTableId).get();
         appointment.setPatient(patient);
-        appointment.setTime(LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm")));
+        appointment.setTime(timeTable.getStartTime());
+        timeTable.setAvailable(false);
+        timeTableRepository.save(timeTable);
         appointmentRepository.save(appointment);
     }
 

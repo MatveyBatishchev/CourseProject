@@ -1,20 +1,14 @@
 package com.example.controllers;
 
 import com.example.models.Appointment;
-import com.example.models.Doctor;
 import com.example.models.Patient;
 import com.example.services.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import java.sql.Date;
 
 @Controller
 @RequestMapping("/appointments")
@@ -38,23 +32,24 @@ public class AppointmentController {
         Appointment appointmentById = appointmentService.findAppointmentById(id);
         if (appointmentById == null) {
             model.addAttribute("object", "Приём");
-            return "mistakes/notfound";
+            return "mistakes/notFound";
         }
         model.addAttribute("appointment", appointmentById);
         return "appointments/getById";
     }
 
     @GetMapping("/new")
-    public String addNewAppointment(@ModelAttribute("appointment") Appointment appointment) {
-        return "appointments/newAppointment";
+    public String addNewAppointment() {
+        return "appointments/newAppointment1";
     }
 
     @PostMapping("/new")
     public String addNewAppointment(
             @AuthenticationPrincipal Patient patient,
             @ModelAttribute("appointment") Appointment appointment,
-            @RequestParam("time") String time) {
-        appointmentService.saveAppointment(appointment, patient, time);
+            @RequestParam("timetable") Long timeTableId) {
+        System.out.println(timeTableId + "FUCCCKCKKCKC");
+        appointmentService.saveAppointment(appointment, patient, timeTableId);
         return "redirect:/appointments/all";
     }
 
@@ -63,7 +58,7 @@ public class AppointmentController {
         Appointment appointmentById = appointmentService.findAppointmentById(id);
         if (appointmentById == null) {
             model.addAttribute("object", "Приём");
-            return "mistakes/notfound";
+            return "mistakes/notFound";
         }
         model.addAttribute("appointment", appointmentById);
         return "/appointments/editById";

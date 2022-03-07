@@ -8,89 +8,90 @@
     <script type="text/javascript" th:src="@{/js/passwordMatch.js}"></script>
 </head>
 <body>
-<header th:insert="blocks/header :: header"></header>
-<div class="container mt-5">
-    <div class="card mb-4">
-        <div class="card-header">Регистрация</div>
-        <div class="card-body">
-            <form th:method="POST" th:action="@{/patients/new}" th:object="${patient}">
-                <div class="alert alert-danger" role="alert" th:if="${message != null}" th:text="${message}"></div>
-                <!--Ряд имени-->
-                <div class="row gx-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="name">Имя</label>
-                        <input name="name" class="form-control" id="name" th:field="*{name}" type="text" required>
+    <header th:insert="blocks/header :: header"></header>
+    <div class="container mt-5">
+        <div class="card mb-4">
+            <div class="card-header">Регистрация</div>
+            <div class="card-body">
+                <form th:method="POST" th:action="@{/patients/new}" th:object="${patient}">
+                    <!--Ошибка существующего email-a-->
+                    <div class="alert alert-danger" role="alert" th:if="${emailMessage != null}" th:text="${emailMessage}"></div>
+                    <!--Ряд имени-->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="nameInput">Имя</label>
+                            <input class="form-control" id="nameInput" type="text" th:field="*{name}" required>
+                        </div>
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                     </div>
-                    <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
-                </div>
-                <!--Ряд фамилии-->
-                <div class="row gx-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="surname">Фамилия</label>
-                        <input name="surname" class="form-control" id="surname" th:field="*{surname}" type="text" required>
+                    <!--Ряд фамилии-->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="surnameInput">Фамилия</label>
+                            <input class="form-control" id="surnameInput" type="text" th:field="*{surname}" required>
+                        </div>
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></div>
                     </div>
-                    <div class="alert alert-warning" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">Surname Error</div>
-                </div>
-                <!--Ряд даты-->
-                <div class="row gx-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="date">Дата рождения</label>
-                        <input name="date" class="form-control" id="date" th:field="*{birthDate}" type="date" required>
+                    <!--Ряд даты-->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="dateInput">Дата рождения</label>
+                            <input class="form-control" id="dateInput" type="date" th:field="*{birthDate}" required>
+                        </div>
                     </div>
-                </div>
-                <!--Ряд пола-->
-                <div class="row gx-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="sex">Пол</label>
-                        <select class="form-control" th:field="*{sex}" id="sex" required>
-                            <option value="0" disabled hidden>Не выбрано</option>
-                            <option value="1">Мужчина</option>
-                            <option value="2">Женщина</option>
-                        </select>
+                    <!--Ряд пола-->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="sexInput">Пол</label>
+                            <select class="form-control" id="sexInput" th:field="*{sex}" required>
+                                <option value="0" disabled>Не выбрано</option>
+                                <option value="1">Мужчина</option>
+                                <option value="2">Женщина</option>
+                            </select>
+                        </div>
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}"></div>
                     </div>
-                    <div class="alert alert-warning" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}">Sex Error</div>
-                </div>
-                <!--Ряд почты-->
-                <div class="row gx-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="email">Email</label>
-                        <input name="email" class="form-control" type="text" id="email" th:field="*{email}" required>
+                    <!--Ряд почты-->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="emailInput">Email</label>
+                            <input class="form-control" id="emailInput" type="text" th:field="*{email}" required>
+                        </div>
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                     </div>
-                    <div class="alert alert-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
-                </div>
-                <!--Ряд телефона-->
-                <div class="row gx-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="telephone">Телефон</label>
-                        <input name="telephone" class="form-control" id="telephone" type="tel" required data-tel-input th:field="*{telephone}">
+                    <!--Ряд телефона-->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="telephoneInput">Телефон</label>
+                            <input class="form-control" id="telephoneInput" type="tel" data-tel-input th:field="*{telephone}" required>
+                        </div>
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}"></div>
                     </div>
-                    <div class="alert alert-warning" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}">Telephone Error</div>
-                </div>
-                <!--Ряд пароля-->
-                <div class="row gx-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="password">Пароль</label>
-                        <input name="password" class="form-control" id="password" th:field="*{password}" type="password" required>
+                    <!--Ряд пароля-->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="passwordInput">Пароль</label>
+                            <input class="form-control" id="passwordInput" type="password" th:field="*{password}" required>
+                        </div>
+                        <ul class="alert alert-warning" th:each="error: ${#fields.errors('password')}">
+                            <li th:each="message : ${error.split(',')}">
+                                <p class="error-message" th:text="${message}"></p>
+                            </li>
+                        </ul>
                     </div>
-                    <ul class="alert alert-warning" th:each="error: ${#fields.errors('password')}">
-                        <li th:each="message : ${error.split(',')}">
-                            <p class="error-message" th:text="${message}"></p>
-                        </li>
-                    </ul>
-                </div>
-                <!--Ряд подтверждения пароля-->
-                <div class="row gx-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="confirm_password" onkeyup='check();'>Пароль</label>
-                        <input name="confirm_password" class="form-control" id="confirm_password" type="password" onkeyup='check();' required>
-                        <span id='passwordMessage'></span>
+                    <!--Ряд подтверждения пароля-->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="confirmPasswordInput">Пароль</label>
+                            <input class="form-control" id="confirmPasswordInput" type="password" onkeyup='check();' required>
+                            <span id='passwordMessage'></span>
+                        </div>
                     </div>
-                </div>
-                <input class="btn btn-primary" type="submit" id="submit" value="Зарегистрироваться"><br><br>
-            </form>
+                    <button class="btn btn-primary" id="regSubmit" type="submit">Зарегистрироваться</button><br><br>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-<footer th:insert="blocks/footer :: footer"></footer>
+    <footer th:insert="blocks/footer :: footer"></footer>
 </body>
 </html>

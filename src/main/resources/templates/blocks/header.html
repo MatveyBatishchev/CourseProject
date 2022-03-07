@@ -11,7 +11,7 @@
         <li class="nav-item"><a href="/medtouch/contacts" class="nav-link">Контакты</a></li>
         <li class="nav-item"><a href="/login" class="nav-link">Войти</a></li>
         <li class="nav-item">
-          <form th:action="@{/logout}" method="post">
+          <form th:method="POST" th:action="@{/logout}">
             <input class="nav-link" type="submit" value="Выйти"/>
           </form>
         </li>

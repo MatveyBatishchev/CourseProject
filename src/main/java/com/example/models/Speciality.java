@@ -85,10 +85,9 @@ public enum Speciality {
 
     public final String label;
 
-    private Speciality(String label) {
+    Speciality(String label) {
         this.label = label;
     }
-
 
     @Override
     public String toString() {

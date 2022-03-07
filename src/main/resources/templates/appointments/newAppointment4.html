@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+  <title>Запись</title>
+  <div th:insert="blocks/webjars :: webjars"></div>
+</head>
+<body>
+  <header th:insert="blocks/header :: header"></header>
+  <div class="container mt-5">
+    <div class="card mb-4">
+      <div class="card-header">Запись на приём</div>
+      <div class="card-body">
+        <form th:method="POST" th:action="@{/appointments/new}" th:object="${appointment}">
+          <!--Ряд специальности-->
+          <div class="row gx-3 mb-3">
+            <div class="col-md-6">
+              <label class="small mb-1" for="inputSpeciality">Выберите специализацию</label>
+              <select class="form-control" id="inputSpeciality" disabled>
+                <option th:each="speciality : ${T(com.example.models.Speciality).values()}"
+                        th:value="${{speciality}}" th:selected="${speciality.name().equalsIgnoreCase(selectedSpec)}" th:text="${speciality.label}">
+                </option>
+              </select>
+            </div>
+          </div>
+          <!--Ряд докторов-->
+          <div class="row gx-3 mb-3">
+            <div class="col-md-6">
+              <label class="small mb-1" for="inputDoctor">Выберите специалиста</label>
+              <select class="form-control" id="inputDoctor" disabled>
+                <option th:value="${appointment.getDoctor().getId()}"
+                        th:text="${appointment.getDoctor().getSurname() + ' ' + appointment.getDoctor().getName() + ' ' + appointment.getDoctor().getPatronymic()}"  th:selected></option>
+              </select>
+            </div>
+          </div>
+          <!--Ряд даты-->
+          <div class="row gx-3 mb-3">
+            <div class="col-md-6">
+              <label class="small mb-1" for="inputSchedule">Выберите доступную дату</label>
+              <select class="form-control" id="inputSchedule" disabled>
+                <option th:text="${appointment.getDate() + ' ' + #dates.dayOfWeekName(appointment.getDate())}">
+                </option>
+              </select>
+            </div>
+          </div>
+          <!--Ряд времени-->
+          <div class="row gx-3 mb-3">
+            <div class="col-md-6">
+              <label class="small mb-1" for="inputTimeTable">Выберите доступное время</label>
+              <select class="form-control" id="inputTimeTable" th:name="timetable">
+                <option th:each="timetable : ${timeTables}"
+                        th:value="${timetable.getId()}" th:text="${timetable.getStartTime().toString()}" th:disabled="${!timetable.isAvailable()}">
+                </option>
+              </select>
+            </div>
+          </div>
+          <!--Спрятанные поля-->
+          <input th:field="*{doctor}" th:value="${appointment.getDoctor().getId()}" hidden>
+          <input th:field="*{date}" th:value="${appointment.getDate()}" hidden>
+          <input class="btn btn-primary" type="submit" value="Записаться"><br><br>
+        </form>
+      </div>
+    </div>
+  </div>
+  <footer th:insert="blocks/footer :: footer"></footer>
+</body>
+</html>

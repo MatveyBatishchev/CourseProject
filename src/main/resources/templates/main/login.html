@@ -6,39 +6,40 @@
   <div th:insert="blocks/webjars :: webjars"></div>
 </head>
 <body>
-<header th:insert="blocks/header :: header"></header>
-<div class="container mt-5">
-  <h1>Войти</h1>
-  <div class="card mb-4">
-    <div th:if="${param.error}">
-      Invalid username and password.
-    </div>
-    <div th:if="${param.logout}">
-      You have been logged out.
-    </div>
-    <div class="card-header">Личные данные</div>
-    <div class="card-body">
-      <form th:action="@{/login}" method="post">
-        <div class="row gx-3 mb-3">
-          <div class="col-md-6">
-            <label class="small mb-1" for="inputEmail">Email</label>
-            <input class="form-control" id="inputEmail" name="username" type="text" th:value="${email}">
+  <header th:insert="blocks/header :: header"></header>
+  <div class="container mt-5">
+    <h1>Войти</h1>
+    <div class="card mb-4">
+      <div th:if="${param.error}">
+        Недопустимое значение email или пароля!
+      </div>
+      <div th:if="${param.logout}">
+        You have been logged out.
+      </div>
+      <div class="card-body">
+        <form method="POST" th:action="@{/login}">
+          <!--Ряд email-->
+          <div class="row gx-3 mb-3">
+            <div class="col-md-6">
+              <label class="small mb-1" for="inputEmail">Email</label>
+              <input class="form-control" id="inputEmail" type="text" th:name="username" th:value="${email}">
+            </div>
           </div>
-        </div>
-        <div class="row gx-3 mb-3">
-          <div class="col-md-6">
-            <label class="small mb-1" for="inputPassword">Пароль</label>
-            <input class="form-control" id="inputPassword" name="password"  type="text">
+          <!--Ряд пароля-->
+          <div class="row gx-3 mb-3">
+            <div class="col-md-6">
+              <label class="small mb-1" for="inputPassword">Пароль</label>
+              <input class="form-control" id="inputPassword" type="password" th:name="password">
+            </div>
           </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Войти</button><br><br>
-      </form>
-      <p>Нет аккаунта,
-        <a href="/patients/new">Зарегистрируйтесь</a>
-      </p>
+          <button class="btn btn-primary" type="submit">Войти</button><br><br>
+        </form>
+        <p>Нет аккаунта,
+          <a href="/patients/new">Зарегистрируйтесь</a>
+        </p>
+      </div>
     </div>
   </div>
-</div>
-<footer th:insert="blocks/footer :: footer"></footer>
+  <footer th:insert="blocks/footer :: footer"></footer>
 </body>
 </html>

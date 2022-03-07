@@ -1,5 +1,6 @@
 package com.example.config;
 
+import com.example.services.DoctorService;
 import com.example.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +8,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 import javax.sql.DataSource;
@@ -16,10 +20,12 @@ import javax.sql.DataSource;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PatientService patientService;
+    private final DoctorService doctorService;
 
     @Autowired
-    public WebSecurityConfig(PatientService patientService) {
+    public WebSecurityConfig(PatientService patientService, DoctorService doctorService) {
         this.patientService = patientService;
+        this.doctorService = doctorService;
     }
 
     @Override
@@ -40,7 +46,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(patientService)
+//        auth.userDetailsService(patientService)
+//                .passwordEncoder(NoOpPasswordEncoder.getInstance());
+        auth.userDetailsService(doctorService)
                 .passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
 }

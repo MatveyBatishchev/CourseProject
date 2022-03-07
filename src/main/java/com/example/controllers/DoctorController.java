@@ -1,7 +1,7 @@
 package com.example.controllers;
 
+import com.example.models.Appointment;
 import com.example.models.Doctor;
-import com.example.repo.DoctorRepository;
 import com.example.services.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,22 +11,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BinaryOperator;
 
 @Controller
 @RequestMapping("/doctors")
 public class DoctorController {
 
-    private final DoctorRepository doctorRepository;
     private final DoctorService doctorService;
 
     @Autowired
-    public DoctorController(DoctorRepository doctorRepository, DoctorService doctorService) {
-        this.doctorRepository = doctorRepository;
+    public DoctorController(DoctorService doctorService) {
         this.doctorService = doctorService;
     }
 
@@ -41,7 +34,7 @@ public class DoctorController {
         Doctor doctorById = doctorService.findDoctorById(id);
         if (doctorById == null) {
             model.addAttribute("object", "Доктор");
-            return "mistakes/notfound";
+            return "mistakes/notFound";
         }
         model.addAttribute("doctor", doctorById);
         return "doctors/getById";
@@ -53,10 +46,15 @@ public class DoctorController {
     }
 
     @PostMapping("/new")
-    public String addNewDoctor(@ModelAttribute("doctor") @Valid Doctor doctor, BindingResult bindingResult,
-                               @RequestParam("avatar") MultipartFile multipartFile) {
+    public String addNewDoctor(@ModelAttribute("doctor") @Valid Doctor doctor, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) return "doctors/newDoctor";
-        doctorService.saveDoctorWithFile(doctor, multipartFile);
+
+        if (doctorService.findDoctorByEmail(doctor.getEmail()) != null) {
+            model.addAttribute("emailMessage", "Специалист с таким email уже существует!");
+            return "doctors/newDoctor";
+        }
+
+        doctorService.saveDoctor(doctor);
         return "redirect:/doctors/all";
     }
 
@@ -65,7 +63,7 @@ public class DoctorController {
         Doctor doctorById = doctorService.findDoctorById(id);
         if (doctorById == null) {
             model.addAttribute("object", "Доктор");
-            return "mistakes/notfound";
+            return "mistakes/notFound";
         }
         model.addAttribute("doctor", doctorById);
         return "doctors/editById";
@@ -73,9 +71,10 @@ public class DoctorController {
 
     @PutMapping("/{id}")
     public String editDoctorById(@ModelAttribute("doctor") @Valid Doctor doctor, BindingResult bindingResult,
-                                 @RequestParam("avatar") MultipartFile multipartFile) {
+                                 @RequestParam("profileImage") MultipartFile multipartFile) {
         if (bindingResult.hasErrors()) return "doctors/editById";
-        doctorService.saveDoctorWithFile(doctor, multipartFile);
+        if (multipartFile.isEmpty()) doctorService.saveDoctor(doctor);
+        else doctorService.saveDoctorWithFile(doctor, multipartFile);
         return "redirect:/doctors/" + doctor.getId();
     }
 
@@ -89,6 +88,15 @@ public class DoctorController {
     public String searchPatient(@RequestParam String search, Model model) {
         model.addAttribute("doctors", doctorService.searchDoctorsByString(search));
         return "/doctors/getAll";
+    }
+
+    @GetMapping("/by_speciality")
+    public String getDoctorsBySpeciality(Model model,
+                                         @ModelAttribute("appointment") Appointment appointment,
+                                         @RequestParam("speciality") String speciality) {
+        model.addAttribute("doctors", doctorService.findDoctorsBySpeciality(speciality));
+        model.addAttribute("selectedSpec", speciality);
+        return "appointments/newAppointment2";
     }
 
 }
