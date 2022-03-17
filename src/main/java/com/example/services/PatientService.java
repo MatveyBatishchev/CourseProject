@@ -3,6 +3,7 @@ package com.example.services;
 import com.example.files.FileUploadUtil;
 import com.example.models.Patient;
 import com.example.models.Role;
+import com.example.repo.DoctorRepository;
 import com.example.repo.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,22 +19,37 @@ import java.util.*;
 public class PatientService implements UserDetailsService {
 
     private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
+    private MailSender mailSender;
 
     @Value("${upload.path}")
     private String uploadPath;
 
     @Autowired
-    public PatientService(PatientRepository patientRepository) {
+    public PatientService(PatientRepository patientRepository,
+                          DoctorRepository doctorRepository,
+                          MailSender mailSender) {
         this.patientRepository = patientRepository;
+        this.doctorRepository = doctorRepository;
+        this.mailSender = mailSender;
     }
 
     public void savePatient(Patient patient) {
         patient.setActive(true);
         patient.setRoles(Collections.singleton(Role.USER));
+        patient.setActivationCode(UUID.randomUUID().toString());
         patientRepository.save(patient);
+        //sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
     }
 
-    public void savePatientWithFile(Patient patient, MultipartFile multipartFile) {
+    public void editPatient(Patient patient) {
+        patient.setActive(true);
+        patient.setRoles(Collections.singleton(Role.USER));
+        if (patient.getActivationCode().isBlank()) patient.setActivationCode(null);
+        patientRepository.save(patient);;
+    }
+
+    public void editPatientWithFile(Patient patient, MultipartFile multipartFile) {
         if (!multipartFile.isEmpty()) {
             try {
                 String uploadDir = uploadPath + "/patients/" + patient.getId();
@@ -46,6 +62,7 @@ public class PatientService implements UserDetailsService {
         }
         patient.setActive(true);
         patient.setRoles(Collections.singleton(Role.USER));
+        if (patient.getActivationCode().isBlank()) patient.setActivationCode(null);
         patientRepository.save(patient);
     }
 
@@ -63,6 +80,13 @@ public class PatientService implements UserDetailsService {
     }
 
     public void deletePatientById(Long id) {
+        try {
+            Patient patient = patientRepository.findById(id).isPresent() ? patientRepository.findById(id).get() : null;
+            String patientDir = uploadPath + "patients/" + patient.getId();
+            FileUploadUtil.deleteDirectory(patientDir);
+        } catch (Exception e) {
+            System.out.println("Ошибка в удалении файла пациента!");
+        }
         patientRepository.deleteById(id);
     }
 
@@ -79,6 +103,30 @@ public class PatientService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return patientRepository.findByEmail(email);
+        if (patientRepository.findByEmail(email) == null) return doctorRepository.findByEmail(email);
+        else return patientRepository.findByEmail(email);
+    }
+
+    public void sendConfirmationEmail(String patientEmail, String patientName, String activationCode) {
+        if (!patientEmail.isEmpty()) {
+            String message = String.format(
+                    "Добро пожаловать в RecoveryMed, %s! \n" +
+                            "Для подтверждения email-а, пожалуйста, перейдите по ссылке: http://localhost:8081/patients/activate/%s \n" +
+                                "С уважением команда RecoveryMed❤",
+                    patientName, activationCode
+            );
+            mailSender.send(patientEmail,"Подтвердите электронную почту", message);
+        }
+    }
+
+    public boolean activateUser(String code) {
+        Patient patient = patientRepository.findByActivationCode(code);
+
+        if (patient == null) return false;
+
+        patient.setActivationCode(null);
+        patientRepository.save(patient);
+
+        return true;
     }
 }

@@ -20,7 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Patient implements UserDetails {
+public class Patient implements User {
     @Id
     @GeneratedValue(generator = "sequence-generator")
     @GenericGenerator(
@@ -34,29 +34,36 @@ public class Patient implements UserDetails {
     )
     private Long id;
 
+    @Column(name="name", nullable=false)
     @Size(min=2, max=30, message = "Имя должно быть от 2-х до 30 букв")
     @NotBlank(message = "Это поле является обязательным")
     private String name;
 
+    @Column(name="surname", nullable=false)
     @Size(min=2, max=30, message = "Фамилия должна быть от 2-х до 30 букв")
     @NotBlank(message = "Это поле является обязательным")
     private String surname;
 
+    @Column(name="birth_date", nullable=false)
     @NotNull(message = "Это поле является обязательным")
     private Date birthDate;
 
+    @Column(name="sex", nullable=false)
     @Min(value=1, message="Недопустимое значение")
     @NotNull(message = "Это поле является обязательным")
     private int sex;
 
+    @Column(name="telephone", nullable=false)
     @Size(min=17, max=18)
     @NotBlank(message = "Это поле является обязательным")
     private String telephone;
 
+    @Column(name="email", nullable=false)
     @Email(message = "Недопустимое значение")
     @NotBlank(message = "Это поле является обязательным")
     private String email;
 
+    @Column(name="password", nullable=false)
     @ValidPassword
     @NotBlank(message = "Это поле является обязательным")
     private String password;
@@ -64,6 +71,10 @@ public class Patient implements UserDetails {
     @Column(name="image", nullable=true)
     private String image;
 
+    @Column(name="activation_code", nullable=true)
+    private String activationCode;
+
+    @Column(name="active", nullable=false)
     private boolean active;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
@@ -78,6 +89,10 @@ public class Patient implements UserDetails {
             fetch = FetchType.EAGER
     )
     private Set<Appointment> appointments = new HashSet<>();
+
+    public String getProfileLink() {
+        return "patients/" + getId();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

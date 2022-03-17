@@ -3,29 +3,29 @@ package com.example.services;
 
 import com.example.files.FileUploadUtil;
 import com.example.models.Doctor;
+import com.example.models.Patient;
 import com.example.models.Role;
 import com.example.repo.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
 @Service
-public class DoctorService implements UserDetailsService {
+public class DoctorService {
 
     private final DoctorRepository doctorRepository;
+    private MailSender mailSender;
 
     @Value("${upload.path}")
     private String uploadPath;
 
     @Autowired
-    public DoctorService(DoctorRepository doctorRepository) {
+    public DoctorService(DoctorRepository doctorRepository, MailSender mailSender) {
         this.doctorRepository = doctorRepository;
+        this.mailSender = mailSender;
     }
 
     public List<Doctor> findAllDoctorsAsc() {
@@ -43,13 +43,13 @@ public class DoctorService implements UserDetailsService {
 
     public void saveDoctor(Doctor doctor) {
         doctor.setActive(true);
-        doctor.setRoles(Collections.singleton(Role.USER));
-        System.out.println(doctor.getPassword());
+        doctor.setRoles(Collections.singleton(Role.DOCTOR));
         if (doctor.getPassword() == null || doctor.getPassword().isEmpty()) doctor.setPassword(generatePassword());
+        sendPassword(doctor.getEmail(), doctor.getName(), doctor.getPassword());
         doctorRepository.save(doctor);
     }
 
-    public void saveDoctorWithFile(Doctor doctor, MultipartFile multipartFile) {
+    public void editDoctorWithFile(Doctor doctor, MultipartFile multipartFile) {
         try {
             String uploadDir = uploadPath + "/doctors/" + doctor.getId();
             String fileName = UUID.randomUUID().toString() + "." + multipartFile.getContentType().substring(6);
@@ -59,12 +59,19 @@ public class DoctorService implements UserDetailsService {
             System.out.println("Ошибка в сохранении файла!");
         }
         doctor.setActive(true);
-        doctor.setRoles(Collections.singleton(Role.USER));
+        doctor.setRoles(Collections.singleton(Role.DOCTOR));
         if (doctor.getPassword() == null || doctor.getPassword().isEmpty()) doctor.setPassword(generatePassword());
         doctorRepository.save(doctor);
     }
 
     public void deleteDoctorById(Long id) {
+        try {
+            Doctor doctor = doctorRepository.findById(id).isPresent() ? doctorRepository.findById(id).get() : null;
+            String doctorDir = uploadPath + "doctors/" + doctor.getId();
+            FileUploadUtil.deleteDirectory(doctorDir);
+        } catch (Exception e) {
+            System.out.println("Ошибка в удалении файла доктора!");
+        }
         doctorRepository.deleteById(id);
     }
 
@@ -92,8 +99,17 @@ public class DoctorService implements UserDetailsService {
         return genPassword;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return doctorRepository.findByEmail(email);
+    public void sendPassword(String doctorEmail, String doctorName, String doctorPassword) {
+        if (!doctorEmail.isEmpty()) {
+            String message = String.format(
+                    "Добро пожаловать в систему RecoveryMed, %s! \n" +
+                            "Для входа в систему используете этот пароль: %s \n" +
+                                "Сохраните пароль, это будет ваш единственный способ входа! По возможности удалите данное письмо. \n" +
+                                    "С уважением команда RecoveryMed❤",
+                    doctorName, doctorPassword
+            );
+            mailSender.send(doctorEmail,"Пароль к системе RecoveryMed", message);
+        }
     }
+
 }

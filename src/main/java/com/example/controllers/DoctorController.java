@@ -74,7 +74,7 @@ public class DoctorController {
                                  @RequestParam("profileImage") MultipartFile multipartFile) {
         if (bindingResult.hasErrors()) return "doctors/editById";
         if (multipartFile.isEmpty()) doctorService.saveDoctor(doctor);
-        else doctorService.saveDoctorWithFile(doctor, multipartFile);
+        else doctorService.editDoctorWithFile(doctor, multipartFile);
         return "redirect:/doctors/" + doctor.getId();
     }
 

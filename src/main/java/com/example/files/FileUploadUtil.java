@@ -22,5 +22,10 @@ public class FileUploadUtil {
         }
     }
 
+    public static void deleteDirectory(String patientDir) throws IOException {
+        Path deletePath = Paths.get(patientDir); // создаём объект пути к файлу
+        FileUtils.deleteDirectory(deletePath.toFile());
+    }
+
 
 }

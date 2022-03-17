@@ -2,14 +2,12 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-    <title>О нас</title>
+    <title>Контакты</title>
     <div th:insert="blocks/webjars :: webjars"></div>
 </head>
 <body>
-    <header th:replace="blocks/header :: header"></header>
-    <div class="container mt-5">
-        <h1>Abouts Us</h1>>
-    </div>
-    <footer th:insert="blocks/footer :: footer"></footer>
+<div class="container mt-5">
+    <h3 class="alert alert-primary" th:text="${activationMessage}"></h3>
+</div>
 </body>
 </html>

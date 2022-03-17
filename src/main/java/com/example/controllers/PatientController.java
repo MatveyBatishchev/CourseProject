@@ -3,6 +3,8 @@ package com.example.controllers;
 import com.example.models.Patient;
 import com.example.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -74,8 +76,8 @@ public class PatientController {
     public String editPatientById(@ModelAttribute("patient") @Valid Patient patient, BindingResult bindingResult,
                                   @RequestParam("profileImage") MultipartFile multipartFile) {
         if (bindingResult.hasErrors()) return "/patients/editById";
-        if (multipartFile.isEmpty()) patientService.savePatient(patient);
-        else patientService.savePatientWithFile(patient, multipartFile);
+        if (multipartFile.isEmpty()) patientService.editPatient(patient);
+        else patientService.editPatientWithFile(patient, multipartFile);
         return "redirect:/patients/" + patient.getId();
     }
 
@@ -89,6 +91,21 @@ public class PatientController {
     public String searchPatient(@RequestParam String search, Model model) {
         model.addAttribute("patients", patientService.searchPatientByString(search));
         return "/patients/getAll";
+    }
+
+    @GetMapping("/activate/{code}")
+    public String activatePatientAccount(@PathVariable("code") String code, Model model) {
+        boolean isActivated = patientService.activateUser(code);
+        if (isActivated) model.addAttribute("activationMessage", "Email успешно подтверждён!");
+        else model.addAttribute("activationMessage", "Код активации не был найден!");
+        return "main/activationCode";
+    }
+
+    @PostMapping("/confirmEmail/{id}")
+    @ResponseBody
+    public String confirmPatientEmail(@PathVariable("id") Patient patient) {
+        patientService.sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
+        return "Успешно!\n Письмо с подтверждением было отправлено вам на почту!";
     }
 
 }

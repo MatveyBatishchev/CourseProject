@@ -4,7 +4,33 @@
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
   <title>Редактировать профиль</title>
   <div th:insert="blocks/webjars :: webjars"></div>
+  <script type="text/javascript" th:src="@{/js/mailConfirmation.js}"></script>
 </head>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  $(document).ready(function() {
+    var activationCode = /*[[${patient.getActivationCode()}]]*/ 'activationCode';
+    checkTimer((activationCode == null || activationCode == ""));
+
+    $("#confirmPatientEmail").on("click",function () {
+      startTimer(2*60, document.querySelector('#timer'));
+
+      var patientId = /*[[${patient.getId()}]]*/ 'default';
+      $.post("/patients/confirmEmail/" + patientId, function(data,status) {
+        $("#confirmationPlaceholder").html('<div class="mt-1 alert alert-success alert-dismissible fade show" role="alert">' + data + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');}); // AJAX
+
+    });
+  });
+
+  function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    var patientId = /*[[${patient.getId()}]]*/ 'patientId';
+    document.cookie = cname + "=" + cvalue + "; " + expires + ";path=/patients/" + patientId;
+  }
+  /*]]>*/
+</script>
 <body>
   <header th:insert="blocks/header :: header"></header>
   <div class="container-xl px-4 mt-3">
@@ -56,6 +82,11 @@
                 <div class="col-md-6">
                   <label class="small mb-1" for="inputEmail">Email</label>
                   <input class="form-control" id="inputEmail" type="email" th:value="${patient.getEmail()}" disabled>
+                  <span th:if="${patient.getActivationCode() == null}" class="text-primary" id="confirmationMessage" th:text="${'Почта подтверждена'}"></span>
+                  <button th:if="${patient.getActivationCode() != null}" class="btn btn-link text-danger" type="button" id="confirmPatientEmail"
+                           th:text="${'Подтвердить почту'}" ></button>
+                  <div id="confirmationPlaceholder"></div>
+                  <p id="timer"></p>
                 </div>
               </div>
             </form>

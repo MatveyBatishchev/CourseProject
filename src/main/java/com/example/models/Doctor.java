@@ -20,7 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Doctor implements UserDetails {
+public class Doctor implements User {
     @Id
     @GeneratedValue(generator = "sequence-generator")
     @GenericGenerator(
@@ -49,6 +49,7 @@ public class Doctor implements UserDetails {
     @NotBlank(message = "Это поле является обязательным")
     private String patronymic;
 
+    @Column(name="email", nullable=false)
     @Email(message = "Недопустимое значение")
     @NotBlank(message = "Это поле является обязательным")
     private String email;
@@ -76,9 +77,11 @@ public class Doctor implements UserDetails {
     @Column(name="image",nullable=true)
     private String image;
 
+    @Column(name="password",nullable=false)
     private String password;
 
-    private boolean isActive;
+    @Column(name="active", nullable=false)
+    private boolean active;
 
     @OneToMany(
             mappedBy = "doctor",
@@ -105,6 +108,11 @@ public class Doctor implements UserDetails {
     @CollectionTable(name = "doctor_role", joinColumns = @JoinColumn(name = "doctor_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    @Override
+    public String getProfileLink() {
+        return "doctors/" + getId();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -135,4 +143,5 @@ public class Doctor implements UserDetails {
     public boolean isEnabled() {
         return isActive();
     }
+
 }
