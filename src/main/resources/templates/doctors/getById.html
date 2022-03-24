@@ -16,7 +16,7 @@
                         <!--Ряд показа фото-->
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
-                                <img class="img-fluid" width="50%" height="50%" th:if="${doctor.getImage() != null && !doctor.getImage().isEmpty()}" th:src="@{/usersFiles/doctors/{id}/{image}(id=${doctor.getId()}, image=${doctor.getImage()})}">
+                                <img class="img-fluid" width="50%" height="50%" th:if="${doctor.getImage() != null && !doctor.getImage().isEmpty()}" th:src="@{/applicationFiles/doctors/{id}/{image}(id=${doctor.getId()}, image=${doctor.getImage()})}">
                             </div>
                         </div>
                         <!--Ряд ФИО-->

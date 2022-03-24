@@ -10,7 +10,7 @@
     <div class="container mt-5 mr-2 ml-2">
         <h1>Список пациентов</h1>
         <!--Ряд фильтров и поисковых строк-->
-        <form th:method="POST" th:action="@{/patients/search}">
+        <form th:method="GET" th:action="@{/patients/search}">
             <div class="row gx-3 mb-3">
                 <div class="col-md-6">
                     <input class="form-control" type="text" placeholder="Поиск" th:name="search">

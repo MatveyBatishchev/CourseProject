@@ -1,0 +1,207 @@
+/*default*/
+*{
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+*,*:before,*:after{
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+:focus,:active{outline: none;}
+a:focus,a:active{outline: none;}
+
+nav,footer,header,aside{display: block;}
+
+html,body{
+    height: 100%;
+    width: 100%;
+    font-size: 100%;
+    line-height: 1;
+    font-size: 16px;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+input,button,textarea{font-family:inherit;}
+
+input::-ms-clear{display: none;}
+button{cursor: pointer;}
+button::-moz-focus-inner {padding:0;border:0;}
+a, a:visited{text-decoration: none;}
+a:hover{text-decoration: none;}
+ul li{list-style: none;}
+img{vertical-align: top;}
+h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight: 400;}
+/*--------------------*/
+/*default*/
+
+/*changing webkits*/
+body {
+    zoom: 90%;
+}
+/*custom borders*/
+.container-fluid{
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+::-webkit-input-placeholder {
+    text-align: center;
+    color: black;
+}
+::-webkit-scrollbar {
+    width: 0.5rem;
+    background: #d3d3d3;
+    border-radius: 10rem ;
+}
+::-webkit-scrollbar-thumb{
+    background: #4d5d51;
+    border-radius: 10rem ;
+}
+
+/*disabled*/
+select:disabled {
+    -webkit-appearance: none;
+    content: none;
+    background-color: #fafafa;
+    /*background: #f8f8f8;*/
+}
+input:disabled {
+    text-align: center;
+    content: none;
+    background-color: #fafafa;
+    color: black;
+    /*background: #f8f8f8;*/
+}
+/*disabled*/
+/*changing webkits*/
+
+/*Hedare footer*/
+.header{
+    height: 110px;
+    background: #1F4326;
+}
+.footer{
+    /*margin-top: 15em;*/
+    width: 100%;
+    height: 8rem;
+
+    background: #243528;
+}
+/*Hedare footer*/
+
+/*Modal*/
+.modalBack{
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 15px;
+}
+.modalField{
+    border: 0 ;
+    border-bottom: 1px solid #000;
+    border-radius: 0px;
+    background-color: rgba(0,0,0,0);
+    outline: 0;
+}
+.messageAlert{
+    border-radius: 5px 5px 15px 15px;
+    text-align: center;
+}
+/*Modal*/
+
+/*FontsLink*/
+@font-face {
+    font-family: 'FFormular';
+    src: url('../fonts/Formular.eot');
+    src: local('☺'), url('../fonts/Formular.woff') format('woff'), url('../fonts/Formular.ttf') format('truetype');
+
+}
+@font-face {
+    font-family: 'FFormular-Light';
+    src: url('static/fonts/Formular-Light.eot');
+    src: local('☺'), url('../fonts/Formular-Light.woff') format('woff'), url('../fonts/Formular-Light.ttf') format('truetype');
+
+}
+@font-face {
+    font-family: 'GGeometria';
+    src: url('../fonts/Geometria.eot');
+    src: local('☺'), url('../fonts/Geometria.woff') format('woff'),
+    url('../fonts/Geometria.ttf') format('truetype');
+}
+
+/*Fonts*/
+.top{
+    font-family: 'GGeometria';
+    font-style: normal;
+    font-size: 35px;
+    line-height: 44px;
+}
+/*themes &nav*/
+.themes{
+    font-family: 'FFormular';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 29px;
+}
+span{
+    font-weight: 600;
+    color: #DD9919;
+}
+
+.confirmationMessage{
+    font-weight: 600;
+    color: #DD9919;
+}
+
+.headlines{
+    font-family: 'FFormular';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 24px;
+}
+.buttonFont{
+    font-family: 'GGeometria';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 23px;
+}
+/*Fonts*/
+
+
+/*common*/
+.button{
+    height: 50px;
+    background: #1F4326;
+    border-radius: 10px;
+    border-color: #1F4326;
+
+    font-family: 'GGeometria';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 23px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/*select по центру можно убрать*/
+select{
+    text-align: center;
+    color: black;
+}
+a{
+    color: #DD9919;
+    box-sizing: border-box;
+    font-family: 'GGeometria';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 23px;
+    text-decoration: underline;
+    text-decoration-style: solid
+}
+/*common*/

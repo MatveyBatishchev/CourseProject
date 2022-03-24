@@ -40,17 +40,20 @@ public class AppointmentController {
 
     @GetMapping("/new")
     public String addNewAppointment() {
-        return "appointments/newAppointment1";
+        return "appointments/newAppointment";
     }
 
     @PostMapping("/new")
+    @ResponseBody
     public String addNewAppointment(
             @AuthenticationPrincipal Patient patient,
-            @ModelAttribute("appointment") Appointment appointment,
-            @RequestParam("timetable") Long timeTableId) {
-        System.out.println(timeTableId + "FUCCCKCKKCKC");
-        appointmentService.saveAppointment(appointment, patient, timeTableId);
-        return "redirect:/appointments/all";
+            @RequestParam("date") String date,
+            @RequestParam("time") String time,
+            @RequestParam("doctorId") Long doctorId,
+            @RequestParam("callbackInfo") String callbackInfo) {
+        System.out.println(callbackInfo);
+        appointmentService.saveAppointment(patient, date, time, doctorId, callbackInfo);
+        return "/appointments/all";
     }
 
     @GetMapping("/{id}/edit")
@@ -68,6 +71,14 @@ public class AppointmentController {
     public String editAppointmentById(@ModelAttribute("appointment") Appointment appointment, BindingResult bindingResult) {
         appointmentService.saveAppointment(appointment);
         return "redirect:/doctors/" + appointment.getId();
+    }
+
+    @PutMapping("/setStatus")
+    @ResponseBody
+    public String setAppointmentStatus(@RequestParam("status") int status,
+                                       @RequestParam("appointmentId") Long appointmentId) {
+        appointmentService.editAppointmentStatus(appointmentId, status);
+        return "new status has been set";
     }
 
     @DeleteMapping("/{id}")

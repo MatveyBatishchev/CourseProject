@@ -1,24 +1,32 @@
 package com.example.services;
 
-import com.example.models.*;
+import com.example.models.Appointment;
+import com.example.models.Patient;
+import com.example.models.TimeTable;
 import com.example.repo.AppointmentRepository;
+import com.example.repo.DoctorRepository;
 import com.example.repo.TimeTableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
+    private final DoctorRepository doctorRepository;
     private final TimeTableRepository timeTableRepository;
 
     @Autowired
-    public AppointmentService(AppointmentRepository appointmentRepository, TimeTableRepository timeTableRepository) {
+    public AppointmentService(AppointmentRepository appointmentRepository, DoctorRepository doctorRepository,
+                              TimeTableRepository timeTableRepository) {
         this.appointmentRepository = appointmentRepository;
+        this.doctorRepository = doctorRepository;
         this.timeTableRepository = timeTableRepository;
     }
 
@@ -27,20 +35,56 @@ public class AppointmentService {
     }
 
     public Appointment findAppointmentById(Long id) {
-        Optional<Appointment> appointmentById = appointmentRepository.findById(id);
-        return appointmentById.isPresent()? appointmentById.get() : null;
+        return appointmentRepository.findById(id).orElse(null);
     }
 
     public void saveAppointment(Appointment appointment) {
         appointmentRepository.save(appointment);
     }
 
-    public void saveAppointment(Appointment appointment, Patient patient, Long timeTableId) {
+    public void saveAppointment(Patient patient, String date, String time, Long doctorId, String callbackInfo) {
+        Appointment appointment = new Appointment();
+
+        // Date
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        java.util.Date parsed = null;
+        try {
+            parsed = format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        java.sql.Date sqlDate = new Date(parsed.getTime());
+        appointment.setDate(sqlDate);
+
+        // Time
+        LocalTime localTime = LocalTime.parse(time + ":00");
+        System.out.println(localTime);
+        appointment.setTime(localTime);
+
+        // Doctor
+        appointment.setDoctor(doctorRepository.findById(doctorId).get());
+
+        // Patient
+        if (patient != null) {
+            appointment.setPatient(patient);
+            appointment.setStatus(0);
+        }
+        else appointment.setStatus(1);
+
+        // TimeTable set isAvailable
+        Long timeTableId = timeTableRepository.findTimeTableIdByDateAndTimeAbdDoctorId(sqlDate,localTime,doctorId);
         TimeTable timeTable = timeTableRepository.findById(timeTableId).get();
-        appointment.setPatient(patient);
-        appointment.setTime(timeTable.getStartTime());
         timeTable.setAvailable(false);
         timeTableRepository.save(timeTable);
+
+        if (!callbackInfo.isBlank()) appointment.setCallbackInfo(callbackInfo);
+
+        appointmentRepository.save(appointment);
+    }
+
+    public void editAppointmentStatus(Long appointmentId, int status) {
+        Appointment appointment = findAppointmentById(appointmentId);
+        appointment.setStatus(status);
         appointmentRepository.save(appointment);
     }
 

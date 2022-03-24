@@ -5,6 +5,38 @@
   <title>Новое расписание</title>
   <div th:insert="blocks/webjars :: webjars"></div>
 </head>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  $(document).ready(function () {
+    let disabledDays = [];
+    let schedules = /*[[${schedules}]]*/ 'default';
+    console.log(JSON.parse(schedules));
+    JSON.parse(schedules).forEach(schedule => {
+      disabledDays.push(schedule.date);
+    });
+
+    $("#datepicker").datepicker({
+      dateFormat: 'dd-mm-yy',
+      minDate: 0,
+      numberOfMonths: 2,
+      beforeShowDay: disableAllTheseDays,
+      onSelect: function () {
+        $("#inputDate").val($("#datepicker").datepicker({dateFormat: 'dd-mm-yy'}).val());
+        console.log($("#inputDate").val());
+      }
+    });
+
+    function disableAllTheseDays(date) {
+      let sdate = $.datepicker.formatDate('dd-mm-yy', date)
+      if ($.inArray(sdate, disabledDays) !== -1) {
+        return [false];
+      }
+      return [true];
+    }
+
+  });
+  /*]]>*/
+</script>
 <body>
   <header th:insert="blocks/header :: header"></header>
   <div class="container mt-5">
@@ -16,7 +48,8 @@
           <div class="row gx-3 mb-3">
             <div class="col-md-6">
               <label class="small mb-1" for="inputDate">Дата приёма</label>
-              <input class="form-control" id="inputDate" type="date" th:field="*{date}" required>
+              <div id="datepicker"></div>
+              <input class="form-control" id="inputDate" type="text" th:name="scheduleDate" hidden>
             </div>
           </div>
           <!--Ряд начала времени-->

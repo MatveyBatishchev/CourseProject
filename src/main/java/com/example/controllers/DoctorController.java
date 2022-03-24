@@ -1,14 +1,16 @@
 package com.example.controllers;
 
-import com.example.models.Appointment;
 import com.example.models.Doctor;
+import com.example.models.Patient;
 import com.example.services.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
@@ -24,20 +26,31 @@ public class DoctorController {
     }
 
     @GetMapping("/all")
-    public String getAllDoctors(Model model) {
-        model.addAttribute("doctors",doctorService.findAllDoctorsAsc());
-        return "doctors/getAll";
+    public ModelAndView getAllDoctors(ModelAndView modelAndView) {
+        return doctorService.findAllDoctors(modelAndView);
     }
 
     @GetMapping("/{id}")
-    public String getDoctorById(@PathVariable("id") Long id, Model model) {
-        Doctor doctorById = doctorService.findDoctorById(id);
-        if (doctorById == null) {
-            model.addAttribute("object", "Доктор");
-            return "mistakes/notFound";
-        }
-        model.addAttribute("doctor", doctorById);
-        return "doctors/getById";
+    public ModelAndView getDoctorById(@PathVariable("id") Long doctorId, ModelAndView modelAndView) {
+        return doctorService.findDoctorById(doctorId, modelAndView);
+    }
+
+    @GetMapping("/getById")
+    @ResponseBody
+    public String getDoctorByIdJson(@AuthenticationPrincipal Patient patient, @RequestParam("doctorId") Long doctorId) {
+        return doctorService.findDoctorByIdJson(patient, doctorId);
+    }
+
+    @GetMapping("/by_speciality")
+    @ResponseBody
+    public String getDoctorsBySpeciality(@RequestParam("speciality") String speciality) {
+        return doctorService.findDoctorsBySpeciality(speciality);
+    }
+
+    @GetMapping("/search")
+    public String getPatientBySearch(@RequestParam("search") String search, Model model) {
+        model.addAttribute("doctors", doctorService.findDoctorsBySearch(search));
+        return "/doctors/getAll";
     }
 
     @GetMapping("/new")
@@ -46,57 +59,26 @@ public class DoctorController {
     }
 
     @PostMapping("/new")
-    public String addNewDoctor(@ModelAttribute("doctor") @Valid Doctor doctor, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) return "doctors/newDoctor";
-
-        if (doctorService.findDoctorByEmail(doctor.getEmail()) != null) {
-            model.addAttribute("emailMessage", "Специалист с таким email уже существует!");
-            return "doctors/newDoctor";
-        }
-
-        doctorService.saveDoctor(doctor);
-        return "redirect:/doctors/all";
+    public ModelAndView addNewDoctor(@ModelAttribute("doctor") @Valid Doctor doctor,
+                                     BindingResult bindingResult, ModelAndView modelAndView) {
+        return doctorService.saveNewDoctor(doctor, bindingResult, modelAndView);
     }
 
     @GetMapping("/{id}/edit")
-    public String editDoctorById( @PathVariable("id") Long id, Model model) {
-        Doctor doctorById = doctorService.findDoctorById(id);
-        if (doctorById == null) {
-            model.addAttribute("object", "Доктор");
-            return "mistakes/notFound";
-        }
-        model.addAttribute("doctor", doctorById);
-        return "doctors/editById";
+    public ModelAndView editDoctorById(@PathVariable("id") Long doctorId, ModelAndView modelAndView) {
+        return doctorService.findDoctorByIdForEdit(doctorId, modelAndView);
     }
 
     @PutMapping("/{id}")
-    public String editDoctorById(@ModelAttribute("doctor") @Valid Doctor doctor, BindingResult bindingResult,
-                                 @RequestParam("profileImage") MultipartFile multipartFile) {
-        if (bindingResult.hasErrors()) return "doctors/editById";
-        if (multipartFile.isEmpty()) doctorService.saveDoctor(doctor);
-        else doctorService.editDoctorWithFile(doctor, multipartFile);
-        return "redirect:/doctors/" + doctor.getId();
+    public ModelAndView editDoctorById(@ModelAttribute("doctor") @Valid Doctor doctor, BindingResult bindingResult,
+                                       @RequestParam("profileImage") MultipartFile multipartFile, ModelAndView modelAndView) {
+        return doctorService.editDoctor(doctor, bindingResult, multipartFile, modelAndView);
     }
 
     @DeleteMapping("/{id}")
     public String deletePatientById(@PathVariable("id") Long id) {
         doctorService.deleteDoctorById(id);
         return "redirect:/doctors/all";
-    }
-
-    @PostMapping("/search")
-    public String searchPatient(@RequestParam String search, Model model) {
-        model.addAttribute("doctors", doctorService.searchDoctorsByString(search));
-        return "/doctors/getAll";
-    }
-
-    @GetMapping("/by_speciality")
-    public String getDoctorsBySpeciality(Model model,
-                                         @ModelAttribute("appointment") Appointment appointment,
-                                         @RequestParam("speciality") String speciality) {
-        model.addAttribute("doctors", doctorService.findDoctorsBySpeciality(speciality));
-        model.addAttribute("selectedSpec", speciality);
-        return "appointments/newAppointment2";
     }
 
 }

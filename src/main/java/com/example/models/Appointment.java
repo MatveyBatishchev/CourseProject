@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -40,16 +39,22 @@ public class Appointment {
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
+    @Column(name="call_info", nullable=true)
+    String callbackInfo;
+
+    @Column(name="status", nullable = false)
+    private int status;
+
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
     public String getPatientName() {
-        return patient != null ? patient.getName() : "<none>";
+        return patient != null ? patient.getSurname() + " " + patient.getName() : callbackInfo.substring(0,callbackInfo.indexOf(" ", callbackInfo.indexOf(" ") + 1));
     }
 
-    public String getPatientEmail() {
-        return patient != null ? patient.getEmail() : "<none>";
+    public String getPatientTelephone() {
+        return patient != null ? patient.getTelephone() : callbackInfo.substring(callbackInfo.indexOf(" ", callbackInfo.indexOf(" ") + 1));
     }
 
 }

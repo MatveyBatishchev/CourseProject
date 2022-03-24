@@ -2,110 +2,132 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
-    <title>Профиль</title>
+    <title>Редактировать профиль</title>
     <div th:insert="blocks/webjars :: webjars"></div>
     <script type="text/javascript" src="/js/phoneForm.js"></script>
 </head>
 <body>
-    <header th:insert="blocks/header :: header"></header>
-    <div class="container-xl px-4 mt-3">
-        <div class="col-xl-8">
-            <div class="card mb-4">
-                <div class="card-header">Данные профиля</div>
-                <div class="card-body">
-                    <form th:method="PUT" th:action="@{/patients/{id}(id=${patient.getId()})}" th:object="${patient}" enctype="multipart/form-data">
-                        <!--Ряд показа фото-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <img class="img-fluid" width="50%" height="50%" th:if="${patient.getImage() != null && !patient.getImage().isEmpty()}" th:src="@{/usersFiles/patients/{id}/{image}(id=${patient.getId()}, image=${patient.getImage()})}">
-                            </div>
-                        </div>
-                        <!--Ряд выбора файла фото-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputImageFile">Фото профиля</label>
-                                <input class="form-control" id="inputImageFile" type="file" accept="image/png, image/jpeg, image/jpg" th:name="profileImage">
-                            </div>
-                        </div>
-                        <!--Ряд имя и фамилия-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputName">Имя</label>
-                                <input class="form-control" id="inputName" type="text" th:field="*{name}" th:value="${patient.getName()}">
-                                <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputSurname">Фамилия</label>
-                                <input class="form-control" id="inputSurname" type="text" th:field="*{surname}" th:value="${patient.getSurname()}">
-                                <div class="alert alert-warning" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></div>
-                            </div>
-                        </div>
-                        <!--Ряд дата и пол-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputBirthDate">Дата рождения</label>
-                                <input class="form-control" id="inputBirthDate" type="date" th:field="*{birthDate}" th:value="${patient.getBirthDate()}">
-                                <div class="alert alert-warning" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="sexInput">Пол</label>
-                                <select class="form-control" id="sexInput" th:field="*{sex}" th:selected="${patient.getSex()}">
-                                    <option value="0" disabled>Не выбрано</option>
-                                    <option value="1">Мужчина</option>
-                                    <option value="2">Женщина</option>
-                                </select>
-                                <div class="alert alert-warning" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}"></div>
-                            </div>
-                        </div>
-                        <!--Ряд телефон и email и спрятанный пароль-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputPhone">Телефон</label>
-                                <input class="form-control" id="inputPhone" type="tel" data-tel-input th:field="*{telephone}" th:value="${patient.getTelephone()}" required>
-                                <div class="alert alert-warning" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}"></div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputEmail">Email</label>
-                                <input class="form-control" id="inputEmail" type="email" th:value="${patient.getEmail()}" disabled>
-                            </div>
-                        </div>
-                        <!--Спрятанные поля-->
-                        <input th:field="*{password}" th:value="${patient.getPassword()}" hidden>
-                        <input th:field="*{email}" th:value="${patient.getEmail()}" hidden>
-                        <input th:field="*{image}" th:value="${patient.getImage()}" hidden>
-                        <input th:field="*{activationCode}" th:value="${patient.getActivationCode()}" hidden>
-                        <!--Ряд кнопок-->
+<header th:insert="blocks/header :: header"></header>
+<div class="container-xl px-4 mt-3">
+    <div class="col-xl-8">
+        <div class="card mb-4">
+            <div class="card-header">Данные профиля</div>
+            <div class="card-body">
+                <form th:method="PUT" th:action="@{/patients/{id}(id=${patient.getId()})}" th:object="${patient}"
+                      enctype="multipart/form-data">
+                    <!--Ряд показа фото-->
+                    <div class="row gx-3 mb-3">
                         <div class="col-md-6">
-                            <input class="btn btn-primary" type="submit" value="Подтвердить"/>
-                            <input class="btn btn-danger" form="deleteForm" type="submit" value="Удалить">
+                            <img class="img-fluid" width="50%" height="50%"
+                                 th:if="${patient.getImage() != null && !patient.getImage().isEmpty()}"
+                                 th:src="@{/applicationFiles/patients/{id}/{image}(id=${patient.getId()}, image=${patient.getImage()})}">
+                            <div th:if="${patient.getImage() == null || patient.getImage().isEmpty()}">
+                                <img class="img-fluid" width="50%" height="50%" alt="" th:if="${patient.getSex() == 1}"
+                                     th:src="@{/applicationFiles/usersFiles/manProfile.jpg}">
+                                <img class="img-fluid" width="50%" height="50%" alt="" th:if="${patient.getSex() == 2}"
+                                     th:src="@{/applicationFiles/usersFiles/womenProfile.png}">
+                            </div>
                         </div>
-                    </form>
-                <form th:method="DELETE" th:action="@{/patients/{id}(id=${patient.getId()})}" id="deleteForm"></form>
-                    <div class="container mt-5 mr-2 ml-2">
-                        <h3>Список приёмов</h3>
-                        <table class="table table-striped table-hover mt-4">
-                            <thead>
-                            <tr>
-                                <th scope="col">Дата</th>
-                                <th scope="col">Время</th>
-                                <th scope="col">Специальность</th>
-                                <th scope="col">Врач</th>
-                            </tr>
-                            </thead>
-                            <tbody th:each= "appointment : ${patient.getAppointments()}">
-                            <tr>
-                                <td th:text="${appointment.getDate() + ' ' + #dates.dayOfWeekName(appointment.getDate())}"></td>
-                                <td th:text="${appointment.getTime()}"></td>
-                                <td th:text="${#strings.setJoin(appointment.getDoctor().getSpecialities(), ', ')}"></td>
-                                <td th:text="${appointment.getDoctor().getSurname() + ' ' + appointment.getDoctor().getName() + ' ' + appointment.getDoctor().getPatronymic()}"></td>
-                            </tr>
-                            </tbody>
-                        </table>
                     </div>
+                    <!--Ряд выбора файла фото-->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="inputImageFile">Фото профиля</label>
+                            <input class="form-control" id="inputImageFile" type="file"
+                                   accept="image/png, image/jpeg, image/jpg" th:name="profileImage">
+                        </div>
+                    </div>
+                    <!--Ряд имя и фамилия-->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="inputName">Имя</label>
+                            <input class="form-control" id="inputName" type="text" th:field="*{name}"
+                                   th:value="${patient.getName()}">
+                            <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}"
+                                 th:errors="*{name}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="inputSurname">Фамилия</label>
+                            <input class="form-control" id="inputSurname" type="text" th:field="*{surname}"
+                                   th:value="${patient.getSurname()}">
+                            <div class="alert alert-warning" th:if="${#fields.hasErrors('surname')}"
+                                 th:errors="*{surname}"></div>
+                        </div>
+                    </div>
+                    <!--Ряд дата и пол-->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="inputBirthDate">Дата рождения</label>
+                            <input class="form-control" id="inputBirthDate" type="date" th:field="*{birthDate}"
+                                   th:value="${patient.getBirthDate()}">
+                            <div class="alert alert-warning" th:if="${#fields.hasErrors('birthDate')}"
+                                 th:errors="*{birthDate}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="sexInput">Пол</label>
+                            <select class="form-control" id="sexInput" th:field="*{sex}"
+                                    th:selected="${patient.getSex()}">
+                                <option value="0" disabled>Не выбрано</option>
+                                <option value="1">Мужчина</option>
+                                <option value="2">Женщина</option>
+                            </select>
+                            <div class="alert alert-warning" th:if="${#fields.hasErrors('sex')}"
+                                 th:errors="*{sex}"></div>
+                        </div>
+                    </div>
+                    <!--Ряд телефон и email и спрятанный пароль-->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="inputPhone">Телефон</label>
+                            <input class="form-control" id="inputPhone" type="tel" data-tel-input
+                                   th:field="*{telephone}" th:value="${patient.getTelephone()}" required>
+                            <div class="alert alert-warning" th:if="${#fields.hasErrors('telephone')}"
+                                 th:errors="*{telephone}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1" for="inputEmail">Email</label>
+                            <input class="form-control" id="inputEmail" type="email" th:value="${patient.getEmail()}"
+                                   disabled>
+                        </div>
+                    </div>
+                    <!--Спрятанные поля-->
+                    <input th:field="*{password}" th:value="${patient.getPassword()}" hidden>
+                    <input th:field="*{email}" th:value="${patient.getEmail()}" hidden>
+                    <input th:field="*{image}" th:value="${patient.getImage()}" hidden>
+                    <input th:field="*{activationCode}" th:value="${patient.getActivationCode()}" hidden>
+                    <input th:field="*{appointments}" th:value="${patient.getAppointments()}" hidden>
+                    <!--Ряд кнопок-->
+                    <div class="col-md-6">
+                        <input class="btn btn-primary" type="submit" value="Подтвердить"/>
+                        <input class="btn btn-danger" form="deleteForm" type="submit" value="Удалить">
+                    </div>
+                </form>
+                <form th:method="DELETE" th:action="@{/patients/{id}(id=${patient.getId()})}" id="deleteForm"></form>
+                <div class="container mt-5 mr-2 ml-2">
+                    <h3>Список приёмов</h3>
+                    <table class="table table-striped table-hover mt-4">
+                        <thead>
+                        <tr>
+                            <th scope="col">Дата</th>
+                            <th scope="col">Время</th>
+                            <th scope="col">Специальность</th>
+                            <th scope="col">Врач</th>
+                        </tr>
+                        </thead>
+                        <tbody th:each="appointment : ${patient.getAppointments()}">
+                        <tr>
+                            <td th:text="${appointment.getDate() + ' ' + #dates.dayOfWeekName(appointment.getDate())}"></td>
+                            <td th:text="${appointment.getTime()}"></td>
+                            <td th:text="${#strings.setJoin(appointment.getDoctor().getSpecialities(), ', ')}"></td>
+                            <td th:text="${appointment.getDoctor().getSurname() + ' ' + appointment.getDoctor().getName() + ' ' + appointment.getDoctor().getPatronymic()}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <footer th:insert="blocks/footer :: footer"></footer>
+</div>
+<footer th:insert="blocks/footer :: footer"></footer>
 </body>
 </html>

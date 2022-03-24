@@ -1,9 +1,10 @@
 package com.example.controllers;
 
-import com.example.models.Appointment;
 import com.example.models.Doctor;
 import com.example.models.Schedule;
 import com.example.services.ScheduleService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -39,16 +40,23 @@ public class ScheduleController {
     }
 
     @GetMapping("/new")
-    public String addNewSchedule(@ModelAttribute("schedule") Schedule schedule) {
+    public String addNewSchedule(@AuthenticationPrincipal Doctor doctor,
+                                 @ModelAttribute("schedule") Schedule schedule,
+                                 Model model) {
+        if (doctor != null) {
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("dd-MM-yyyy").create();
+            model.addAttribute("schedules", gson.toJson(doctor.getSchedules()));
+        }
         return "schedules/newSchedule";
     }
 
     @PostMapping("/new")
     public String addNewSchedule(@ModelAttribute("schedule") Schedule schedule,
                                  @AuthenticationPrincipal Doctor doctor,
+                                 @RequestParam("scheduleDate") String date,
                                  @RequestParam("startTime") String startTime,
                                  @RequestParam("endTime") String endTime) {
-        scheduleService.saveNewSchedule(schedule, startTime, endTime, doctor);
+        scheduleService.saveNewSchedule(schedule, date, startTime, endTime, doctor);
         return "redirect:/schedules/all";
     }
 
@@ -68,7 +76,7 @@ public class ScheduleController {
                                       @AuthenticationPrincipal Doctor doctor,
                                       @RequestParam("startTime") String startTime,
                                       @RequestParam("endTime") String endTime) {
-        scheduleService.saveNewSchedule(schedule, startTime, endTime, doctor);
+        //scheduleService.saveNewSchedule(schedule, startTime, endTime, doctor);
         return "redirect:/schedules/" + schedule.getId();
     }
 
@@ -77,25 +85,18 @@ public class ScheduleController {
         scheduleService.deleteScheduleById(id);
     }
 
-    @GetMapping("/getDoctorsSchedules")
-    public String getTimeOfDoctor(Model model,
-                                  @RequestParam("speciality") String speciality,
-                                  @ModelAttribute("appointment") Appointment appointment) {
-        model.addAttribute("doctor", appointment.getDoctor());
-        model.addAttribute("selectedSpec", speciality);
-        model.addAttribute("schedules", scheduleService.findSchedulesByDoctorId(appointment.getDoctor().getId()));
-        return "appointments/newAppointment3";
+    @GetMapping("/getDoctorSchedules")
+    @ResponseBody
+    public String getSchedulesOfDoctor(@RequestParam("doctorId") Long doctorId) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("dd-MM-yyyy").create();
+        return gson.toJson(scheduleService.findSchedulesByDoctorId(doctorId));
     }
 
     @GetMapping("/getTimeTables")
-    public String getTimeTablesOfSchedule(Model model,
-                                          @ModelAttribute("appointment") Appointment appointment,
-                                          @RequestParam("speciality") String speciality,
-                                          @RequestParam("schedule") Long scheduleId) {
-        model.addAttribute("selectedSpec", speciality);
-        appointment.setDate(scheduleService.findScheduleById(scheduleId).getDate());
-        model.addAttribute("timeTables", scheduleService.findScheduleById(scheduleId).getTimeTable());
-        return "appointments/newAppointment4";
+    @ResponseBody
+    public String getTimeTablesOfSchedule(@RequestParam("scheduleDate") String scheduleDate,
+                                          @RequestParam("doctorId") Long doctorId) {
+        return scheduleService.findTimeTablesOfSchedule(scheduleDate, doctorId);
     }
 
 }

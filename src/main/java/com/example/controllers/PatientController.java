@@ -3,13 +3,12 @@ package com.example.controllers;
 import com.example.models.Patient;
 import com.example.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
@@ -25,20 +24,19 @@ public class PatientController {
     }
 
     @GetMapping("/all")
-    public String getAllPatients(Model model) {
-        model.addAttribute("patients",patientService.findAllPatientsAsc());
-        return "patients/getAll";
+    public ModelAndView getAllPatients(ModelAndView modelAndView) {
+        return patientService.findAllPatients(modelAndView);
     }
 
     @GetMapping("/{id}")
-    public String getPatientById(@PathVariable("id") Long id, Model model) {
-        Patient patientById = patientService.findPatientById(id);
-        if (patientById == null) {
-            model.addAttribute("object", "Пациент");
-            return "mistakes/notFound";
-        }
-        model.addAttribute("patient", patientById);
-        return "patients/getById";
+    public ModelAndView getPatientById(@PathVariable("id") Long patientId, ModelAndView modelAndView) {
+        return patientService.findPatientById(patientId, modelAndView);
+    }
+
+    @GetMapping("/search")
+    public String getPatientBySearch(@RequestParam("search") String search, Model model) {
+        model.addAttribute("patients", patientService.findPatientBySearch(search));
+        return "/patients/getAll";
     }
 
     @GetMapping("/new")
@@ -47,58 +45,30 @@ public class PatientController {
     }
 
     @PostMapping("/new")
-    public String addNewPatient(@ModelAttribute("patient") @Valid Patient patient,
-                                BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) return "main/registration";
-
-        if (patientService.findPatientByEmail(patient.getEmail()) != null) {
-            model.addAttribute("emailMessage", "Пользователь с таким email уже существует!");
-            return "main/registration";
-        }
-
-        patientService.savePatient(patient);
-        model.addAttribute("email", patient.getEmail());
-        return "main/login";
+    public ModelAndView addNewPatient(@ModelAttribute("patient") @Valid Patient patient,
+                                BindingResult bindingResult, ModelAndView modelAndView) {
+        return patientService.saveNewPatient(patient, bindingResult, modelAndView);
     }
 
     @GetMapping("/{id}/edit")
-    public String editPatientById( @PathVariable("id") Long id, Model model) {
-        Patient patientById = patientService.findPatientById(id);
-        if (patientById == null) {
-            model.addAttribute("object", "Пациент");
-            return "mistakes/notFound";
-        }
-        model.addAttribute("patient", patientById);
-        return "patients/editById";
+    public ModelAndView editPatientById( @PathVariable("id") Long patientId, ModelAndView modelAndView) {
+        return patientService.findPatientByIdForEdit(patientId, modelAndView);
     }
 
     @PutMapping("/{id}")
-    public String editPatientById(@ModelAttribute("patient") @Valid Patient patient, BindingResult bindingResult,
-                                  @RequestParam("profileImage") MultipartFile multipartFile) {
-        if (bindingResult.hasErrors()) return "/patients/editById";
-        if (multipartFile.isEmpty()) patientService.editPatient(patient);
-        else patientService.editPatientWithFile(patient, multipartFile);
-        return "redirect:/patients/" + patient.getId();
+    public ModelAndView editPatientById(@ModelAttribute("patient") @Valid Patient patient, BindingResult bindingResult,
+                                  @RequestParam("profileImage") MultipartFile multipartFile, ModelAndView modelAndView) {
+        return patientService.editPatient(patient, bindingResult, multipartFile, modelAndView);
     }
 
     @DeleteMapping("/{id}")
-    public String deletePatientById(@PathVariable("id") Long id) {
-        patientService.deletePatientById(id);
-        return "redirect:/patients/all";
-    }
-
-    @PostMapping("/search")
-    public String searchPatient(@RequestParam String search, Model model) {
-        model.addAttribute("patients", patientService.searchPatientByString(search));
-        return "/patients/getAll";
+    public ModelAndView deletePatientById(@PathVariable("id") Long patientId, ModelAndView modelAndView) {
+        return patientService.deletePatientById(patientId, modelAndView);
     }
 
     @GetMapping("/activate/{code}")
-    public String activatePatientAccount(@PathVariable("code") String code, Model model) {
-        boolean isActivated = patientService.activateUser(code);
-        if (isActivated) model.addAttribute("activationMessage", "Email успешно подтверждён!");
-        else model.addAttribute("activationMessage", "Код активации не был найден!");
-        return "main/activationCode";
+    public ModelAndView activatePatientAccount(@PathVariable("code") String code, ModelAndView modelAndView) {
+        return patientService.activatePatient(code, modelAndView);
     }
 
     @PostMapping("/confirmEmail/{id}")

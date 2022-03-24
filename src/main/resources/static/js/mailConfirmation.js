@@ -5,12 +5,13 @@ function startTimer(duration, display) {
     var timer = duration, minutes, seconds;
 
     $("#confirmPatientEmail").prop("disabled", true);
-    if (timer == 30) {
-    display.textContent = "Для повторной отправки ожидайте: 00:30";
-    $("#timer").prop("hidden", false);
-    timer--; }
+    if (timer == 120) {
+        display.textContent = "Для повторной отправки ожидайте: 02:00";
+        $("#timer").prop("hidden", false);
+        timer--;
+    }
 
-    let intervalId = setInterval(function() {
+    let intervalId = setInterval(function () {
         minutes = parseInt(timer / 60, 10); // определяем начальное кол-во минут
         seconds = parseInt(timer % 60, 10); // определяем начальное кол-во секунд
 
@@ -38,8 +39,7 @@ function checkTimer(confirmationMarker) {
     var seconds_data = getCookie("seconds");
     if (!minutes_data || !seconds_data || confirmationMarker) { // если нет куки не запускаем таймер
         // no cookie found use default
-    }
-    else {
+    } else {
         var timer_amount = parseInt(minutes_data * 60) + parseInt(seconds_data)
         var fiveMinutes = timer_amount, display = document.querySelector('#timer');
         startTimer(fiveMinutes, display);
@@ -49,10 +49,10 @@ function checkTimer(confirmationMarker) {
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
-    for(var i=0; i<ca.length; i++) {
+    for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+        while (c.charAt(0) == ' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
     }
     return "";
 }

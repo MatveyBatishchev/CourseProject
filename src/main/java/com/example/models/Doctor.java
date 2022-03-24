@@ -1,10 +1,13 @@
 package com.example.models;
 
-import lombok.*;
+import com.google.gson.annotations.Expose;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -32,21 +35,25 @@ public class Doctor implements User {
                     @Parameter(name = "increment_size", value = "1")
             }
     )
+    @Expose
     private Long id;
 
     @Column(name="name",nullable=false)
     @Size(min=2, max=30, message = "Имя должно быть от 2-х до 30 букв")
     @NotBlank(message = "Это поле является обязательным")
+    @Expose
     private String name;
 
     @Column(name="surname",nullable=false)
     @Size(min=2, max=30, message = "Фамилия должно быть от 2-х до 30 букв")
     @NotBlank(message = "Это поле является обязательным")
+    @Expose
     private String surname;
 
     @Column(name="patronymic",nullable=false)
     @Size(min=2, max=30, message = "Отчество должно быть от 2-х до 30 букв")
     @NotBlank(message = "Это поле является обязательным")
+    @Expose
     private String patronymic;
 
     @Column(name="email", nullable=false)
@@ -56,10 +63,12 @@ public class Doctor implements User {
 
     @Column(name="experience",nullable=false)
     @Min(value=1, message="Недопустимое значение")
+    @Expose
     private int experience;
 
     @Column(name="category",nullable=false)
     @NotBlank(message = "Это поле является обязательным")
+    @Expose
     private String category;
 
     @Column(name="about_doctor",nullable=false)
@@ -75,6 +84,7 @@ public class Doctor implements User {
     private String workPlaces;
 
     @Column(name="image",nullable=true)
+    @Expose
     private String image;
 
     @Column(name="password",nullable=false)
@@ -85,7 +95,7 @@ public class Doctor implements User {
 
     @OneToMany(
             mappedBy = "doctor",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.PERSIST,
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
@@ -93,7 +103,7 @@ public class Doctor implements User {
 
     @OneToMany(
             mappedBy = "doctor",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.PERSIST,
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )

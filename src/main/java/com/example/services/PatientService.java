@@ -11,7 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.*;
 
@@ -20,7 +22,7 @@ public class PatientService implements UserDetailsService {
 
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
-    private MailSender mailSender;
+    private final MailSender mailSender;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -34,63 +36,39 @@ public class PatientService implements UserDetailsService {
         this.mailSender = mailSender;
     }
 
-    public void savePatient(Patient patient) {
-        patient.setActive(true);
-        patient.setRoles(Collections.singleton(Role.USER));
-        patient.setActivationCode(UUID.randomUUID().toString());
-        patientRepository.save(patient);
-        //sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
+    public ModelAndView findAllPatients(ModelAndView modelAndView) {
+        modelAndView.addObject("patients",patientRepository.findByOrderByIdAsc());
+        modelAndView.setViewName("patients/getAll");
+        return modelAndView;
     }
 
-    public void editPatient(Patient patient) {
-        patient.setActive(true);
-        patient.setRoles(Collections.singleton(Role.USER));
-        if (patient.getActivationCode().isBlank()) patient.setActivationCode(null);
-        patientRepository.save(patient);;
-    }
-
-    public void editPatientWithFile(Patient patient, MultipartFile multipartFile) {
-        if (!multipartFile.isEmpty()) {
-            try {
-                String uploadDir = uploadPath + "/patients/" + patient.getId();
-                String fileName = UUID.randomUUID().toString() + "." + multipartFile.getContentType().substring(6);
-                patient.setImage(fileName);
-                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-            } catch (Exception e) {
-                System.out.println("Ошибка в сохранении файла!");
-            }
+    public ModelAndView findPatientById(Long patientId, ModelAndView modelAndView) {
+        Patient patientById = patientRepository.findById(patientId).orElse(null);
+        if (patientById == null) {
+            modelAndView.addObject("object", "Пациент");
+            modelAndView.setViewName("mistakes/notFound");
         }
-        patient.setActive(true);
-        patient.setRoles(Collections.singleton(Role.USER));
-        if (patient.getActivationCode().isBlank()) patient.setActivationCode(null);
-        patientRepository.save(patient);
-    }
-
-    public List<Patient> findAllPatientsAsc() {
-        return patientRepository.findByOrderByIdAsc();
-    }
-
-    public Patient findPatientByEmail(String email) {
-        return patientRepository.findByEmail(email);
-    }
-
-    public Patient findPatientById(Long id) {
-        Optional<Patient> patientById = patientRepository.findById(id);
-        return patientById.isPresent()? patientById.get() : null;
-    }
-
-    public void deletePatientById(Long id) {
-        try {
-            Patient patient = patientRepository.findById(id).isPresent() ? patientRepository.findById(id).get() : null;
-            String patientDir = uploadPath + "patients/" + patient.getId();
-            FileUploadUtil.deleteDirectory(patientDir);
-        } catch (Exception e) {
-            System.out.println("Ошибка в удалении файла пациента!");
+        else {
+            modelAndView.addObject("patient", patientById);
+            modelAndView.setViewName("patients/getById");
         }
-        patientRepository.deleteById(id);
+        return modelAndView;
     }
 
-    public HashSet<Patient> searchPatientByString(String search) {
+    public ModelAndView findPatientByIdForEdit(Long patientId, ModelAndView modelAndView) {
+        Patient patientById = patientRepository.findById(patientId).orElse(null);
+        if (patientById == null) {
+            modelAndView.addObject("object", "Пациент");
+            modelAndView.setViewName("mistakes/notFound");
+        }
+        else {
+            modelAndView.addObject("patient", patientById);
+            modelAndView.setViewName("patients/editById");
+        }
+        return modelAndView;
+    }
+
+    public HashSet<Patient> findPatientBySearch(String search) {
         List<Patient> patientsList = new ArrayList<>();
         if (search != null && !search.isEmpty()) {
             for (String s : search.split(" ")) {
@@ -101,10 +79,93 @@ public class PatientService implements UserDetailsService {
         return new HashSet<>(patientsList);
     }
 
+    public ModelAndView saveNewPatient(Patient patient, BindingResult bindingResult, ModelAndView modelAndView) {
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("main/registration");
+        }
+        else {
+            if (patientRepository.findByEmail(patient.getEmail()) != null) {
+                modelAndView.addObject("emailMessage", "Пользователь с таким email уже существует!");
+                modelAndView.setViewName("main/registration");
+            }
+            else {
+                savePatientWithEmail(patient);
+                modelAndView.addObject("email", patient.getEmail());
+                modelAndView.setViewName("main/login");
+            }
+        }
+        return modelAndView;
+    }
+
+    public void savePatientWithEmail(Patient patient) {
+        patient.setActive(true);
+        patient.setRoles(Collections.singleton(Role.USER));
+        patient.setActivationCode(UUID.randomUUID().toString());
+        patientRepository.save(patient);
+        sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
+    }
+
+    public void savePatient(Patient patient) {
+        patient.setActive(true);
+        patient.setRoles(Collections.singleton(Role.USER));
+        if (patient.getActivationCode().isBlank()) patient.setActivationCode(null);
+        patientRepository.save(patient);
+    }
+
+    public void savePatientFile(Patient patient, MultipartFile multipartFile) {
+        try {
+            String uploadDir = uploadPath + "/patients/" + patient.getId();
+            String fileName = UUID.randomUUID() + "." + Objects.requireNonNull(multipartFile.getContentType()).substring(6);
+            patient.setImage(fileName);
+            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        } catch (Exception e) {
+            System.out.println("Ошибка в сохранении файла!");
+        }
+    }
+
+    public ModelAndView editPatient(Patient patient, BindingResult bindingResult, MultipartFile multipartFile, ModelAndView modelAndView) {
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("/patients/editById");
+        }
+        else {
+            if (!multipartFile.isEmpty()) savePatientFile(patient, multipartFile);
+            savePatient(patient);
+            modelAndView.setViewName("redirect:/patients/" + patient.getId());
+        }
+        return modelAndView;
+    }
+
+    public ModelAndView deletePatientById(Long id, ModelAndView modelAndView) {
+        try {
+            Patient patient = patientRepository.findById(id).orElse(null);
+            if (patient != null) {
+                String patientDir = uploadPath + "patients/" + patient.getId();
+                FileUploadUtil.deleteDirectory(patientDir);
+            }
+        } catch (Exception e) {
+            System.out.println("Ошибка в удалении файла пациента!");
+        }
+        patientRepository.deleteById(id);
+        modelAndView.setViewName("redirect:/patients/all");
+        return modelAndView;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         if (patientRepository.findByEmail(email) == null) return doctorRepository.findByEmail(email);
         else return patientRepository.findByEmail(email);
+    }
+
+    public ModelAndView activatePatient(String code, ModelAndView modelAndView) {
+        Patient patient = patientRepository.findByActivationCode(code);
+        if (patient == null) modelAndView.addObject("activationMessage", "Код активации не был найден!");
+        else {
+            modelAndView.addObject("activationMessage", "Email успешно подтверждён!");
+            patient.setActivationCode(null);
+            patientRepository.save(patient);
+        }
+        modelAndView.setViewName("main/activationCode");
+        return modelAndView;
     }
 
     public void sendConfirmationEmail(String patientEmail, String patientName, String activationCode) {
@@ -117,16 +178,5 @@ public class PatientService implements UserDetailsService {
             );
             mailSender.send(patientEmail,"Подтвердите электронную почту", message);
         }
-    }
-
-    public boolean activateUser(String code) {
-        Patient patient = patientRepository.findByActivationCode(code);
-
-        if (patient == null) return false;
-
-        patient.setActivationCode(null);
-        patientRepository.save(patient);
-
-        return true;
     }
 }

@@ -1,12 +1,13 @@
 package com.example.models;
 
 import com.example.validation.ValidPassword;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -77,11 +78,6 @@ public class Patient implements User {
     @Column(name="active", nullable=false)
     private boolean active;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "patient_role", joinColumns = @JoinColumn(name = "patient_id")) // описывает, что данное поле будет храниться в отдельной таблице, для кторой мы не описывали mapping
-    @Enumerated(EnumType.STRING)
-    private Set<Role> roles;
-
     @OneToMany(
             mappedBy = "patient",
             cascade = CascadeType.ALL,
@@ -89,6 +85,11 @@ public class Patient implements User {
             fetch = FetchType.EAGER
     )
     private Set<Appointment> appointments = new HashSet<>();
+
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "patient_role", joinColumns = @JoinColumn(name = "patient_id")) // описывает, что данное поле будет храниться в отдельной таблице, для кторой мы не описывали mapping
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles;
 
     public String getProfileLink() {
         return "patients/" + getId();
