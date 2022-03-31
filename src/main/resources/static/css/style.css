@@ -60,6 +60,10 @@ body {
     border-radius: 10rem ;
 }
 
+input {
+    text-align: center;
+}
+
 /*disabled*/
 select:disabled {
     -webkit-appearance: none;

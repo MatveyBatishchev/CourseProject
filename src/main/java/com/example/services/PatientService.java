@@ -102,7 +102,7 @@ public class PatientService implements UserDetailsService {
         patient.setRoles(Collections.singleton(Role.USER));
         patient.setActivationCode(UUID.randomUUID().toString());
         patientRepository.save(patient);
-        sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
+        //sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
     }
 
     public void savePatient(Patient patient) {
@@ -125,6 +125,7 @@ public class PatientService implements UserDetailsService {
 
     public ModelAndView editPatient(Patient patient, BindingResult bindingResult, MultipartFile multipartFile, ModelAndView modelAndView) {
         if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult);
             modelAndView.setViewName("/patients/editById");
         }
         else {
@@ -135,7 +136,7 @@ public class PatientService implements UserDetailsService {
         return modelAndView;
     }
 
-    public ModelAndView deletePatientById(Long id, ModelAndView modelAndView) {
+    public void deletePatientById(Long id) {
         try {
             Patient patient = patientRepository.findById(id).orElse(null);
             if (patient != null) {
@@ -146,8 +147,6 @@ public class PatientService implements UserDetailsService {
             System.out.println("Ошибка в удалении файла пациента!");
         }
         patientRepository.deleteById(id);
-        modelAndView.setViewName("redirect:/patients/all");
-        return modelAndView;
     }
 
     @Override
@@ -166,6 +165,19 @@ public class PatientService implements UserDetailsService {
         }
         modelAndView.setViewName("main/activationCode");
         return modelAndView;
+    }
+
+    public void sendDeleteConfirmationMail(String patientEmail, String confirmationCode) {
+        if (!patientEmail.isEmpty()) {
+            String message = String.format(
+                    "Здравствуйте, с вашего аккаунта был отправлен запрос на удаление. \n" +
+                            "Никому не сообщайте код подтверждения! Если не вы отправляли запрос, обратитесь по телефону клиники. \n" +
+                            "Код подтверждения удаления аккаунта: %s \n" +
+                            "С уважением команда RecoveryMed❤",
+                    confirmationCode
+            );
+            mailSender.send(patientEmail,"Код для удаления аккаунта", message);
+        }
     }
 
     public void sendConfirmationEmail(String patientEmail, String patientName, String activationCode) {

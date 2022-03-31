@@ -58,12 +58,15 @@ public class PatientController {
     @PutMapping("/{id}")
     public ModelAndView editPatientById(@ModelAttribute("patient") @Valid Patient patient, BindingResult bindingResult,
                                   @RequestParam("profileImage") MultipartFile multipartFile, ModelAndView modelAndView) {
+        System.out.println("Are we working??");
         return patientService.editPatient(patient, bindingResult, multipartFile, modelAndView);
     }
 
     @DeleteMapping("/{id}")
-    public ModelAndView deletePatientById(@PathVariable("id") Long patientId, ModelAndView modelAndView) {
-        return patientService.deletePatientById(patientId, modelAndView);
+    @ResponseBody
+    public String deletePatientById(@PathVariable("id") Long patientId) {
+        patientService.deletePatientById(patientId);
+        return "Успешно!\n Аккаунт был удалён!";
     }
 
     @GetMapping("/activate/{code}")
@@ -75,7 +78,14 @@ public class PatientController {
     @ResponseBody
     public String confirmPatientEmail(@PathVariable("id") Patient patient) {
         patientService.sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
-        return "Успешно!\n Письмо с подтверждением было отправлено вам на почту!";
+        return "Успешно!\n Письмо с подтверждением было отправлено на почту!";
     }
 
+    @PostMapping("/sendDeleteCode")
+    @ResponseBody
+    public String sendDeleteConfirmationMail(@RequestParam("patientEmail") String patientEmail,
+                                           @RequestParam("confirmationCode") String confirmationCode) {
+        patientService.sendDeleteConfirmationMail(patientEmail, confirmationCode);
+        return "Успешно!\n Письмо с кодом подтверждения удаления аккаунта было отправлено на почту!";
+    }
 }
