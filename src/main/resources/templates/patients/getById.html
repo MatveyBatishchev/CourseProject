@@ -5,7 +5,6 @@
     <title>Профиль</title>
     <div th:insert="blocks/webjars :: webjars"></div>
     <link rel="stylesheet" th:href="@{/css/profileStyle.css}">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
     <script type="text/javascript" th:src="@{/js/phoneForm.js}"></script>
     <script type="text/javascript" th:src="@{/js/mailConfirmation.js}"></script>
 </head>
@@ -44,13 +43,16 @@
         <div class="leftC col-md-5">
             <h3 class="top mt-4">Профиль</h3>
             <!--Фото профиля-->
-            <img class="mainPhoto" height="50%" width="50%" alt="" th:if="${patient.getImage() != null && !patient.getImage().isEmpty()}"
-                 th:src="@{/applicationFiles/patients/{id}/{image}(id=${patient.getId()}, image=${patient.getImage()})}">
-            <div th:if="${patient.getImage() == null || patient.getImage().isEmpty()}">
-                <img class="mainPhoto" width="50%" height="50%" alt="" th:if="${patient.getSex() == 1}"
-                     th:src="@{/applicationFiles/usersFiles/manProfile.jpg}">
-                <img class="mainPhoto" width="50%" height="50%" alt="" th:if="${patient.getSex() == 2}"
-                     th:src="@{/applicationFiles/usersFiles/womenProfile.png}">
+            <div class="photoFrame">
+                    <img class="mainPhotoInput"
+                         th:if="${patient.getImage() != null && !patient.getImage().isEmpty()}"
+                         th:src="@{/applicationFiles/patients/{id}/{image}(id=${patient.getId()}, image=${patient.getImage()})}">
+                    <div th:if="${patient.getImage() == null || patient.getImage().isEmpty()}">
+                        <img class="mainPhotoInput" th:if="${patient.getSex() == 1}"
+                             th:src="@{/applicationFiles/usersFiles/manProfile.jpg}">
+                        <img class="mainPhotoInput" th:if="${patient.getSex() == 2}"
+                             th:src="@{/applicationFiles/usersFiles/womenProfile.png}">
+                    </div>
             </div>
             <!--Данные пользователя-->
             <div class="container headlines">
@@ -81,10 +83,10 @@
                     <div class="col-5"></div>
                     <div class="col-1"></div>
                     <!--Подтверждена-->
-                    <h5 class="col-5 buttonFont confirmationMessage" id="confirmationMessage"
+                    <h5 class="col-5 buttonFont aStyleText" id="confirmationMessage"
                         th:if="${patient.getActivationCode() == null}">Почта подтверждена</h5>
                     <!--Не Подтверждена-->
-                    <button class="btn col-5 btn-link buttonFont" type="button"
+                    <button class="btn col-5 btn-link buttonFont aStyleButton" type="button"
                             id="confirmPatientEmail" th:if="${patient.getActivationCode() != null}">Подтвердить почту</button>
                 </div>
                 <!--Ряд уведомления о подтверждении почты-->
@@ -105,17 +107,30 @@
                 <div class="d-flex justify-content-center align-items-center">
                     <a class="btn btn-primary button mt-5 mb-3 px-4" role="button" th:href="@{/patients/{id}/edit(id=${patient.getId()})}">Редактировать</a>
                 </div>
-                <!--В редактировании-->
-                <!--<div><a class="buttonFont" href="">Изменить пароль</a></div>-->
-                <!--<div class="mt-5 pt-2"> <a href="">Удалить аккаунт</a></div>-->
             </div>
+        </div>
+        <!--Разделитель-->
+        <div class="col-1">
+            <div class="greenLine"></div>
         </div>
         <!--Приёмы-->
         <div class="rightC col">
             <h3 class="mt-4 top">Мои Приёмы</h3>
             <div class="overflow-auto" style=" max-height: 550px; overflow: auto">
+                <!--Нет приемов -->
+                <div class="doctorBody mt-4" style="width: 520px" th:if="${patient.getAppointments().size() == 0}"><!--Центрируем данные-->
+                    <!--Плажка зеленая-->
+                    <div class="greenDoctorHeader d-flex align-items-center justify-content-center"></div>
+                    <div class="container-fluid d-flex align-items-center justify-content-center mt-3" style=" margin-left: auto;">
+                        <div>
+                            <h4 class="themes">У вас еще нет приемов</h4>
+                            <h5 class="headlines"> Запишитесь к нашим специалистам</h5>
+                            <i class="las la-heartbeat la-4x" style="color:#243528 "></i>
+                        </div>
+                    </div>
+                </div>
                 <!--Список карточек-->
-                <ul>
+                <ul th:if="${patient.getAppointments().size() != 0}">
                     <li th:each= "appointment : ${patient.getAppointments()}">
                         <!--Карточка-->
                         <div class="doctorBody mt-4">
@@ -143,14 +158,14 @@
                                     <!--Дата, время, кабинет-->
                                     <div class="col-8 row gx-1 headlines">
                                         <div class="col text-start mx-2">
-                                            <h5>Дата:</h5> <span th:text="${appointment.getDate() + ' ' + #dates.dayOfWeekName(appointment.getDate())}"></span>
+                                            <h5>Дата:</h5> <span class="spanStyle" th:text="${appointment.getDate() + ' ' + #dates.dayOfWeekName(appointment.getDate())}"></span>
                                         </div>
                                         <div class="col-1"></div>
                                         <div class="col text-start">
-                                            <h5>Время:</h5><span class="p-1" th:text="${appointment.getTime()}"></span>
+                                            <h5>Время:</h5><span class="p-1 spanStyle" th:text="${appointment.getTime()}"></span>
                                         </div>
                                         <div class="col text-start">
-                                            <h5>Кабинет:</h5><span class="p-1" th:text="${'210 каб'}"></span>
+                                            <h5>Кабинет:</h5><span class="p-1 spanStyle" th:text="${'210 каб'}"></span>
                                         </div>
                                     </div>
                                     <!--Подробнее кнопка-->
@@ -167,8 +182,6 @@
         </div>
     </div>
 </div>
-<!--Разделительная линия-->
-<div class="greenLine"></div>
 <footer th:insert="blocks/footer :: footer"></footer>
 </body>
 </html>

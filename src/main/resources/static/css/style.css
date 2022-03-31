@@ -59,11 +59,9 @@ body {
     background: #4d5d51;
     border-radius: 10rem ;
 }
-
-input {
+input{
     text-align: center;
 }
-
 /*disabled*/
 select:disabled {
     -webkit-appearance: none;
@@ -81,19 +79,44 @@ input:disabled {
 /*disabled*/
 /*changing webkits*/
 
-/*Hedare footer*/
+/*Header footer*/
 .header{
-    height: 110px;
-    background: #1F4326;
+    height: 80px;
+    background: #243528;
 }
-.footer{
-    /*margin-top: 15em;*/
+.mainLabel {
+    font-family: 'FFormular';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 28px;
+    color: white;
+}
+.nav-link{
+    margin-left: 1.4rem;
+    color: white;
+}
+.nav-link:hover{
+    color: white;
+}
+.nav-link::after{
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: white;
+    transform: scale(0);
+    transition: all.5s;
+}
+.nav-link:hover:after{
+    transform: scale(1);
+}
+
+.footer {
     width: 100%;
     height: 8rem;
 
     background: #243528;
 }
-/*Hedare footer*/
 
 /*Modal*/
 .modalBack{
@@ -108,7 +131,10 @@ input:disabled {
     outline: 0;
 }
 .messageAlert{
-    border-radius: 5px 5px 15px 15px;
+    margin-top: 15px;
+    background: #FFDE7C;
+    padding: 10px;
+    border-radius: 10px;
     text-align: center;
 }
 /*Modal*/
@@ -122,7 +148,7 @@ input:disabled {
 }
 @font-face {
     font-family: 'FFormular-Light';
-    src: url('static/fonts/Formular-Light.eot');
+    src: url('../fonts/Formular-Light.eot');
     src: local('☺'), url('../fonts/Formular-Light.woff') format('woff'), url('../fonts/Formular-Light.ttf') format('truetype');
 
 }
@@ -145,15 +171,10 @@ input:disabled {
     font-family: 'FFormular';
     font-style: normal;
     font-weight: 300;
-    font-size: 24px;
-    line-height: 29px;
+    font-size: 19px;
+    line-height: 19px;
 }
-span{
-    font-weight: 600;
-    color: #DD9919;
-}
-
-.confirmationMessage{
+.spanStyle{
     font-weight: 600;
     color: #DD9919;
 }
@@ -197,7 +218,30 @@ select{
     text-align: center;
     color: black;
 }
-a{
+/*a{*/
+/*    color: #DD9919;*/
+/*    box-sizing: border-box;*/
+/*    font-family: 'GGeometria';*/
+/*    font-style: normal;*/
+/*    font-weight: 400;*/
+/*    font-size: 18px;*/
+/*    line-height: 23px;*/
+/*    text-decoration: underline;*/
+/*    text-decoration-style: solid*/
+/*}*/
+
+.aStyleText{
+    color: #DD9919;
+    box-sizing: border-box;
+    font-family: 'GGeometria';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 23px;
+    text-decoration-style: solid
+}
+
+.aStyleButton{
     color: #DD9919;
     box-sizing: border-box;
     font-family: 'GGeometria';
@@ -208,4 +252,20 @@ a{
     text-decoration: underline;
     text-decoration-style: solid
 }
-/*common*/
+
+.mutedButton {
+    font-family: 'Geometria';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 23px;
+    cursor: pointer;
+    color: #9c9b9b;
+    transform: scale(0);
+    transition: all.5s;
+}
+
+.mutedButton:hover {
+    text-decoration: underline;
+    color: #9c9b9b;
+}

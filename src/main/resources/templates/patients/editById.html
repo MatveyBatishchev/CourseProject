@@ -5,10 +5,10 @@
     <title>Редактировать профиль</title>
     <div th:insert="blocks/webjars :: webjars"></div>
     <link rel="stylesheet" th:href="@{/css/profileStyle.css}">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
     <script type="text/javascript" th:src="@{/js/phoneForm.js}"></script>
     <script type="text/javascript" th:src="@{/js/deleteConfirmation.js}"></script>
     <script type="text/javascript" th:src="@{/js/newPasswordModals.js}"></script>
+    <script type="text/javascript" th:src="@{/js/photoPreview.js}"></script>
 </head>
 <body>
 <header th:insert="blocks/header :: header"></header>
@@ -16,58 +16,78 @@
     <div class="row">
         <!--Профиль-->
         <div class="leftC col-md-5">
-                <form th:method="PUT" th:action="@{/patients/{id}(id=${patient.getId()})}" th:object="${patient}" enctype="multipart/form-data">
+            <form th:method="PUT" th:action="@{/patients/{id}(id=${patient.getId()})}" th:object="${patient}"
+                  enctype="multipart/form-data">
                 <h3 class="top mt-4">Профиль</h3>
-                <!--Показ фото профиля-->
-                <img class="mainPhoto" height="50%" width="50%" alt="" th:if="${patient.getImage() != null && !patient.getImage().isEmpty()}"
-                     th:src="@{/applicationFiles/patients/{id}/{image}(id=${patient.getId()}, image=${patient.getImage()})}">
-                <div th:if="${patient.getImage() == null || patient.getImage().isEmpty()}">
-                    <img class="mainPhoto" width="50%" height="50%" alt="" th:if="${patient.getSex() == 1}"
-                         th:src="@{/applicationFiles/usersFiles/manProfile.jpg}">
-                    <img class="mainPhoto" width="50%" height="50%" alt="" th:if="${patient.getSex() == 2}"
-                         th:src="@{/applicationFiles/usersFiles/womenProfile.png}">
-                </div>
-                <!--Выбор фото профиля-->
-                <div class="row gx-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="inputImageFile">Фото профиля</label>
-                        <input class="form-control" id="inputImageFile" type="file"
-                               accept="image/png, image/jpeg, image/jpg" th:name="profileImage">
-                    </div>
+                <!--Фото профиля-->
+                <div>
+                    <label for="file-input" class="photoFrame">
+                        <img class="mainPhotoInput" id="profileImage"
+                             th:if="${patient.getImage() != null && !patient.getImage().isEmpty()}"
+                             th:src="@{/applicationFiles/patients/{id}/{image}(id=${patient.getId()}, image=${patient.getImage()})}">
+                        <div th:if="${patient.getImage() == null || patient.getImage().isEmpty()}">
+                            <img class="mainPhotoInput" th:if="${patient.getSex() == 1}"
+                                 th:src="@{/applicationFiles/usersFiles/manProfile.jpg}">
+                            <img class="mainPhotoInput" th:if="${patient.getSex() == 2}"
+                                 th:src="@{/applicationFiles/usersFiles/womenProfile.png}">
+                        </div>
+                        <!--Icon-->
+                        <div class="iconInput">
+                            <i class="las la-portrait la-5x"></i>
+                        </div>
+                    </label>
+                    <input id="file-input" type="file" style="display: none;"
+                           accept="image/png, image/jpeg, image/jpg" th:name="profileImage"/>
                 </div>
                 <!--Данные пользователя-->
                 <div class="container headlines">
                     <!--Ряд имени и фамилии-->
                     <div class="row d-flex justify-content-center mt-1">
-                        <input class="attrBlock col-5" id="inputName" type="text" th:field="*{name}" th:value="${patient.getName()}">
+                        <input class="attrBlock col-5" id="inputName" type="text" th:field="*{name}"
+                               th:value="${patient.getName()}">
                         <div class="col-1"></div>
-                        <input class="attrBlock col-5" id="inputSurname" type="text" th:field="*{surname}" th:value="${patient.getSurname()}">
+                        <input class="attrBlock col-5" id="inputSurname" type="text" th:field="*{surname}"
+                               th:value="${patient.getSurname()}">
+                    </div>
+                    <div class="row d-flex justify-content-center mt-1" th:if="${#fields.hasErrors('name') || #fields.hasErrors('surname')}">
+                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        <div class="col-1"></div>
+                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></div>
                     </div>
                     <!--Ряд пола и даты пождения-->
                     <div class="row d-flex justify-content-center mt-4">
-                        <select class="col-5 attrBlock" id="sexInput" th:field="*{sex}" th:selected="${patient.getSex()}">
+                        <select class="col-5 attrBlock" id="sexInput" th:field="*{sex}"
+                                th:selected="${patient.getSex()}">
                             <option value="0" disabled>Не выбрано</option>
                             <option value="1">Мужчина</option>
                             <option value="2">Женщина</option>
                         </select>
                         <div class="col-1"></div>
-                        <input class="col-5 attrBlock" id="inputBirthday" type="date" th:field="*{birthDate}" th:value="${patient.getBirthDate()}">
+                        <input class="col-5 attrBlock" id="inputBirthday" type="date" th:field="*{birthDate}"
+                               th:value="${patient.getBirthDate()}">
+                    </div>
+                    <div class="row d-flex justify-content-center mt-1" th:if="${#fields.hasErrors('sex') || #fields.hasErrors('birthDate')}">
+                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}"></div>
+                        <div class="col-1"></div>
+                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></div>
                     </div>
                     <!--Ряд телефона и email-а-->
                     <div class="row d-flex justify-content-center mt-4">
-                        <input class="col-5 attrBlock" data-tel-input type="tel" id="inputPhone" th:field="*{telephone}" th:value="${patient.getTelephone()}">
+                        <input class="col-5 attrBlock" data-tel-input type="tel" id="inputPhone" th:field="*{telephone}"
+                               th:value="${patient.getTelephone()}">
                         <div class="col-1"></div>
-                        <input class="col-5 attrBlock" id="inputEmail" type="email" th:value="${patient.getEmail()}">
+                        <input class="col-5 attrBlock" id="inputEmail" type="email" th:value="${patient.getEmail()}" disabled>
                     </div>
                     <!--Ряд подтверждения почты-->
                     <div class="row d-flex justify-content-center">
-                        <div class="col-5"></div>
+                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}"></div>
+                        <div class="col-5" th:unless="${#fields.hasErrors('telephone')}"></div>
                         <div class="col-1"></div>
                         <!--Подтверждена-->
-                        <h5 class="col-5 buttonFont confirmationMessage"
+                        <h5 class="col-5 buttonFont aStyleText"
                             th:if="${patient.getActivationCode() == null}">Почта подтверждена</h5>
                         <!--Не Подтверждена-->
-                        <h5 class="btn col-5 btn-link buttonFont"
+                        <h5 class="btn col-5 btn-link buttonFont aStyleButton"
                             th:if="${patient.getActivationCode() != null}">Подтвердить почту</h5>
                     </div>
                     <!--Спрятанные поля-->
@@ -81,7 +101,7 @@
                     </div>
                 </div>
                 <!--Кнопка-->
-                <div class="">
+                <div class="mt-4">
                     <!--Подтвердить-->
                     <div class="d-flex justify-content-center align-items-center">
                         <input class="btn btn-primary button mt-5 mb-3 px-4" type="submit"
@@ -89,27 +109,44 @@
                     </div>
                     <!--Изменить пароль-->
                     <div class="mt-5 pt-2">
-                        <a class="text-muted" id="changePasswordButton" type="button" data-bs-toggle="modal" data-bs-target="#checkPasswordModal">
+                        <a class="mutedButton" id="changePasswordButton" data-bs-toggle="modal"
+                           data-bs-target="#checkPasswordModal">
                             Изменить пароль
                         </a>
                     </div>
                     <!--Удалить аккаунт-->
                     <div class="mt-1 pt-2">
-                        <a class="text-muted" id="deleteButton" type="button" data-bs-toggle="modal"
+                        <a class="mutedButton" id="deleteButton" data-bs-toggle="modal"
                            data-bs-target="#warningDeleteModal">
                             Удалить аккаунт
                         </a>
                     </div>
                 </div>
-                </form>
-            </div>
+            </form>
+        </div>
+        <!--Разделитель-->
+        <div class="col-1">
+            <div class="greenLine"></div>
+        </div>
         <!--Приёмы-->
         <div class="rightC col" aria-disabled="true">
             <h3 class="mt-4 top">Мои Приёмы</h3>
             <div class="overflow-auto" style=" max-height: 550px; overflow: auto">
-                <!--Список карточек-->
-                <ul>
-                    <li th:each= "appointment : ${patient.getAppointments()}">
+                <!--Нет приемов -->
+                <div class="doctorBody mt-4" style="width: 520px" th:if="${patient.getAppointments().size() == 0}"><!--Центрируем данные-->
+                    <!--Плажка зеленая-->
+                    <div class="greenDoctorHeader d-flex align-items-center justify-content-center"></div>
+                    <div class="container-fluid d-flex align-items-center justify-content-center mt-3" style=" margin-left: auto;">
+                        <div>
+                            <h4 class="themes">У вас еще нет приемов</h4>
+                            <h5 class="headlines"> Запишитесь к нашим специалистам</h5>
+                            <i class="las la-heartbeat la-4x" style="color:#243528 "></i>
+                        </div>
+                    </div>
+                </div>
+                <!--Список приёмов-->
+                <ul th:if="${patient.getAppointments().size() != 0}">
+                    <li th:each="appointment : ${patient.getAppointments()}">
                         <!--Карточка-->
                         <div class="doctorBody mt-4">
                             <!--Плажка зеленая-->
@@ -119,13 +156,14 @@
                                 <div class="row mt-2">
                                     <!--Фото-->
                                     <div class="col-2">
-                                        <img class="doctorPhoto float-start"  alt=""
+                                        <img class="doctorPhoto float-start" alt=""
                                              th:src="@{/applicationFiles/doctors/{id}/{image}(id=${appointment.getDoctor().getId()}, image=${appointment.getDoctor().getImage()})}">
                                     </div>
                                     <!--Личные данные-->
                                     <div class="col text-start">
                                         <!--ФИО-->
-                                        <h4 class="themes" th:text="${appointment.getDoctor().getSurname() + ' ' + appointment.getDoctor().getName() + ' ' + appointment.getDoctor().getPatronymic()}"></h4>
+                                        <h4 class="themes"
+                                            th:text="${appointment.getDoctor().getSurname() + ' ' + appointment.getDoctor().getName() + ' ' + appointment.getDoctor().getPatronymic()}"></h4>
                                         <!--Описание специалиста-->
                                         <h5 class="headlines"
                                             th:text="${#strings.setJoin(appointment.getDoctor().getSpecialities(), ', ') + ', ' + appointment.getDoctor().getCategory() + ', Стаж ' + appointment.getDoctor().getExperience()}"></h5>
@@ -136,14 +174,14 @@
                                     <!--Дата, время, кабинет-->
                                     <div class="col-8 row gx-1 headlines">
                                         <div class="col text-start mx-2">
-                                            <h5>Дата:</h5> <span th:text="${appointment.getDate() + ' ' + #dates.dayOfWeekName(appointment.getDate())}"></span>
+                                            <h5>Дата:</h5> <span class="spanStyle" th:text="${appointment.getDate() + ' ' + #dates.dayOfWeekName(appointment.getDate())}"></span>
                                         </div>
                                         <div class="col-1"></div>
                                         <div class="col text-start">
-                                            <h5>Время:</h5><span class="p-1" th:text="${appointment.getTime()}"></span>
+                                            <h5>Время:</h5><span class="p-1 spanStyle" th:text="${appointment.getTime()}"></span>
                                         </div>
                                         <div class="col text-start">
-                                            <h5>Кабинет:</h5><span class="p-1" th:text="${'210 каб'}"></span>
+                                            <h5>Кабинет:</h5><span class="p-1 spanStyle" th:text="${'210 каб'}"></span>
                                         </div>
                                     </div>
                                     <!--Подробнее кнопка-->
@@ -161,14 +199,12 @@
     </div>
 </div>
 
-<!--Разделительная линия-->
-<div class="greenLine"></div>
-
 <!--Модальные окна-->
-<div class="container" >
+<div class="container">
 
     <!-- Окно удаления -->
-    <div class="modal fade" id="warningDeleteModal" tabindex="-1" role="dialog" aria-labelledby="warningDeleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="warningDeleteModal" tabindex="-1" role="dialog"
+         aria-labelledby="warningDeleteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -183,19 +219,23 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    <button type="button" id="warningDeleteButton" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Подтвердить</button>
+                    <button type="button" id="warningDeleteButton" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#confirmDeleteModal">Подтвердить
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Окно подтверждения удаления -->
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
+         aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmDeleteModalLabel">Удаление аккаунта</h5>
-                    <button type="button" id="closeSecondModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" id="closeSecondModal" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="modalBody">
                     <p>
@@ -210,7 +250,8 @@
                         <input name='code' class='code-input form-control squareInput' required/>
                         <input name='code' class='code-input form-control squareInput' required/>
                         <input name='code' class='code-input form-control squareInput' required/>
-                        <br><div id="incorrectCode"></div>
+                        <br>
+                        <div id="incorrectCode"></div>
                     </form>
                 </div>
                 <div class="modal-footer" id="modalFooter">
@@ -222,7 +263,8 @@
     </div>
 
     <!-- Окно ввода текущего пароля -->
-    <div class="modal fade" id="checkPasswordModal" tabindex="-1" role="dialog" aria-labelledby="checkPasswordModalLabel"
+    <div class="modal fade" id="checkPasswordModal" tabindex="-1" role="dialog"
+         aria-labelledby="checkPasswordModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -233,7 +275,8 @@
                 <div class="modal-body">
                     <p>Введите свой текущий пароль:</p>
                     <div class="input-group mb-3">
-                        <input class="form-control border-end-0 inputPasswordClass" type="password" id="checkActualPassword"
+                        <input class="form-control border-end-0 inputPasswordClass" type="password"
+                               id="checkActualPassword"
                                value="" aria-describedby="basic-addon1">
                         <div class="input-group-addon">
                         <span class="input-group-text rounded-start-0 textarea-addon" id="basic-addon1">
@@ -252,7 +295,8 @@
     </div>
 
     <!-- Окно вода нового пароля -->
-    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel"
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog"
+         aria-labelledby="changePasswordModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -276,7 +320,8 @@
                     <span id="passwordMessage"></span>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                        <button type="button" class="btn btn-primary" id="submitChangePassword" disabled>Подтвердить</button>
+                        <button type="button" class="btn btn-primary" id="submitChangePassword" disabled>Подтвердить
+                        </button>
                     </div>
                 </div>
             </div>

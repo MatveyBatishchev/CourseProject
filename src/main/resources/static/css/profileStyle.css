@@ -1,10 +1,14 @@
 .leftC{
     /*background: yellow;*/
+
     text-align: center;
+    position: center;
+    height: 100%;
 }
 
 .rightC{
     /*background: blue;*/
+    margin-right: 100px;
     text-align: center;
 }
 
@@ -24,24 +28,10 @@
     align-items: center;
 }
 
-.mainPhoto{
-    /*min-width: 10rem;*/
-    /*min-height: 10rem;*/
-    max-width: 12rem;
-    max-height: 12rem;
-    object-fit: cover;
-    object-position: center;
-
-    background: #FFFFFF;
-    border: 1px solid #000000;
-    border-radius: 50%;
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
 
 .doctorBody{
     position: center;
-    min-width: 615px;
+    /*min-width: 615px;*/
     max-width: 630px;
     min-height: 180px;
 
@@ -71,13 +61,60 @@
 }
 
 .greenLine{
-    position: absolute;
-    width: 0.25rem;
-    height: 40rem;
-    left: 47%;
-    top: 8.625rem;
+    margin-top: 1rem;
+    width: 0.2rem;
+    height: 100%;
+    margin-right: 10rem;
+    margin-left: 2rem;
+    /*top: 8.625rem;*/
 
     background: #5A7861;
+}
+
+/*Photo change*/
+.photoFrame{
+    position: relative;
+    height: 12rem;
+    width: 12rem;
+
+    background: transparent;
+    border: 1px solid #000000;
+    border-radius: 50%;
+    margin: 15px auto;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.mainPhotoInput{
+    background: transparent;
+    /*position: absolute;*/
+    object-fit: cover;
+    max-width: 12.5rem;
+    max-height: 12.5rem;
+    object-position: center;
+}
+
+.iconInput{
+    color: black;
+    background: rgb(221, 221, 221);
+
+    height: 50%;
+    width: 50%;
+    border-radius: 50%;
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.iconInput:hover{
+    opacity: 1;
 }
 
 .squareInput {

@@ -61,5 +61,4 @@ $(document).ready(function () {
         $("#changePasswordModalBody").html('<p>Новый пароль будет успешно установлен при подтверждении редактирования</p>')
     });
 
-
 });
