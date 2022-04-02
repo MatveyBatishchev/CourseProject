@@ -5,6 +5,7 @@ import com.example.models.Patient;
 import com.example.models.Role;
 import com.example.repo.DoctorRepository;
 import com.example.repo.PatientRepository;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -150,8 +151,11 @@ public class PatientService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        if (patientRepository.findByEmail(email) == null) return doctorRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String email) {
+        if (patientRepository.findByEmail(email) == null) {
+            if (doctorRepository.findByEmail(email) == null) throw new UsernameNotFoundException("User was not found!");
+            else return doctorRepository.findByEmail(email);
+        }
         else return patientRepository.findByEmail(email);
     }
 
@@ -190,5 +194,9 @@ public class PatientService implements UserDetailsService {
             );
             mailSender.send(patientEmail,"Подтвердите электронную почту", message);
         }
+    }
+
+    public String checkIfPatientExists(String email) {
+        return new Gson().toJson(patientRepository.existsByEmail(email));
     }
 }

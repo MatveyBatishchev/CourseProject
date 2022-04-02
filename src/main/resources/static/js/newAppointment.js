@@ -46,6 +46,7 @@ $(document).ready(function () {
                     enableDays.push(schedule.date.toString());
                 });
                 $("#inputSchedule").datepicker("destroy");
+                $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
                 $('#inputSchedule').datepicker({
                     dateFormat: 'dd-mm-yy',
                     minDate: 0,

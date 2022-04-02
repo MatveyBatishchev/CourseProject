@@ -218,17 +218,6 @@ select{
     text-align: center;
     color: black;
 }
-/*a{*/
-/*    color: #DD9919;*/
-/*    box-sizing: border-box;*/
-/*    font-family: 'GGeometria';*/
-/*    font-style: normal;*/
-/*    font-weight: 400;*/
-/*    font-size: 18px;*/
-/*    line-height: 23px;*/
-/*    text-decoration: underline;*/
-/*    text-decoration-style: solid*/
-/*}*/
 
 .aStyleText{
     color: #DD9919;
@@ -253,6 +242,7 @@ select{
     text-decoration-style: solid
 }
 
+/*Delete Account, Change password*/
 .mutedButton {
     font-family: 'Geometria';
     font-style: normal;
@@ -268,4 +258,22 @@ select{
 .mutedButton:hover {
     text-decoration: underline;
     color: #9c9b9b;
+}
+
+/*Password input addon*/
+.textarea-addon {
+    border-bottom-left-radius: 0 !important;
+    background-color: #FFFFFF;
+    border-top-left-radius: 0 !important;
+}
+
+/*Кнопка закрытия alert-a*/
+.alert-dismissible .btn-close {
+    padding: 1.1rem 1rem;
+}
+
+/*Bootstrap modal*/
+.modal-backdrop {
+    width: 100% !important;
+    height: 100% !important;
 }

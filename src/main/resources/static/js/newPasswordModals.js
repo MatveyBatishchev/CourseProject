@@ -9,15 +9,6 @@ $(document).ready(function () {
         keyboard: true
     });
 
-    // показ и скрытие пороля
-    const togglePassword = $(".togglePasswordClass").on("click", function () {
-        $(".inputPasswordClass").each(function () {
-            const type = $(this).prop("type") === "password" ? "text" : "password";
-            $(this).prop("type", type);
-            togglePassword.toggleClass("bi-eye");
-        })
-    });
-
     const inputPassword = $('#inputPassword');
     const inputConfirmPassword = $('#inputConfirmPassword');
     const passwordMessage = $('#passwordMessage');

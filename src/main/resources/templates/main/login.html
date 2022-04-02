@@ -1,45 +1,102 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-  <title>Войти</title>
-  <div th:insert="blocks/webjars :: webjars"></div>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <title>Войти</title>
+    <div th:insert="blocks/webjars :: webjars"></div>
+    <script type="text/javascript" th:src="@{/js/showHidePassword.js}"></script>
+    <script type="text/javascript" th:src="@{/js/resetPassword.js}"></script>
 </head>
+<script>
+    $(document).ready(function() {
+        $('#resetPasswordModal').modal({
+            backdrop: 'static',
+            keyboard: true
+        });
+    });
+</script>
 <body>
+
 <header th:replace="blocks/header :: header"></header>
+
 <div class="container mt-5">
-  <h1>Войти</h1>
-  <div class="card mb-4">
-    <div th:if="${param.error}">
-      Недопустимое значение email или пароля!
-    </div>
-    <div th:if="${param.logout}">
-      You have been logged out.
-    </div>
-    <div class="card-body">
-      <form method="POST" th:action="@{/login}">
-        <!--Ряд email-->
-        <div class="row gx-3 mb-3">
-          <div class="col-md-6">
-            <label class="small mb-1" for="inputEmail">Email</label>
-            <input class="form-control" id="inputEmail" type="text" th:name="username" th:value="${email}">
-          </div>
+    <h1>Войти</h1>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div th:if="${param.error}">
+                <div class="mt-2 alert alert-danger alert-dismissible fade show" role="alert">
+                    Неверное значение логина или пароля!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            <div th:if="${param.logout}">
+                <div class="mt-2 alert alert-success alert-dismissible fade show" role="alert">
+                    Вы успешно вышли из аккаунта!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            <form method="POST" th:action="@{/login}">
+                <!--Ряд email-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="inputEmail">Email</label>
+                        <input class="form-control" id="inputEmail" type="text" th:name="username" th:value="${email}">
+                    </div>
+                </div>
+                <!--Ряд пароля-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="inputPassword">Пароль</label>
+                        <div class="input-group mb-3">
+                            <input class="form-control border-end-0 inputPasswordClass" type="password" id="inputPassword" value="" th:name="password" aria-describedby="basic-addon1">
+                            <div class="input-group-addon">
+                              <span class="input-group-text rounded-start-0 textarea-addon" id="basic-addon1">
+                                  <i class="bi bi-eye-slash togglePasswordClass"></i>
+                              </span>
+                            </div>
+                        </div>
+                        <a class="text-muted" type="button" data-bs-toggle="modal"
+                           data-bs-target="#resetPasswordModal">Забыли пароль?</a>
+                        <br>
+                    </div>
+                </div>
+                <button class="btn btn-primary" type="submit">Войти</button>
+                <br><br>
+            </form>
+            <p>Нет аккаунта,
+                <a href="/patients/new">Зарегистрируйтесь</a>
+            </p>
         </div>
-        <!--Ряд пароля-->
-        <div class="row gx-3 mb-3">
-          <div class="col-md-6">
-            <label class="small mb-1" for="inputPassword">Пароль</label>
-            <input class="form-control" id="inputPassword" type="password" th:name="password">
-          </div>
-        </div>
-        <button class="btn btn-primary" type="submit">Войти</button><br><br>
-      </form>
-      <p>Нет аккаунта,
-        <a href="/patients/new">Зарегистрируйтесь</a>
-      </p>
     </div>
-  </div>
 </div>
+
+<!--Модальные окна-->
+<div>
+    <!--Окно запроса на восстановление пароля-->
+    <div class="modal fade" id="resetPasswordModal" tabindex="-1" role="dialog"
+         aria-labelledby="resetModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resetModalLabel">Восстановление пароля</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="resetPasswordModalBody">
+                    <p>Мы отправим вам электронное сообщение с инструкциями для сброса пароля.</p>
+                    <p>Введите ваш email, привязанный к аккаунту RecoveryMed:</p>
+                    <input class="form-control" id="resetPasswordEmail" placeholder="name@example.com" type="text">
+                    <div id="errorPlaceholder"></div>
+                </div>
+                <div class="modal-footer" id="resetPasswordModalFooter">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" id="submitResetPassword">Подтвердить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer th:insert="blocks/footer :: footer"></footer>
 </body>
 </html>

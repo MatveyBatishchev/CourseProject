@@ -9,9 +9,34 @@
     <script type="text/javascript" th:src="@{/js/deleteConfirmation.js}"></script>
     <script type="text/javascript" th:src="@{/js/newPasswordModals.js}"></script>
     <script type="text/javascript" th:src="@{/js/photoPreview.js}"></script>
+    <script type="text/javascript" th:src="@{/js/showHidePassword.js}"></script>
 </head>
+<script>
+    $(document).ready(function () {
+        var birthDate = $("#inputBirthDate");
+        $.datepicker.setDefaults($.datepicker.regional["ru"]);
+        birthDate.datepicker(
+            {
+                maxDate: "31-12-2008",
+                showAnim: 'slideDown',
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true,
+                onSelect: function () {
+                    var date = birthDate.datepicker('getDate');
+                    var month = date.getMonth() + 1;
+                    month = month.toString().length == 1 ? '0' + month : month;
+                    var day = date.getDate().toString().length == 1 ? '0' + date.getDate() : date.getDate();
+                    $("#hiddenBirthDate").val(date.getFullYear() + "-" + month + "-" + day)
+                }
+            }
+        );
+    });
+</script>
 <body>
+
 <header th:insert="blocks/header :: header"></header>
+
 <div class="container-fluid" style="padding-left: 85px">
     <div class="row">
         <!--Профиль-->
@@ -49,10 +74,12 @@
                         <input class="attrBlock col-5" id="inputSurname" type="text" th:field="*{surname}"
                                th:value="${patient.getSurname()}">
                     </div>
-                    <div class="row d-flex justify-content-center mt-1" th:if="${#fields.hasErrors('name') || #fields.hasErrors('surname')}">
+                    <div class="row d-flex justify-content-center mt-1"
+                         th:if="${#fields.hasErrors('name') || #fields.hasErrors('surname')}">
                         <div class="col-5 messageAlert" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                         <div class="col-1"></div>
-                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></div>
+                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('surname')}"
+                             th:errors="*{surname}"></div>
                     </div>
                     <!--Ряд пола и даты пождения-->
                     <div class="row d-flex justify-content-center mt-4">
@@ -63,24 +90,28 @@
                             <option value="2">Женщина</option>
                         </select>
                         <div class="col-1"></div>
-                        <input class="col-5 attrBlock" id="inputBirthday" type="date" th:field="*{birthDate}"
-                               th:value="${patient.getBirthDate()}">
+                        <input class="col-5 attrBlock" id="inputBirthDate" type="text"
+                               th:value="${T(org.apache.commons.lang3.time.DateFormatUtils).format(patient.getBirthDate(), 'dd-MM-yyyy')}">
                     </div>
-                    <div class="row d-flex justify-content-center mt-1" th:if="${#fields.hasErrors('sex') || #fields.hasErrors('birthDate')}">
+                    <div class="row d-flex justify-content-center mt-1"
+                         th:if="${#fields.hasErrors('sex') || #fields.hasErrors('birthDate')}">
                         <div class="col-5 messageAlert" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}"></div>
                         <div class="col-1"></div>
-                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></div>
+                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('birthDate')}"
+                             th:errors="*{birthDate}"></div>
                     </div>
                     <!--Ряд телефона и email-а-->
                     <div class="row d-flex justify-content-center mt-4">
                         <input class="col-5 attrBlock" data-tel-input type="tel" id="inputPhone" th:field="*{telephone}"
                                th:value="${patient.getTelephone()}">
                         <div class="col-1"></div>
-                        <input class="col-5 attrBlock" id="inputEmail" type="email" th:value="${patient.getEmail()}" disabled>
+                        <input class="col-5 attrBlock" id="inputEmail" type="email" th:value="${patient.getEmail()}"
+                               disabled>
                     </div>
                     <!--Ряд подтверждения почты-->
                     <div class="row d-flex justify-content-center">
-                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}"></div>
+                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('telephone')}"
+                             th:errors="*{telephone}"></div>
                         <div class="col-5" th:unless="${#fields.hasErrors('telephone')}"></div>
                         <div class="col-1"></div>
                         <!--Подтверждена-->
@@ -94,6 +125,7 @@
                     <div>
                         <input id="inputId" th:value="${patient.getId()}" hidden>
                         <input id="hiddenPassword" th:field="*{password}" th:value="${patient.getPassword()}" hidden>
+                        <input id="hiddenBirthDate" type="date" th:field="*{birthDate}" hidden>
                         <input th:field="*{email}" th:value="${patient.getEmail()}" hidden>
                         <input th:field="*{image}" th:value="${patient.getImage()}" hidden>
                         <input th:field="*{activationCode}" th:value="${patient.getActivationCode()}" hidden>
@@ -133,10 +165,12 @@
             <h3 class="mt-4 top">Мои Приёмы</h3>
             <div class="overflow-auto" style=" max-height: 550px; overflow: auto">
                 <!--Нет приемов -->
-                <div class="doctorBody mt-4" style="width: 520px" th:if="${patient.getAppointments().size() == 0}"><!--Центрируем данные-->
+                <div class="doctorBody mt-4" style="width: 520px" th:if="${patient.getAppointments().size() == 0}">
+                    <!--Центрируем данные-->
                     <!--Плажка зеленая-->
                     <div class="greenDoctorHeader d-flex align-items-center justify-content-center"></div>
-                    <div class="container-fluid d-flex align-items-center justify-content-center mt-3" style=" margin-left: auto;">
+                    <div class="container-fluid d-flex align-items-center justify-content-center mt-3"
+                         style=" margin-left: auto;">
                         <div>
                             <h4 class="themes">У вас еще нет приемов</h4>
                             <h5 class="headlines"> Запишитесь к нашим специалистам</h5>
@@ -174,11 +208,13 @@
                                     <!--Дата, время, кабинет-->
                                     <div class="col-8 row gx-1 headlines">
                                         <div class="col text-start mx-2">
-                                            <h5>Дата:</h5> <span class="spanStyle" th:text="${appointment.getDate() + ' ' + #dates.dayOfWeekName(appointment.getDate())}"></span>
+                                            <h5>Дата:</h5> <span class="spanStyle"
+                                                                 th:text="${appointment.getDate() + ' ' + #dates.dayOfWeekName(appointment.getDate())}"></span>
                                         </div>
                                         <div class="col-1"></div>
                                         <div class="col text-start">
-                                            <h5>Время:</h5><span class="p-1 spanStyle" th:text="${appointment.getTime()}"></span>
+                                            <h5>Время:</h5><span class="p-1 spanStyle"
+                                                                 th:text="${appointment.getTime()}"></span>
                                         </div>
                                         <div class="col text-start">
                                             <h5>Кабинет:</h5><span class="p-1 spanStyle" th:text="${'210 каб'}"></span>
@@ -201,7 +237,6 @@
 
 <!--Модальные окна-->
 <div class="container">
-
     <!-- Окно удаления -->
     <div class="modal fade" id="warningDeleteModal" tabindex="-1" role="dialog"
          aria-labelledby="warningDeleteModalLabel" aria-hidden="true">
@@ -226,7 +261,6 @@
             </div>
         </div>
     </div>
-
     <!-- Окно подтверждения удаления -->
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
          aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
@@ -261,7 +295,6 @@
             </div>
         </div>
     </div>
-
     <!-- Окно ввода текущего пароля -->
     <div class="modal fade" id="checkPasswordModal" tabindex="-1" role="dialog"
          aria-labelledby="checkPasswordModalLabel"
@@ -293,8 +326,7 @@
             </div>
         </div>
     </div>
-
-    <!-- Окно вода нового пароля -->
+    <!-- Окно ввода нового пароля -->
     <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog"
          aria-labelledby="changePasswordModalLabel"
          aria-hidden="true">
@@ -327,10 +359,10 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <footer th:insert="blocks/footer :: footer"></footer>
+
 </body>
 
 </html>

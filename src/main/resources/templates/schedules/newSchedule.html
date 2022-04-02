@@ -10,11 +10,13 @@
   $(document).ready(function () {
     let disabledDays = [];
     let schedules = /*[[${schedules}]]*/ 'default';
-    console.log(JSON.parse(schedules));
-    JSON.parse(schedules).forEach(schedule => {
+    if (JSON.parse(schedules) != null) {
+    JSON.parse(schedules).each(schedule => {
       disabledDays.push(schedule.date);
-    });
+    }); }
 
+    //$.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
+    console.log($("#datepicker"));
     $("#datepicker").datepicker({
       dateFormat: 'dd-mm-yy',
       minDate: 0,

@@ -1,97 +1,113 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <title>Регистрация</title>
     <div th:insert="blocks/webjars :: webjars"></div>
     <script type="text/javascript" th:src="@{/js/phoneForm.js}"></script>
     <script type="text/javascript" th:src="@{/js/passwordMatch.js}"></script>
+    <script type="text/javascript" th:src="@{/js/showHidePassword.js}"></script>
 </head>
 <body>
-    <header th:replace="blocks/header :: header"></header>
-    <div class="container mt-5">
-        <div class="card mb-4">
-            <div class="card-header">Регистрация</div>
-            <div class="card-body">
-                <form th:method="POST" th:action="@{/patients/new}" th:object="${patient}">
-                    <!--Ошибка существующего email-a-->
-                    <div class="alert alert-danger" role="alert" th:if="${emailMessage != null}" th:text="${emailMessage}"></div>
-                    <!--Ряд имени-->
-                    <div class="row gx-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="small mb-1" for="nameInput">Имя</label>
-                            <input class="form-control" id="nameInput" type="text" th:field="*{name}" required>
-                        </div>
-                        <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+<header th:replace="blocks/header :: header"></header>
+<div class="container mt-5">
+    <div class="card mb-4">
+        <div class="card-header">Регистрация</div>
+        <div class="card-body">
+            <form th:method="POST" th:action="@{/patients/new}" th:object="${patient}">
+                <!--Ошибка существующего email-a-->
+                <div class="alert alert-danger" role="alert" th:if="${emailMessage != null}"
+                     th:text="${emailMessage}"></div>
+                <!--Ряд имени-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="nameInput">Имя</label>
+                        <input class="form-control" id="nameInput" type="text" th:field="*{name}" required>
                     </div>
-                    <!--Ряд фамилии-->
-                    <div class="row gx-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="small mb-1" for="surnameInput">Фамилия</label>
-                            <input class="form-control" id="surnameInput" type="text" th:field="*{surname}" required>
-                        </div>
-                        <div class="alert alert-warning" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></div>
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
+                <!--Ряд фамилии-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="surnameInput">Фамилия</label>
+                        <input class="form-control" id="surnameInput" type="text" th:field="*{surname}" required>
                     </div>
-                    <!--Ряд даты-->
-                    <div class="row gx-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="small mb-1" for="dateInput">Дата рождения</label>
-                            <input class="form-control" id="dateInput" type="date" th:field="*{birthDate}" required>
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('surname')}"
+                         th:errors="*{surname}"></div>
+                </div>
+                <!--Ряд даты-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="dateInput">Дата рождения</label>
+                        <input class="form-control" id="dateInput" type="date" th:field="*{birthDate}" required>
+                    </div>
+                </div>
+                <!--Ряд пола-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="sexInput">Пол</label>
+                        <select class="form-control" id="sexInput" th:field="*{sex}" required>
+                            <option value="0" disabled>Не выбрано</option>
+                            <option value="1">Мужчина</option>
+                            <option value="2">Женщина</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}"></div>
+                </div>
+                <!--Ряд почты-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="emailInput">Email</label>
+                        <input class="form-control" id="emailInput" type="text" th:field="*{email}" required>
+                    </div>
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
+                <!--Ряд телефона-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="telephoneInput">Телефон</label>
+                        <input class="form-control" id="telephoneInput" type="tel" data-tel-input
+                               th:field="*{telephone}" required>
+                    </div>
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('telephone')}"
+                         th:errors="*{telephone}"></div>
+                </div>
+                <!--Ряд пароля-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="passwordInput">Пароль</label>
+                        <div class="input-group mb-3">
+                            <input class="form-control border-end-0 inputPasswordClass" type="password"
+                                   id="passwordInput" th:field="*{password}"
+                                   value="" aria-describedby="basic-addon1" required>
+                            <div class="input-group-addon">
+                                <span class="input-group-text rounded-start-0 textarea-addon" id="basic-addon1">
+                                    <i class="bi bi-eye-slash togglePasswordClass"></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <!--Ряд пола-->
-                    <div class="row gx-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="small mb-1" for="sexInput">Пол</label>
-                            <select class="form-control" id="sexInput" th:field="*{sex}" required>
-                                <option value="0" disabled>Не выбрано</option>
-                                <option value="1">Мужчина</option>
-                                <option value="2">Женщина</option>
-                            </select>
-                        </div>
-                        <div class="alert alert-warning" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}"></div>
+                    <ul class="alert alert-warning" th:each="error: ${#fields.errors('password')}">
+                        <li th:each="message : ${error.split(',')}">
+                            <p class="error-message" th:text="${message}"></p>
+                        </li>
+                    </ul>
+                </div>
+                <!--Ряд подтверждения пароля-->
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="confirmPasswordInput">Пароль</label>
+                        <input class="form-control inputPasswordClass" id="confirmPasswordInput" type="password" value="" onkeyup='check();'
+                               required>
+                        <span id='passwordMessage'></span>
                     </div>
-                    <!--Ряд почты-->
-                    <div class="row gx-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="small mb-1" for="emailInput">Email</label>
-                            <input class="form-control" id="emailInput" type="text" th:field="*{email}" required>
-                        </div>
-                        <div class="alert alert-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-                    </div>
-                    <!--Ряд телефона-->
-                    <div class="row gx-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="small mb-1" for="telephoneInput">Телефон</label>
-                            <input class="form-control" id="telephoneInput" type="tel" data-tel-input th:field="*{telephone}" required>
-                        </div>
-                        <div class="alert alert-warning" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}"></div>
-                    </div>
-                    <!--Ряд пароля-->
-                    <div class="row gx-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="small mb-1" for="passwordInput">Пароль</label>
-                            <input class="form-control" id="passwordInput" type="password" th:field="*{password}" required>
-                        </div>
-                        <ul class="alert alert-warning" th:each="error: ${#fields.errors('password')}">
-                            <li th:each="message : ${error.split(',')}">
-                                <p class="error-message" th:text="${message}"></p>
-                            </li>
-                        </ul>
-                    </div>
-                    <!--Ряд подтверждения пароля-->
-                    <div class="row gx-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="small mb-1" for="confirmPasswordInput">Пароль</label>
-                            <input class="form-control" id="confirmPasswordInput" type="password" onkeyup='check();' required>
-                            <span id='passwordMessage'></span>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" id="regSubmit" type="submit">Зарегистрироваться</button><br><br>
-                </form>
-            </div>
+                </div>
+                <button class="btn btn-primary" id="regSubmit" type="submit">Зарегистрироваться</button>
+                <br><br>
+            </form>
         </div>
     </div>
-    <footer th:insert="blocks/footer :: footer"></footer>
+</div>
+<footer th:insert="blocks/footer :: footer"></footer>
 </body>
 </html>

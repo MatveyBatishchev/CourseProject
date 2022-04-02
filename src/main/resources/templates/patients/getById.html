@@ -23,6 +23,11 @@
             }); // AJAX
 
         });
+
+        $("#inputBirthday").datepicker( {
+            dateFormat: 'yy-mm-dd',
+            defaultDate: $("#inputBirthday").val()
+        });
     });
 
     function setCookie(cname, cvalue, exdays) {
@@ -62,7 +67,7 @@
                     <div class="col-1"></div>
                     <input class="attrBlock col-5" id="inputSurname" type="text" th:value="${patient.getSurname()}" disabled>
                 </div>
-                <!--Ряд пола и даты пождения-->
+                <!--Ряд пола и даты рождения-->
                 <div class="row d-flex justify-content-center mt-4">
                     <select class="col-5 attrBlock" id="sexInput" disabled>
                         <option disabled>Не выбрано</option>
@@ -70,7 +75,7 @@
                         <option th:selected="${patient.getSex()==2}">Женщина</option>
                     </select>
                     <div class="col-1"></div>
-                    <input class="col-5 attrBlock" id="inputBirthday" type="date" th:value="${patient.getBirthDate()}" disabled>
+                    <input class="col-5 attrBlock" id="inputBirthday" th:value="${T(org.apache.commons.lang3.time.DateFormatUtils).format(patient.getBirthDate(), 'dd-MM-yyyy')}" disabled>
                 </div>
                 <!--Ряд телефона и email-а-->
                 <div class="row d-flex justify-content-center mt-4">

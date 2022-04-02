@@ -81,11 +81,25 @@ public class PatientController {
         return "Успешно!\n Письмо с подтверждением было отправлено на почту!";
     }
 
+    @PostMapping("/passwordEmail")
+    @ResponseBody
+    public String sendResetPasswordEmail(@RequestParam("resetEmail") String resetEmail) {
+        return "Письмо для восстановления пароля было успешно отправлено вам на почту!";
+    }
+
+    @GetMapping
+
     @PostMapping("/sendDeleteCode")
     @ResponseBody
     public String sendDeleteConfirmationMail(@RequestParam("patientEmail") String patientEmail,
                                            @RequestParam("confirmationCode") String confirmationCode) {
         patientService.sendDeleteConfirmationMail(patientEmail, confirmationCode);
         return "Успешно!\n Письмо с кодом подтверждения удаления аккаунта было отправлено на почту!";
+    }
+
+    @GetMapping("/findPatient")
+    @ResponseBody
+    public String checkPatientExist(@RequestParam("resetEmail") String resetEmail) {
+        return patientService.checkIfPatientExists(resetEmail);
     }
 }
