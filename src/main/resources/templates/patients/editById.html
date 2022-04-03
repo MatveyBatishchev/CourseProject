@@ -5,236 +5,245 @@
     <title>Редактировать профиль</title>
     <div th:insert="blocks/webjars :: webjars"></div>
     <link rel="stylesheet" th:href="@{/css/profileStyle.css}">
+    <link rel="stylesheet" th:href="@{/css/datepickerStyle.css}">
     <script type="text/javascript" th:src="@{/js/phoneForm.js}"></script>
     <script type="text/javascript" th:src="@{/js/deleteConfirmation.js}"></script>
     <script type="text/javascript" th:src="@{/js/newPasswordModals.js}"></script>
     <script type="text/javascript" th:src="@{/js/photoPreview.js}"></script>
+    <script type="text/javascript" th:src="@{/js/passwordMatch.js}"></script>
     <script type="text/javascript" th:src="@{/js/showHidePassword.js}"></script>
+    <script type="text/javascript" th:src="@{/js/setDatepicker.js}"></script>
 </head>
 <script>
-    $(document).ready(function () {
-        var birthDate = $("#inputBirthDate");
-        $.datepicker.setDefaults($.datepicker.regional["ru"]);
-        birthDate.datepicker(
-            {
-                maxDate: "31-12-2008",
-                showAnim: 'slideDown',
-                dateFormat: 'dd-mm-yy',
-                changeMonth: true,
-                changeYear: true,
-                onSelect: function () {
-                    var date = birthDate.datepicker('getDate');
-                    var month = date.getMonth() + 1;
-                    month = month.toString().length == 1 ? '0' + month : month;
-                    var day = date.getDate().toString().length == 1 ? '0' + date.getDate() : date.getDate();
-                    $("#hiddenBirthDate").val(date.getFullYear() + "-" + month + "-" + day)
-                }
-            }
-        );
+    $(document).ready(function() {
+        setDatepicker($("#inputBirthDate"));
     });
 </script>
 <body>
+<div class="wrapper">
+    <div class="content">
+        <header th:insert="blocks/header :: header"></header>
 
-<header th:insert="blocks/header :: header"></header>
-
-<div class="container-fluid" style="padding-left: 85px">
-    <div class="row">
-        <!--Профиль-->
-        <div class="leftC col-md-5">
-            <form th:method="PUT" th:action="@{/patients/{id}(id=${patient.getId()})}" th:object="${patient}"
-                  enctype="multipart/form-data">
-                <h3 class="top mt-4">Профиль</h3>
-                <!--Фото профиля-->
-                <div>
-                    <label for="file-input" class="photoFrame">
-                        <img class="mainPhotoInput" id="profileImage"
-                             th:if="${patient.getImage() != null && !patient.getImage().isEmpty()}"
-                             th:src="@{/applicationFiles/patients/{id}/{image}(id=${patient.getId()}, image=${patient.getImage()})}">
-                        <div th:if="${patient.getImage() == null || patient.getImage().isEmpty()}">
-                            <img class="mainPhotoInput" th:if="${patient.getSex() == 1}"
-                                 th:src="@{/applicationFiles/usersFiles/manProfile.jpg}">
-                            <img class="mainPhotoInput" th:if="${patient.getSex() == 2}"
-                                 th:src="@{/applicationFiles/usersFiles/womenProfile.png}">
-                        </div>
-                        <!--Icon-->
-                        <div class="iconInput">
-                            <i class="las la-portrait la-5x"></i>
-                        </div>
-                    </label>
-                    <input id="file-input" type="file" style="display: none;"
-                           accept="image/png, image/jpeg, image/jpg" th:name="profileImage"/>
-                </div>
-                <!--Данные пользователя-->
-                <div class="container headlines">
-                    <!--Ряд имени и фамилии-->
-                    <div class="row d-flex justify-content-center mt-1">
-                        <input class="attrBlock col-5" id="inputName" type="text" th:field="*{name}"
-                               th:value="${patient.getName()}">
-                        <div class="col-1"></div>
-                        <input class="attrBlock col-5" id="inputSurname" type="text" th:field="*{surname}"
-                               th:value="${patient.getSurname()}">
-                    </div>
-                    <div class="row d-flex justify-content-center mt-1"
-                         th:if="${#fields.hasErrors('name') || #fields.hasErrors('surname')}">
-                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-                        <div class="col-1"></div>
-                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('surname')}"
-                             th:errors="*{surname}"></div>
-                    </div>
-                    <!--Ряд пола и даты пождения-->
-                    <div class="row d-flex justify-content-center mt-4">
-                        <select class="col-5 attrBlock" id="sexInput" th:field="*{sex}"
-                                th:selected="${patient.getSex()}">
-                            <option value="0" disabled>Не выбрано</option>
-                            <option value="1">Мужчина</option>
-                            <option value="2">Женщина</option>
-                        </select>
-                        <div class="col-1"></div>
-                        <input class="col-5 attrBlock" id="inputBirthDate" type="text"
-                               th:value="${T(org.apache.commons.lang3.time.DateFormatUtils).format(patient.getBirthDate(), 'dd-MM-yyyy')}">
-                    </div>
-                    <div class="row d-flex justify-content-center mt-1"
-                         th:if="${#fields.hasErrors('sex') || #fields.hasErrors('birthDate')}">
-                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}"></div>
-                        <div class="col-1"></div>
-                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('birthDate')}"
-                             th:errors="*{birthDate}"></div>
-                    </div>
-                    <!--Ряд телефона и email-а-->
-                    <div class="row d-flex justify-content-center mt-4">
-                        <input class="col-5 attrBlock" data-tel-input type="tel" id="inputPhone" th:field="*{telephone}"
-                               th:value="${patient.getTelephone()}">
-                        <div class="col-1"></div>
-                        <input class="col-5 attrBlock" id="inputEmail" type="email" th:value="${patient.getEmail()}"
-                               disabled>
-                    </div>
-                    <!--Ряд подтверждения почты-->
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-5 messageAlert" th:if="${#fields.hasErrors('telephone')}"
-                             th:errors="*{telephone}"></div>
-                        <div class="col-5" th:unless="${#fields.hasErrors('telephone')}"></div>
-                        <div class="col-1"></div>
-                        <!--Подтверждена-->
-                        <h5 class="col-5 buttonFont aStyleText"
-                            th:if="${patient.getActivationCode() == null}">Почта подтверждена</h5>
-                        <!--Не Подтверждена-->
-                        <h5 class="btn col-5 btn-link buttonFont aStyleButton"
-                            th:if="${patient.getActivationCode() != null}">Подтвердить почту</h5>
-                    </div>
-                    <!--Спрятанные поля-->
-                    <div>
-                        <input id="inputId" th:value="${patient.getId()}" hidden>
-                        <input id="hiddenPassword" th:field="*{password}" th:value="${patient.getPassword()}" hidden>
-                        <input id="hiddenBirthDate" type="date" th:field="*{birthDate}" hidden>
-                        <input th:field="*{email}" th:value="${patient.getEmail()}" hidden>
-                        <input th:field="*{image}" th:value="${patient.getImage()}" hidden>
-                        <input th:field="*{activationCode}" th:value="${patient.getActivationCode()}" hidden>
-                        <input th:field="*{appointments}" th:value="${patient.getAppointments()}" hidden>
-                    </div>
-                </div>
-                <!--Кнопка-->
-                <div class="mt-4">
-                    <!--Подтвердить-->
-                    <div class="d-flex justify-content-center align-items-center">
-                        <input class="btn btn-primary button mt-5 mb-3 px-4" type="submit"
-                               value="Подтвердить"/>
-                    </div>
-                    <!--Изменить пароль-->
-                    <div class="mt-5 pt-2">
-                        <a class="mutedButton" id="changePasswordButton" data-bs-toggle="modal"
-                           data-bs-target="#checkPasswordModal">
-                            Изменить пароль
-                        </a>
-                    </div>
-                    <!--Удалить аккаунт-->
-                    <div class="mt-1 pt-2">
-                        <a class="mutedButton" id="deleteButton" data-bs-toggle="modal"
-                           data-bs-target="#warningDeleteModal">
-                            Удалить аккаунт
-                        </a>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <!--Разделитель-->
-        <div class="col-1">
-            <div class="greenLine"></div>
-        </div>
-        <!--Приёмы-->
-        <div class="rightC col" aria-disabled="true">
-            <h3 class="mt-4 top">Мои Приёмы</h3>
-            <div class="overflow-auto" style=" max-height: 550px; overflow: auto">
-                <!--Нет приемов -->
-                <div class="doctorBody mt-4" style="width: 520px" th:if="${patient.getAppointments().size() == 0}">
-                    <!--Центрируем данные-->
-                    <!--Плажка зеленая-->
-                    <div class="greenDoctorHeader d-flex align-items-center justify-content-center"></div>
-                    <div class="container-fluid d-flex align-items-center justify-content-center mt-3"
-                         style=" margin-left: auto;">
+        <div class="container-fluid" style="padding-left: 85px">
+            <div class="row">
+                <!--Профиль-->
+                <div class="leftC col-md-5">
+                    <form th:method="PUT" th:action="@{/patients/{id}(id=${patient.getId()})}" th:object="${patient}"
+                          enctype="multipart/form-data">
+                        <h3 class="top mt-4">Профиль</h3>
+                        <!--Фото профиля-->
                         <div>
-                            <h4 class="themes">У вас еще нет приемов</h4>
-                            <h5 class="headlines"> Запишитесь к нашим специалистам</h5>
-                            <i class="las la-heartbeat la-4x" style="color:#243528 "></i>
-                        </div>
-                    </div>
-                </div>
-                <!--Список приёмов-->
-                <ul th:if="${patient.getAppointments().size() != 0}">
-                    <li th:each="appointment : ${patient.getAppointments()}">
-                        <!--Карточка-->
-                        <div class="doctorBody mt-4">
-                            <!--Плажка зеленая-->
-                            <div class=" green d-flex align-items-center justify-content-center"></div>
-                            <div class="container-fluid">
-                                <!--Доктор-->
-                                <div class="row mt-2">
-                                    <!--Фото-->
-                                    <div class="col-2">
-                                        <img class="doctorPhoto float-start" alt=""
-                                             th:src="@{/applicationFiles/doctors/{id}/{image}(id=${appointment.getDoctor().getId()}, image=${appointment.getDoctor().getImage()})}">
-                                    </div>
-                                    <!--Личные данные-->
-                                    <div class="col text-start">
-                                        <!--ФИО-->
-                                        <h4 class="themes"
-                                            th:text="${appointment.getDoctor().getSurname() + ' ' + appointment.getDoctor().getName() + ' ' + appointment.getDoctor().getPatronymic()}"></h4>
-                                        <!--Описание специалиста-->
-                                        <h5 class="headlines"
-                                            th:text="${#strings.setJoin(appointment.getDoctor().getSpecialities(), ', ') + ', ' + appointment.getDoctor().getCategory() + ', Стаж ' + appointment.getDoctor().getExperience()}"></h5>
-                                    </div>
+                            <label for="file-input" class="photoFrame">
+                                <img class="mainPhotoInput" id="profileImage"
+                                     th:if="${patient.getImage() != null && !patient.getImage().isEmpty()}"
+                                     th:src="@{/applicationFiles/patients/{id}/{image}(id=${patient.getId()}, image=${patient.getImage()})}">
+                                <div th:if="${patient.getImage() == null || patient.getImage().isEmpty()}">
+                                    <img class="mainPhotoInput" th:if="${patient.getSex() == 1}"
+                                         th:src="@{/applicationFiles/usersFiles/manProfile.jpg}">
+                                    <img class="mainPhotoInput" th:if="${patient.getSex() == 2}"
+                                         th:src="@{/applicationFiles/usersFiles/womenProfile.png}">
                                 </div>
-                                <!--Данные приема и кнопка-->
-                                <div class="row">
-                                    <!--Дата, время, кабинет-->
-                                    <div class="col-8 row gx-1 headlines">
-                                        <div class="col text-start mx-2">
-                                            <h5>Дата:</h5> <span class="spanStyle"
-                                                                 th:text="${appointment.getDate() + ' ' + #dates.dayOfWeekName(appointment.getDate())}"></span>
-                                        </div>
-                                        <div class="col-1"></div>
-                                        <div class="col text-start">
-                                            <h5>Время:</h5><span class="p-1 spanStyle"
-                                                                 th:text="${appointment.getTime()}"></span>
-                                        </div>
-                                        <div class="col text-start">
-                                            <h5>Кабинет:</h5><span class="p-1 spanStyle" th:text="${'210 каб'}"></span>
-                                        </div>
-                                    </div>
-                                    <!--Подробнее кнопка-->
-                                    <div class="col ">
-                                        <button class="btn btn-primary button float-end mt-2 mb-3 px-4">Подробнее
-                                        </button>
-                                    </div>
+                                <!--Icon-->
+                                <div class="iconInput">
+                                    <i class="las la-portrait la-5x"></i>
+                                </div>
+                            </label>
+                            <input id="file-input" type="file" style="display: none;"
+                                   accept="image/png, image/jpeg, image/jpg" th:name="profileImage"/>
+                        </div>
+                        <!--Данные пользователя-->
+                        <div class="container headlines">
+                            <!--Ряд имени и фамилии-->
+                            <div class="row d-flex justify-content-center mt-1">
+                                <input class="attrBlock col-5" id="inputName" type="text" th:field="*{name}"
+                                       th:value="${patient.getName()}">
+                                <div class="col-1"></div>
+                                <input class="attrBlock col-5" id="inputSurname" type="text" th:field="*{surname}"
+                                       th:value="${patient.getSurname()}">
+                            </div>
+                            <div class="row d-flex justify-content-center mt-1"
+                                 th:if="${#fields.hasErrors('name') || #fields.hasErrors('surname')}">
+                                <div class="col-5 messageAlert" th:if="${#fields.hasErrors('name')}"
+                                     th:errors="*{name}"></div>
+                                <div class="col-1"></div>
+                                <div class="col-5 messageAlert" th:if="${#fields.hasErrors('surname')}"
+                                     th:errors="*{surname}"></div>
+                            </div>
+                            <!--Ряд пола и даты пождения-->
+                            <div class="row d-flex justify-content-center mt-4">
+                                <select class="col-5 attrBlock" id="sexInput" th:field="*{sex}"
+                                        th:selected="${patient.getSex()}">
+                                    <option value="0" disabled>Не выбрано</option>
+                                    <option value="1">Мужчина</option>
+                                    <option value="2">Женщина</option>
+                                </select>
+                                <div class="col-1"></div>
+                                <input class="col-5 attrBlock" id="inputBirthDate" type="text"
+                                       th:value="${T(org.apache.commons.lang3.time.DateFormatUtils).format(patient.getBirthDate(), 'dd-MM-yyyy')}">
+                            </div>
+                            <div class="row d-flex justify-content-center mt-1"
+                                 th:if="${#fields.hasErrors('sex') || #fields.hasErrors('birthDate')}">
+                                <div class="col-5 messageAlert" th:if="${#fields.hasErrors('sex')}"
+                                     th:errors="*{sex}"></div>
+                                <div class="col-1"></div>
+                                <div class="col-5 messageAlert" th:if="${#fields.hasErrors('birthDate')}"
+                                     th:errors="*{birthDate}"></div>
+                            </div>
+                            <!--Ряд телефона и email-а-->
+                            <div class="row d-flex justify-content-center mt-4">
+                                <input class="col-5 attrBlock" data-tel-input type="tel" id="inputPhone"
+                                       th:field="*{telephone}"
+                                       th:value="${patient.getTelephone()}">
+                                <div class="col-1"></div>
+                                <input class="col-5 attrBlock" id="inputEmail" type="email"
+                                       th:value="${patient.getEmail()}"
+                                       disabled>
+                            </div>
+                            <!--Ряд подтверждения почты-->
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-5 messageAlert" th:if="${#fields.hasErrors('telephone')}"
+                                     th:errors="*{telephone}"></div>
+                                <div class="col-5" th:unless="${#fields.hasErrors('telephone')}"></div>
+                                <div class="col-1"></div>
+                                <!--Подтверждена-->
+                                <h5 class="col-5 buttonFont aStyleText"
+                                    th:if="${patient.isConfirmed() == true}">Почта подтверждена</h5>
+                                <!--Не Подтверждена-->
+                                <h5 class="btn col-5 btn-link buttonFont aStyleButton"
+                                    th:if="${patient.isConfirmed() == false}">Подтвердить почту</h5>
+                            </div>
+                            <!--Ряд ошибки нового пароля-->
+                            <div class="row d-flex justify-content-center" th:if="${#fields.hasErrors('password')}">
+                                <div class="col-11 messageAlert">
+                                    <p>Произошла ошибка в процессе изменения пароля! Возможные причины:</p>
+                                    <ul class="alert alert-warning" th:each="error: ${#fields.errors('password')}">
+                                        <li th:each="message : ${error.split(',')}">
+                                            <p class="error-message" th:text="${message}"></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!--Спрятанные поля-->
+                            <div>
+                                <input id="inputId" th:value="${patient.getId()}" hidden>
+                                <input id="hiddenPassword" th:field="*{password}" th:value="${patient.getPassword()}"
+                                       hidden>
+                                <input id="hiddenBirthDate" type="date" th:field="*{birthDate}" hidden>
+                                <input th:field="*{email}" th:value="${patient.getEmail()}" hidden>
+                                <input th:field="*{image}" th:value="${patient.getImage()}" hidden>
+                                <input th:field="*{activationCode}" th:value="${patient.getActivationCode()}" hidden>
+                                <input th:field="*{appointments}" th:value="${patient.getAppointments()}" hidden>
+                                <input th:field="*{confirmed}" th:value="${patient.isConfirmed()}" hidden>
+                            </div>
+                        </div>
+                        <!--Кнопка-->
+                        <div class="mt-4">
+                            <!--Подтвердить-->
+                            <div class="d-flex justify-content-center align-items-center">
+                                <input class="btn btn-primary button mt-5 mb-3 px-4" type="submit"
+                                       value="Подтвердить"/>
+                            </div>
+                            <!--Изменить пароль-->
+                            <div class="mt-5 pt-2">
+                                <a class="mutedButton" id="changePasswordButton" data-bs-toggle="modal"
+                                   data-bs-target="#checkPasswordModal">
+                                    Изменить пароль
+                                </a>
+                            </div>
+                            <!--Удалить аккаунт-->
+                            <div class="mt-1 pt-2">
+                                <a class="mutedButton" id="deleteButton" data-bs-toggle="modal"
+                                   data-bs-target="#warningDeleteModal">
+                                    Удалить аккаунт
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!--Разделитель-->
+                <div class="col-1">
+                    <div class="greenLine"></div>
+                </div>
+                <!--Приёмы-->
+                <div class="rightC col" aria-disabled="true">
+                    <h3 class="mt-4 top">Мои Приёмы</h3>
+                    <div class="overflow-auto" style=" max-height: 550px; overflow: auto">
+                        <!--Нет приемов -->
+                        <div class="doctorBody mt-4" style="width: 520px"
+                             th:if="${patient.getAppointments().size() == 0}">
+                            <!--Центрируем данные-->
+                            <!--Плажка зеленая-->
+                            <div class="greenDoctorHeader d-flex align-items-center justify-content-center"></div>
+                            <div class="container-fluid d-flex align-items-center justify-content-center mt-3"
+                                 style=" margin-left: auto;">
+                                <div>
+                                    <h4 class="themes">У вас еще нет приемов</h4>
+                                    <h5 class="headlines"> Запишитесь к нашим специалистам</h5>
+                                    <i class="las la-heartbeat la-4x" style="color:#243528 "></i>
                                 </div>
                             </div>
                         </div>
-                    </li>
-                </ul>
+                        <!--Список приёмов-->
+                        <ul th:if="${patient.getAppointments().size() != 0}">
+                            <li th:each="appointment : ${patient.getAppointments()}">
+                                <!--Карточка-->
+                                <div class="doctorBody mt-4">
+                                    <!--Плажка зеленая-->
+                                    <div class=" green d-flex align-items-center justify-content-center"></div>
+                                    <div class="container-fluid">
+                                        <!--Доктор-->
+                                        <div class="row mt-2">
+                                            <!--Фото-->
+                                            <div class="col-2">
+                                                <img class="doctorPhoto float-start" alt=""
+                                                     th:src="@{/applicationFiles/doctors/{id}/{image}(id=${appointment.getDoctor().getId()}, image=${appointment.getDoctor().getImage()})}">
+                                            </div>
+                                            <!--Личные данные-->
+                                            <div class="col text-start">
+                                                <!--ФИО-->
+                                                <h4 class="themes"
+                                                    th:text="${appointment.getDoctor().getSurname() + ' ' + appointment.getDoctor().getName() + ' ' + appointment.getDoctor().getPatronymic()}"></h4>
+                                                <!--Описание специалиста-->
+                                                <h5 class="headlines"
+                                                    th:text="${#strings.setJoin(appointment.getDoctor().getSpecialities(), ', ') + ', ' + appointment.getDoctor().getCategory() + ', Стаж ' + appointment.getDoctor().getExperience()}"></h5>
+                                            </div>
+                                        </div>
+                                        <!--Данные приема и кнопка-->
+                                        <div class="row">
+                                            <!--Дата, время, кабинет-->
+                                            <div class="col-8 row gx-1 headlines">
+                                                <div class="col text-start mx-2">
+                                                    <h5>Дата:</h5> <span class="spanStyle"
+                                                                         th:text="${appointment.getDate() + ' ' + #dates.dayOfWeekName(appointment.getDate())}"></span>
+                                                </div>
+                                                <div class="col-1"></div>
+                                                <div class="col text-start">
+                                                    <h5>Время:</h5><span class="p-1 spanStyle"
+                                                                         th:text="${appointment.getTime()}"></span>
+                                                </div>
+                                                <div class="col text-start">
+                                                    <h5>Кабинет:</h5><span class="p-1 spanStyle"
+                                                                           th:text="${'210 каб'}"></span>
+                                                </div>
+                                            </div>
+                                            <!--Подробнее кнопка-->
+                                            <div class="col ">
+                                                <button class="btn btn-primary button float-end mt-2 mb-3 px-4">
+                                                    Подробнее
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <footer th:insert="blocks/footer :: footer"></footer>
 </div>
-
 <!--Модальные окна-->
 <div class="container">
     <!-- Окно удаления -->
@@ -340,7 +349,7 @@
                     <p>Введите новый пароль:</p>
                     <div class="input-group mb-3">
                         <input class="form-control border-end-0 inputPasswordClass" type="password" id="inputPassword"
-                               value="" aria-describedby="basic-addon2">
+                               value="" onkeyup='check($("#submitChangePassword"));' aria-describedby="basic-addon2">
                         <div class="input-group-addon">
                         <span class="input-group-text rounded-start-0 textarea-addon" id="basic-addon2">
                             <i class="bi bi-eye-slash togglePasswordClass"></i>
@@ -348,8 +357,11 @@
                         </div>
                     </div>
                     <p>Подтвердите новый пароль:</p>
-                    <input class="form-control inputPasswordClass" type="password" id="inputConfirmPassword" value="">
+                    <input class="form-control inputPasswordClass" type="password" id="inputConfirmPassword"
+                           onkeyup='check($("#submitChangePassword"));' value="">
                     <span id="passwordMessage"></span>
+                    <br>
+                    <div id="samePassword"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                         <button type="button" class="btn btn-primary" id="submitChangePassword" disabled>Подтвердить
@@ -360,10 +372,6 @@
         </div>
     </div>
 </div>
-
-<footer th:insert="blocks/footer :: footer"></footer>
-
 </body>
-
 </html>
 

@@ -1,42 +1,47 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-  <title>Все расписания</title>
-  <div th:insert="blocks/webjars :: webjars"></div>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <title>Все расписания</title>
+    <div th:insert="blocks/webjars :: webjars"></div>
 </head>
 <body>
-  <header th:insert="blocks/header :: header"></header>
-  <div class="container mt-5 mr-2 ml-2">
-    <h1>Список расписаний</h1>
-    <table class="table table-striped table-hover mt-4">
-      <caption>Список расписаний</caption>
-      <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Дата</th>
-        <th scope="col">День недели</th>
-        <th scope="col">Время консультации</th>
-        <th scope="col">Начало времени приёмов</th>
-        <th scope="col">Конец времени приёмов</th>
-        <th scope="col">Врач</th>
-        <th scope="col">Статус приёмов</th>
-      </tr>
-      </thead>
-      <tbody th:each="schedule : ${schedules}">
-      <tr>
-        <th scope="row"><a th:href="@{/schedules/{id}(id=${schedule.getId()})}" th:text="${schedule.getId()}"></a></th>
-        <td th:text="${schedule.getDate()}"></td>
-        <td th:text="${#dates.dayOfWeekName(schedule.getDate())}"></td>
-        <td th:text="${schedule.getConsultingTime() + ' минут'}"></td>
-        <td th:text="${schedule.getStartTime()}"></td>
-        <td th:text="${schedule.getEndTime()}"></td>
-        <td th:text="${schedule.getDoctor() == null ? 'null' : schedule.getDoctor().getSurname() + ' ' + schedule.getDoctor().getName() + ' ' + schedule.getDoctor().getPatronymic()}"></td>
-        <td th:text="${'Link'}"></td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-  <footer th:insert="blocks/footer :: footer"></footer>
+<div class="wrapper">
+    <div class="content">
+        <header th:insert="blocks/header :: header"></header>
+        <div class="container mt-5 mr-2 ml-2">
+            <h1>Список расписаний</h1>
+            <table class="table table-striped table-hover mt-4">
+                <caption>Список расписаний</caption>
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Дата</th>
+                    <th scope="col">День недели</th>
+                    <th scope="col">Время консультации</th>
+                    <th scope="col">Начало времени приёмов</th>
+                    <th scope="col">Конец времени приёмов</th>
+                    <th scope="col">Врач</th>
+                    <th scope="col">Статус приёмов</th>
+                </tr>
+                </thead>
+                <tbody th:each="schedule : ${schedules}">
+                <tr>
+                    <th scope="row"><a th:href="@{/schedules/{id}(id=${schedule.getId()})}"
+                                       th:text="${schedule.getId()}"></a></th>
+                    <td th:text="${schedule.getDate()}"></td>
+                    <td th:text="${#dates.dayOfWeekName(schedule.getDate())}"></td>
+                    <td th:text="${schedule.getConsultingTime() + ' минут'}"></td>
+                    <td th:text="${schedule.getStartTime()}"></td>
+                    <td th:text="${schedule.getEndTime()}"></td>
+                    <td th:text="${schedule.getDoctor() == null ? 'null' : schedule.getDoctor().getSurname() + ' ' + schedule.getDoctor().getName() + ' ' + schedule.getDoctor().getPatronymic()}"></td>
+                    <td th:text="${'Link'}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <footer th:insert="blocks/footer :: footer"></footer>
+</div>
 </body>
 </html>

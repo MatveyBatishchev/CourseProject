@@ -81,13 +81,26 @@ public class PatientController {
         return "Успешно!\n Письмо с подтверждением было отправлено на почту!";
     }
 
+    @GetMapping("/reset/{code}")
+    public ModelAndView resetPassword(@PathVariable("code") String code, ModelAndView modelAndView) {
+        return patientService.resetPassword(code, modelAndView);
+    }
+
+    @PostMapping("/reset/{code}")
+    public ModelAndView savePatientWithNewPassword(@PathVariable("code") String code,
+                                                   @RequestParam("password") String newPassword,
+                                                   ModelAndView modelAndView,
+                                                   BindingResult bindingResult) {
+        return patientService.saveNewPassword(code, newPassword, modelAndView, bindingResult);
+    }
+
     @PostMapping("/passwordEmail")
     @ResponseBody
     public String sendResetPasswordEmail(@RequestParam("resetEmail") String resetEmail) {
+        patientService.sendResetPasswordEmail(resetEmail);
         return "Письмо для восстановления пароля было успешно отправлено вам на почту!";
     }
 
-    @GetMapping
 
     @PostMapping("/sendDeleteCode")
     @ResponseBody

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.SmartValidator;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,6 +25,8 @@ public class PatientService implements UserDetailsService {
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
     private final MailSender mailSender;
+    @Autowired
+    private SmartValidator validator;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -100,6 +103,7 @@ public class PatientService implements UserDetailsService {
 
     public void savePatientWithEmail(Patient patient) {
         patient.setActive(true);
+        patient.setConfirmed(false);
         patient.setRoles(Collections.singleton(Role.USER));
         patient.setActivationCode(UUID.randomUUID().toString());
         patientRepository.save(patient);
@@ -126,7 +130,6 @@ public class PatientService implements UserDetailsService {
 
     public ModelAndView editPatient(Patient patient, BindingResult bindingResult, MultipartFile multipartFile, ModelAndView modelAndView) {
         if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult);
             modelAndView.setViewName("/patients/editById");
         }
         else {
@@ -161,15 +164,56 @@ public class PatientService implements UserDetailsService {
 
     public ModelAndView activatePatient(String code, ModelAndView modelAndView) {
         Patient patient = patientRepository.findByActivationCode(code);
-        if (patient == null) modelAndView.addObject("activationMessage", "Код активации не был найден!");
+        if (patient == null) modelAndView.addObject("message", "Код активации не был найден!");
         else {
-            modelAndView.addObject("activationMessage", "Email успешно подтверждён!");
+            modelAndView.addObject("message", "Email успешно подтверждён!");
             patient.setActivationCode(null);
+            patient.setConfirmed(true);
             patientRepository.save(patient);
         }
         modelAndView.setViewName("main/activationCode");
         return modelAndView;
     }
+
+    public ModelAndView resetPassword(String code, ModelAndView modelAndView) {
+        Patient patient = patientRepository.findByActivationCode(code);
+        if (patient == null) {
+            modelAndView.addObject("message", "Код активации не был найден!");
+            modelAndView.setViewName("main/activationCode");
+        }
+        else {
+            modelAndView.addObject("email", patient.getEmail());
+            modelAndView.addObject("activationCode", code);
+            modelAndView.setViewName("main/resetPassword");
+        }
+        return modelAndView;
+    }
+
+    public ModelAndView saveNewPassword(String code, String newPassword, ModelAndView modelAndView, BindingResult bindingResult) {
+        Patient patient = patientRepository.findByActivationCode(code);
+        if (patient == null) {
+            modelAndView.addObject("message", "Произошла ошибка в процессе изменения пароля!");
+            modelAndView.setViewName("main/activationCode");
+        }
+        else {
+            patient.setPassword(newPassword);
+            validator.validate(patient, bindingResult);
+            if (bindingResult.hasErrors()) {
+                modelAndView.addObject("passwordErrors", bindingResult.getAllErrors());
+                modelAndView.addObject("email", patient.getEmail());
+                modelAndView.addObject("activationCode", patient.getActivationCode());
+                modelAndView.setViewName("main/resetPassword");
+            }
+            else {
+                patient.setActivationCode(null);
+                patientRepository.save(patient);
+                modelAndView.addObject("email", patient.getEmail());
+                modelAndView.setViewName("main/login");
+            }
+        }
+        return modelAndView;
+    }
+
 
     public void sendDeleteConfirmationMail(String patientEmail, String confirmationCode) {
         if (!patientEmail.isEmpty()) {
@@ -193,6 +237,22 @@ public class PatientService implements UserDetailsService {
                     patientName, activationCode
             );
             mailSender.send(patientEmail,"Подтвердите электронную почту", message);
+        }
+    }
+
+    public void sendResetPasswordEmail(String patientEmail) {
+        Patient patient = patientRepository.findByEmail(patientEmail);
+        if (patient != null) {
+            String activationCode = UUID.randomUUID().toString();
+            patient.setActivationCode(activationCode);
+            patientRepository.save(patient);
+            String message = String.format(
+                    "Привет, %s! \n" +
+                            "Для сброса вашего пароля и создания нового, пожалуйста, перейдите по ссылке: http://localhost:8081/patients/reset/%s \n" +
+                            "С уважением команда RecoveryMed❤",
+                    patient.getName(), activationCode
+            );
+            mailSender.send(patientEmail,"Восстановление пароля", message);
         }
     }
 

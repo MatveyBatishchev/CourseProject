@@ -1,101 +1,120 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-  <title>Регистрация нового специалиста</title>
-  <div th:insert="blocks/webjars :: webjars"></div>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <title>Регистрация нового специалиста</title>
+    <div th:insert="blocks/webjars :: webjars"></div>
 </head>
 <body>
-  <header th:insert="blocks/header :: header"></header>
-  <div class="container mt-5">
-    <div class="card mb-4">
-      <div class="card-header">Добавление нового специалиста</div>
-      <div class="card-body">
-        <form th:method="POST" th:action="@{/doctors/new}" th:object="${doctor}" enctype="multipart/form-data">
-          <!--Ошибка существующего email-a-->
-          <div class="alert alert-danger" role="alert" th:if="${emailMessage != null}" th:text="${emailMessage}"></div>
-          <!--Ряд ФИО-->
-          <div class="row gx-3 mb-3">
-            <div class="col-md-6">
-              <label class="small mb-1" for="inputName">Имя</label>
-              <input class="form-control" id="inputName" type="text" th:field="*{name}">
-              <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+<div class="wrapper">
+    <div class="content">
+        <header th:insert="blocks/header :: header"></header>
+        <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">Добавление нового специалиста</div>
+                <div class="card-body">
+                    <form th:method="POST" th:action="@{/doctors/new}" th:object="${doctor}"
+                          enctype="multipart/form-data">
+                        <!--Ошибка существующего email-a-->
+                        <div class="alert alert-danger" role="alert" th:if="${emailMessage != null}"
+                             th:text="${emailMessage}"></div>
+                        <!--Ряд ФИО-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputName">Имя</label>
+                                <input class="form-control" id="inputName" type="text" th:field="*{name}">
+                                <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}"
+                                     th:errors="*{name}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputSurname">Фамилия</label>
+                                <input class="form-control" id="inputSurname" type="text" th:field="*{surname}">
+                                <div class="alert alert-warning" th:if="${#fields.hasErrors('surname')}"
+                                     th:errors="*{surname}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputPatronymic">Отчество</label>
+                                <input class="form-control" id="inputPatronymic" type="text" th:field="*{patronymic}">
+                                <div class="alert alert-warning" th:if="${#fields.hasErrors('patronymic')}"
+                                     th:errors="*{patronymic}"></div>
+                            </div>
+                        </div>
+                        <!--Ряд почты-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputEmail">Email</label>
+                                <input class="form-control" id="inputEmail" type="text" th:field="*{email}">
+                                <div class="alert alert-warning" th:if="${#fields.hasErrors('email')}"
+                                     th:errors="*{email}"></div>
+                            </div>
+                        </div>
+                        <!--Ряд стажа-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputExperience">Стаж</label>
+                                <input class="form-control" id="inputExperience" type="number" th:field="*{experience}">
+                                <div class="alert alert-warning" th:if="${#fields.hasErrors('experience')}"
+                                     th:errors="*{experience}"></div>
+                            </div>
+                        </div>
+                        <!--Ряд специализации-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputSpeciality">Специальность</label>
+                                <select class="form-control" id="inputSpeciality" th:field="*{specialities}" multiple>
+                                    <option th:each="speciality : ${T(com.example.models.Speciality).values()}"
+                                            th:value="${{speciality}}" th:text="${speciality.label}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--Ряд категории-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputCategory">Категория специалиста</label>
+                                <input class="form-control" id="inputCategory" type="text" th:field="*{category}">
+                                <div class="alert alert-warning" th:if="${#fields.hasErrors('category')}"
+                                     th:errors="*{category}"></div>
+                            </div>
+                        </div>
+                        <!--Ряд О враче-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputAboutDoctor">О враче</label>
+                                <textarea class="form-control" id="inputAboutDoctor" type="text"
+                                          th:field="*{aboutDoctor}"></textarea>
+                                <div class="alert alert-warning" th:if="${#fields.hasErrors('aboutDoctor')}"
+                                     th:errors="*{aboutDoctor}"></div>
+                            </div>
+                        </div>
+                        <!--Ряд специализации и профессиональных навыков-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputSkills">Специализация и профессиональные навыки
+                                    врача</label>
+                                <textarea class="form-control" id="inputSkills" type="text"
+                                          th:field="*{skills}"></textarea>
+                                <div class="alert alert-warning" th:if="${#fields.hasErrors('skills')}"
+                                     th:errors="*{skills}"></div>
+                            </div>
+                        </div>
+                        <!--Ряд опыта работы-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputWorkPlaces">Опыт работы</label>
+                                <textarea class="form-control" id="inputWorkPlaces" type="text"
+                                          th:field="*{workPlaces}"></textarea>
+                                <div class="alert alert-warning" th:if="${#fields.hasErrors('workPlaces')}"
+                                     th:errors="*{workPlaces}"></div>
+                            </div>
+                        </div>
+                        <input class="btn btn-primary" type="submit" value="Зарегистрировать"><br><br>
+                    </form>
+                </div>
             </div>
-            <div class="col-md-6">
-              <label class="small mb-1" for="inputSurname">Фамилия</label>
-              <input class="form-control" id="inputSurname" type="text" th:field="*{surname}">
-              <div class="alert alert-warning" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></div>
-            </div>
-            <div class="col-md-6">
-              <label class="small mb-1" for="inputPatronymic">Отчество</label>
-              <input class="form-control" id="inputPatronymic" type="text" th:field="*{patronymic}">
-              <div class="alert alert-warning" th:if="${#fields.hasErrors('patronymic')}" th:errors="*{patronymic}"></div>
-            </div>
-          </div>
-          <!--Ряд почты-->
-          <div class="row gx-3 mb-3">
-            <div class="col-md-6">
-              <label class="small mb-1" for="inputEmail">Email</label>
-              <input class="form-control" id="inputEmail" type="text" th:field="*{email}">
-              <div class="alert alert-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-            </div>
-          </div>
-          <!--Ряд стажа-->
-          <div class="row gx-3 mb-3">
-            <div class="col-md-6">
-              <label class="small mb-1" for="inputExperience">Стаж</label>
-              <input class="form-control" id="inputExperience" type="number" th:field="*{experience}">
-              <div class="alert alert-warning" th:if="${#fields.hasErrors('experience')}" th:errors="*{experience}"></div>
-            </div>
-          </div>
-          <!--Ряд специализации-->
-          <div class="row gx-3 mb-3">
-            <div class="col-md-6">
-              <label class="small mb-1" for="inputSpeciality">Специальность</label>
-              <select class="form-control" id="inputSpeciality" th:field="*{specialities}" multiple>
-                <option th:each="speciality : ${T(com.example.models.Speciality).values()}"
-                        th:value="${{speciality}}" th:text="${speciality.label}">
-                </option>
-              </select>
-            </div>
-          </div>
-          <!--Ряд категории-->
-          <div class="row gx-3 mb-3">
-            <div class="col-md-6">
-              <label class="small mb-1" for="inputCategory">Категория специалиста</label>
-              <input class="form-control" id="inputCategory" type="text" th:field="*{category}">
-              <div class="alert alert-warning" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
-            </div>
-          </div>
-          <!--Ряд О враче-->
-          <div class="row gx-3 mb-3">
-            <div class="col-md-6">
-              <label class="small mb-1" for="inputAboutDoctor">О враче</label>
-              <textarea class="form-control" id="inputAboutDoctor" type="text" th:field="*{aboutDoctor}"></textarea>
-              <div class="alert alert-warning" th:if="${#fields.hasErrors('aboutDoctor')}" th:errors="*{aboutDoctor}"></div>
-            </div>
-          </div>
-          <!--Ряд специализации и профессиональных навыков-->
-          <div class="row gx-3 mb-3">
-            <div class="col-md-6">
-              <label class="small mb-1" for="inputSkills">Специализация и профессиональные навыки врача</label>
-              <textarea class="form-control" id="inputSkills" type="text" th:field="*{skills}"></textarea>
-              <div class="alert alert-warning" th:if="${#fields.hasErrors('skills')}" th:errors="*{skills}"></div>
-            </div>
-          </div>
-          <!--Ряд опыта работы-->
-          <div class="row gx-3 mb-3">
-            <div class="col-md-6">
-              <label class="small mb-1" for="inputWorkPlaces">Опыт работы</label>
-              <textarea class="form-control" id="inputWorkPlaces" type="text" th:field="*{workPlaces}"></textarea>
-              <div class="alert alert-warning" th:if="${#fields.hasErrors('workPlaces')}" th:errors="*{workPlaces}"></div>
-            </div>
-          </div>
-          <input class="btn btn-primary" type="submit" value="Зарегистрировать"><br><br>
-        </form>
-      </div>
+        </div>
     </div>
-  </div>
-  <footer th:insert="blocks/footer :: footer"></footer>
+    <footer th:insert="blocks/footer :: footer"></footer>
+</div>
 </body>
 </html>

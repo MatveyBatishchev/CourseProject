@@ -55,7 +55,7 @@ public class Patient implements User {
     private int sex;
 
     @Column(name="telephone", nullable=false)
-    @Size(min=17, max=18)
+    @Size(min=17, max=18, message = "Недопустимое значение")
     @NotBlank(message = "Это поле является обязательным")
     private String telephone;
 
@@ -77,6 +77,9 @@ public class Patient implements User {
 
     @Column(name="active", nullable=false)
     private boolean active;
+
+    @Column(name="confirmed", nullable=false)
+    private boolean confirmed;
 
     @OneToMany(
             mappedBy = "patient",

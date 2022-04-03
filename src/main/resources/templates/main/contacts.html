@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <title>Контакты</title>
     <div th:insert="blocks/webjars :: webjars"></div>
 </head>
 <body>
-    <header th:replace="blocks/header :: header"></header>
-    <div class="container mt-5">
-        <h1>Contacts</h1>>
+<div class="wrapper">
+    <div class="content">
+        <header th:replace="blocks/header :: header"></header>
+        <div class="container mt-5">
+            <h1>Contacts</h1>>
+        </div>
     </div>
     <footer th:insert="blocks/footer :: footer"></footer>
+</div>
 </body>
 </html>

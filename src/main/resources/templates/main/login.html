@@ -8,7 +8,7 @@
     <script type="text/javascript" th:src="@{/js/resetPassword.js}"></script>
 </head>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#resetPasswordModal').modal({
             backdrop: 'static',
             keyboard: true
@@ -16,60 +16,66 @@
     });
 </script>
 <body>
+<div class="wrapper">
+    <div class="content">
+        <header th:replace="blocks/header :: header"></header>
 
-<header th:replace="blocks/header :: header"></header>
-
-<div class="container mt-5">
-    <h1>Войти</h1>
-    <div class="card mb-4">
-        <div class="card-body">
-            <div th:if="${param.error}">
-                <div class="mt-2 alert alert-danger alert-dismissible fade show" role="alert">
-                    Неверное значение логина или пароля!
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </div>
-            <div th:if="${param.logout}">
-                <div class="mt-2 alert alert-success alert-dismissible fade show" role="alert">
-                    Вы успешно вышли из аккаунта!
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </div>
-            <form method="POST" th:action="@{/login}">
-                <!--Ряд email-->
-                <div class="row gx-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="inputEmail">Email</label>
-                        <input class="form-control" id="inputEmail" type="text" th:name="username" th:value="${email}">
+        <div class="container mt-5">
+            <h1>Войти</h1>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div th:if="${param.error}">
+                        <div class="mt-2 alert alert-danger alert-dismissible fade show" role="alert">
+                            Неверное значение логина или пароля!
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     </div>
-                </div>
-                <!--Ряд пароля-->
-                <div class="row gx-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="inputPassword">Пароль</label>
-                        <div class="input-group mb-3">
-                            <input class="form-control border-end-0 inputPasswordClass" type="password" id="inputPassword" value="" th:name="password" aria-describedby="basic-addon1">
-                            <div class="input-group-addon">
+                    <div th:if="${param.logout}">
+                        <div class="mt-2 alert alert-success alert-dismissible fade show" role="alert">
+                            Вы успешно вышли из аккаунта!
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    <form method="POST" th:action="@{/login}">
+                        <!--Ряд email-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputEmail">Email</label>
+                                <input class="form-control" id="inputEmail" type="text" th:name="username"
+                                       th:value="${email}">
+                            </div>
+                        </div>
+                        <!--Ряд пароля-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputPassword">Пароль</label>
+                                <div class="input-group mb-3">
+                                    <input class="form-control border-end-0 inputPasswordClass" type="password"
+                                           id="inputPassword" value="" th:name="password"
+                                           aria-describedby="basic-addon1">
+                                    <div class="input-group-addon">
                               <span class="input-group-text rounded-start-0 textarea-addon" id="basic-addon1">
                                   <i class="bi bi-eye-slash togglePasswordClass"></i>
                               </span>
+                                    </div>
+                                </div>
+                                <a class="text-muted" type="button" data-bs-toggle="modal"
+                                   data-bs-target="#resetPasswordModal">Забыли пароль?</a>
+                                <br>
                             </div>
                         </div>
-                        <a class="text-muted" type="button" data-bs-toggle="modal"
-                           data-bs-target="#resetPasswordModal">Забыли пароль?</a>
-                        <br>
-                    </div>
+                        <button class="btn btn-primary" type="submit">Войти</button>
+                        <br><br>
+                    </form>
+                    <p>Нет аккаунта,
+                        <a href="/patients/new">Зарегистрируйтесь</a>
+                    </p>
                 </div>
-                <button class="btn btn-primary" type="submit">Войти</button>
-                <br><br>
-            </form>
-            <p>Нет аккаунта,
-                <a href="/patients/new">Зарегистрируйтесь</a>
-            </p>
+            </div>
         </div>
     </div>
+    <footer th:insert="blocks/footer :: footer"></footer>
 </div>
-
 <!--Модальные окна-->
 <div>
     <!--Окно запроса на восстановление пароля-->
@@ -96,7 +102,5 @@
         </div>
     </div>
 </div>
-
-<footer th:insert="blocks/footer :: footer"></footer>
 </body>
 </html>

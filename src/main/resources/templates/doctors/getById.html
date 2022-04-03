@@ -1,95 +1,110 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <title>Профиль специалиста</title>
     <div th:insert="blocks/webjars :: webjars"></div>
 </head>
 <body>
-    <header th:insert="blocks/header :: header"></header>
-    <div class="container-xl px-4 mt-3">
-        <div class="col-xl-8">
-            <div class="card mb-4">
-                <div class="card-header">Данные профиля</div>
-                <div class="card-body">
-                    <form>
-                        <!--Ряд показа фото-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <img class="img-fluid" width="50%" height="50%" th:if="${doctor.getImage() != null && !doctor.getImage().isEmpty()}" th:src="@{/applicationFiles/doctors/{id}/{image}(id=${doctor.getId()}, image=${doctor.getImage()})}">
+<div class="wrapper">
+    <div class="content">
+        <header th:insert="blocks/header :: header"></header>
+        <div class="container-xl px-4 mt-3">
+            <div class="col-xl-8">
+                <div class="card mb-4">
+                    <div class="card-header">Данные профиля</div>
+                    <div class="card-body">
+                        <form>
+                            <!--Ряд показа фото-->
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <img class="img-fluid" width="50%" height="50%"
+                                         th:if="${doctor.getImage() != null && !doctor.getImage().isEmpty()}"
+                                         th:src="@{/applicationFiles/doctors/{id}/{image}(id=${doctor.getId()}, image=${doctor.getImage()})}">
+                                </div>
                             </div>
-                        </div>
-                        <!--Ряд ФИО-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputName">Имя</label>
-                                <input class="form-control" id="inputName" type="text" th:value="${doctor.getName()}" disabled>
+                            <!--Ряд ФИО-->
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputName">Имя</label>
+                                    <input class="form-control" id="inputName" type="text"
+                                           th:value="${doctor.getName()}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputSurname">Фамилия</label>
+                                    <input class="form-control" id="inputSurname" type="text"
+                                           th:value="${doctor.getSurname()}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputPatronymic">Отчество</label>
+                                    <input class="form-control" id="inputPatronymic" type="text"
+                                           th:value="${doctor.getPatronymic()}" disabled>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputSurname">Фамилия</label>
-                                <input class="form-control" id="inputSurname" type="text" th:value="${doctor.getSurname()}" disabled>
+                            <!--Ряд почты-->
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputEmail">Email</label>
+                                    <input class="form-control" id="inputEmail" type="text"
+                                           th:value="${doctor.getEmail()}" disabled>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputPatronymic">Отчество</label>
-                                <input class="form-control" id="inputPatronymic" type="text" th:value="${doctor.getPatronymic()}" disabled>
+                            <!--Ряд стажа и специальностей-->
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputExperience">Стаж</label>
+                                    <input class="form-control" id="inputExperience" type="number"
+                                           th:value="${doctor.getExperience()}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputSpecialities">Специальности</label>
+                                    <input class="form-control" id="inputSpecialities" type="text"
+                                           th:value="${#strings.setJoin(doctor.getSpecialities(), ', ')}" disabled>
+                                </div>
                             </div>
-                        </div>
-                        <!--Ряд почты-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputEmail">Email</label>
-                                <input class="form-control" id="inputEmail" type="text" th:value="${doctor.getEmail()}" disabled>
-                            </div>
-                        </div>
-                        <!--Ряд стажа и специальностей-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputExperience">Стаж</label>
-                                <input class="form-control" id="inputExperience" type="number" th:value="${doctor.getExperience()}" disabled>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputSpecialities">Специальности</label>
-                                <input class="form-control" id="inputSpecialities" type="text"
-                                       th:value="${#strings.setJoin(doctor.getSpecialities(), ', ')}" disabled>
-                            </div>
-                        </div>
-                        <!--Ряд категории-->
-                        <div class="row gx-3 mb-3">
+                            <!--Ряд категории-->
+                            <div class="row gx-3 mb-3">
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputCategory">Категория специалиста</label>
-                                    <input class="form-control" id="inputCategory" type="text" th:value="${doctor.getCategory()}" disabled>
+                                    <input class="form-control" id="inputCategory" type="text"
+                                           th:value="${doctor.getCategory()}" disabled>
                                 </div>
-                        </div>
-                        <!--Ряд О враче-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputAboutDoctor">О враче</label>
-                                <textarea class="form-control" id="inputAboutDoctor" type="text"
-                                          th:text="${doctor.getAboutDoctor()}" disabled></textarea>
                             </div>
-                        </div>
-                        <!--Ряд специализации и навыков-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputSkills">Специализация и профессиональные навыки врача</label>
-                                <textarea class="form-control" id="inputSkills" type="text"
-                                          value="Умеет много разного" th:text="${doctor.getSkills()}" disabled></textarea>
+                            <!--Ряд О враче-->
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputAboutDoctor">О враче</label>
+                                    <textarea class="form-control" id="inputAboutDoctor" type="text"
+                                              th:text="${doctor.getAboutDoctor()}" disabled></textarea>
+                                </div>
                             </div>
-                        </div>
-                        <!--Ряд мест работы-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputWorkPlaces">Опыт работы</label>
-                                <textarea class="form-control" id="inputWorkPlaces" type="text"
-                                          value="Большой опыт" th:text="${doctor.getWorkPlaces()}" disabled></textarea>
+                            <!--Ряд специализации и навыков-->
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputSkills">Специализация и профессиональные навыки
+                                        врача</label>
+                                    <textarea class="form-control" id="inputSkills" type="text"
+                                              value="Умеет много разного" th:text="${doctor.getSkills()}"
+                                              disabled></textarea>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                    <a class="btn btn-primary" role="button" th:href="@{/doctors/{id}/edit(id=${doctor.getId()})}">Редактировать</a>
+                            <!--Ряд мест работы-->
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputWorkPlaces">Опыт работы</label>
+                                    <textarea class="form-control" id="inputWorkPlaces" type="text"
+                                              value="Большой опыт" th:text="${doctor.getWorkPlaces()}"
+                                              disabled></textarea>
+                                </div>
+                            </div>
+                        </form>
+                        <a class="btn btn-primary" role="button" th:href="@{/doctors/{id}/edit(id=${doctor.getId()})}">Редактировать</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <footer th:insert="blocks/footer :: footer"></footer>
+</div>
 </body>
 </html>

@@ -8,82 +8,86 @@
     <script type="text/javascript" th:src="@{/js/phoneForm.js}"></script>
 </head>
 <body>
-<header th:insert="blocks/header :: header"></header>
-<div class="container mt-5">
-    <div class="card mb-4">
-        <div class="card-header">Запись на приём</div>
-        <div class="card-body">
-            <form>
-                <!--Ряд специальности-->
-                <div class="row gx-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="inputSpeciality">Выберите направление</label>
-                        <select class="form-control" id="inputSpeciality" required>
-                            <option value="" disabled selected>Выберите направление</option>
-                            <option th:each="speciality : ${T(com.example.models.Speciality).values()}"
-                                    th:value="${{speciality}}" th:text="${speciality.label}">
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <!--Ряд специалиста-->
-                <div class="row gx-3 mb-3" id="doctorsRow" hidden>
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="inputDoctor">Выберите специалиста</label>
-                        <select class="form-control" id="inputDoctor" required>
-                        </select>
-                    </div>
-                </div>
-                <!--Ряд даты-->
-                <div class="row gx-3 mb-3" id="schedulesRow" hidden>
-                    <div class="col-md-6">
-                        <label class="small mb-1" for="inputSchedule">Выберите дату приёма</label>
-                        <div id="inputSchedule"></div>
-                    </div>
-                </div>
-                <!--Ряд времени-->
-                <div class="row gx-3 mb-3" id="timetablesRow" hidden>
-                    <label class="small mb-1" for="inputTimetable">Выберите дату приёма</label>
-                    <div class="container" id="inputTimetable">
-                    </div>
-                </div>
-                <!--Ряд готового приёма-->
-                <div class="card mb-2" id="previewRow" hidden>
-                    <div class="card-header">Превью приёма</div>
-                    <div class="card-body">
-                        <h5 class="card-title" id="previewDoctorName"></h5>
-                        <p class="card-text" id="previewExperience"></p>
-                        <p class="card-text" id="previewCategory"></p>
-                        <p class="card-text" id="previewDate"></p>
-                    </div>
-                </div>
-                <!--Контактной информации-->
-                <div class="card mb-4" id="callbackRow" hidden>
-                    <div class="card-header">Контактные данные</div>
-                    <div class="card-body">
+<div class="wrapper">
+    <div class="content">
+        <header th:insert="blocks/header :: header"></header>
+        <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">Запись на приём</div>
+                <div class="card-body">
+                    <form>
+                        <!--Ряд специальности-->
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
-                                <label class="small mb-1" for="inputName">Имя</label>
-                                <input class="form-control" id="inputName" type="text">
+                                <label class="small mb-1" for="inputSpeciality">Выберите направление</label>
+                                <select class="form-control" id="inputSpeciality" required>
+                                    <option value="" disabled selected>Выберите направление</option>
+                                    <option th:each="speciality : ${T(com.example.models.Speciality).values()}"
+                                            th:value="${{speciality}}" th:text="${speciality.label}">
+                                    </option>
+                                </select>
                             </div>
+                        </div>
+                        <!--Ряд специалиста-->
+                        <div class="row gx-3 mb-3" id="doctorsRow" hidden>
                             <div class="col-md-6">
-                                <label class="small mb-1" for="inputSurname">Фамилия</label>
-                                <input class="form-control" id="inputSurname" type="text">
+                                <label class="small mb-1" for="inputDoctor">Выберите специалиста</label>
+                                <select class="form-control" id="inputDoctor" required>
+                                </select>
                             </div>
                         </div>
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-12">
-                                <label class="small mb-1" for="inputTelephone">Телефон</label>
-                                <input class="form-control" id="inputTelephone" type="tel" data-tel-input>
+                        <!--Ряд даты-->
+                        <div class="row gx-3 mb-3" id="schedulesRow" hidden>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputSchedule">Выберите дату приёма</label>
+                                <div id="inputSchedule"></div>
                             </div>
                         </div>
-                    </div>
+                        <!--Ряд времени-->
+                        <div class="row gx-3 mb-3" id="timetablesRow" hidden>
+                            <label class="small mb-1" for="inputTimetable">Выберите дату приёма</label>
+                            <div class="container" id="inputTimetable">
+                            </div>
+                        </div>
+                        <!--Ряд готового приёма-->
+                        <div class="card mb-2" id="previewRow" hidden>
+                            <div class="card-header">Превью приёма</div>
+                            <div class="card-body">
+                                <h5 class="card-title" id="previewDoctorName"></h5>
+                                <p class="card-text" id="previewExperience"></p>
+                                <p class="card-text" id="previewCategory"></p>
+                                <p class="card-text" id="previewDate"></p>
+                            </div>
+                        </div>
+                        <!--Контактной информации-->
+                        <div class="card mb-4" id="callbackRow" hidden>
+                            <div class="card-header">Контактные данные</div>
+                            <div class="card-body">
+                                <div class="row gx-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="inputName">Имя</label>
+                                        <input class="form-control" id="inputName" type="text">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="inputSurname">Фамилия</label>
+                                        <input class="form-control" id="inputSurname" type="text">
+                                    </div>
+                                </div>
+                                <div class="row gx-3 mb-3">
+                                    <div class="col-md-12">
+                                        <label class="small mb-1" for="inputTelephone">Телефон</label>
+                                        <input class="form-control" id="inputTelephone" type="tel" data-tel-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input class="btn btn-primary" value="Подтвердить" id="submitButton" disabled><br><br>
+                    </form>
                 </div>
-                <input class="btn btn-primary" value="Подтвердить" id="submitButton" disabled><br><br>
-            </form>
+            </div>
         </div>
     </div>
+    <footer th:insert="blocks/footer :: footer"></footer>
 </div>
-<footer th:insert="blocks/footer :: footer"></footer>
 </body>
 </html>
