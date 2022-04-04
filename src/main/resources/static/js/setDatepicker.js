@@ -15,14 +15,16 @@ function setDatepicker(birthDate) {
                     var day = date.getDate().toString().length == 1 ? '0' + date.getDate() : date.getDate();
                     $("#hiddenBirthDate").val(date.getFullYear() + "-" + month + "-" + day);
                 }
-            }
-        );
+            });
 
         var cleave = new Cleave(birthDate, {
             date: true,
             delimiter: '-',
             datePattern: ['d', 'm', 'Y']
         });
+
+        Scrollbar.init(document.querySelector('.ui-datepicker-year'), options);
+        Scrollbar.init(document.querySelector('.ui-datepicker-month'), options);
 
     });
 }

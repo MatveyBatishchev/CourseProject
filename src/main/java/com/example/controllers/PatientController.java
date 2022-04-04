@@ -58,7 +58,6 @@ public class PatientController {
     @PutMapping("/{id}")
     public ModelAndView editPatientById(@ModelAttribute("patient") @Valid Patient patient, BindingResult bindingResult,
                                   @RequestParam("profileImage") MultipartFile multipartFile, ModelAndView modelAndView) {
-        System.out.println("Are we working??");
         return patientService.editPatient(patient, bindingResult, multipartFile, modelAndView);
     }
 
@@ -114,5 +113,11 @@ public class PatientController {
     @ResponseBody
     public String checkPatientExist(@RequestParam("resetEmail") String resetEmail) {
         return patientService.checkIfPatientExists(resetEmail);
+    }
+
+    @GetMapping("/comparePasswords")
+    @ResponseBody
+    public String comparePasswords(@RequestParam("providedPassword") String providedPassword, @RequestParam("patientId") Long patientId) {
+        return patientService.comparePasswords(providedPassword, patientId);
     }
 }

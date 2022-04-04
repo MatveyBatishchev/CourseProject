@@ -18,27 +18,45 @@ $(document).ready(function () {
     });
 
     // проверка совпадения паролей
-    $("#submitCheckPassword").on("click", function() {
-        if ($("#checkActualPassword").val() !== $("#hiddenPassword").val())
-            $("#incorrectPassword").html('<div class="mt-2 alert alert-danger alert-dismissible fade show messageAlert" ' +
-                'role="alert">Неверный пароль!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
-        else {
-            $('#checkPasswordModal').modal("hide");
-            $("#changePasswordModal").modal("toggle");
-        }
+    $("#submitCheckPassword").on("click", function () {
+        $.ajax({
+            type: "GET",
+            url: "/patients/comparePasswords",
+            data: {
+                providedPassword: $("#checkActualPassword").val(),
+                patientId: $("#inputId").val()
+            },
+            success: function (data) {
+                if (data !== "true") {
+                    $("#incorrectPassword").html('<div class="mt-2 alert alert-danger alert-dismissible fade show messageAlert" ' +
+                        'role="alert">Неверный пароль!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                } else {
+                    $('#checkPasswordModal').modal("hide");
+                    $("#changePasswordModal").modal("toggle");
+                }
+            }
+        });
     });
 
     // создание нового пароля
-    $("#submitChangePassword").on("click", function() {
-        if ($("#hiddenPassword").val() == $("#inputPassword").val()) {
-            $("#samePassword").html('<div class="mt-2 alert alert-danger alert-dismissible fade show messageAlert" role="alert">Новый пароль совпадает с предыдущим!' +
-                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
-        }
-        else
-        {
-            $("#hiddenPassword").val($("#inputPassword").val());
-            $("#changePasswordModalBody").html('<p>Новый пароль будет успешно установлен при подтверждении редактирования</p>');
-        }
+    $("#submitChangePassword").on("click", function () {
+        $.ajax({
+            type: "GET",
+            url: "/patients/comparePasswords",
+            data: {
+                providedPassword: $("#inputPassword").val(),
+                patientId: $("#inputId").val()
+            },
+            success: function (data) {
+                if (data === "true") {
+                    $("#samePassword").html('<div class="mt-2 alert alert-danger alert-dismissible fade show messageAlert" role="alert">Новый пароль совпадает с предыдущим!' +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                } else {
+                    $("#hiddenPassword").val(data);
+                    $("#changePasswordModalBody").html('<p>Новый пароль будет успешно установлен при подтверждении редактирования</p>');
+                }
+            }
+        });
     });
 
 });

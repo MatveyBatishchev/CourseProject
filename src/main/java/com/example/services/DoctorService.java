@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,14 +25,16 @@ public class DoctorService {
 
     private final DoctorRepository doctorRepository;
     private final MailSender mailSender;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${upload.path}")
     private String uploadPath;
 
     @Autowired
-    public DoctorService(DoctorRepository doctorRepository, MailSender mailSender) {
+    public DoctorService(DoctorRepository doctorRepository, MailSender mailSender, PasswordEncoder passwordEncoder) {
         this.doctorRepository = doctorRepository;
         this.mailSender = mailSender;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public ModelAndView findAllDoctors(ModelAndView modelAndView) {
@@ -111,8 +114,9 @@ public class DoctorService {
         doctor.setActive(true);
         doctor.setRoles(Collections.singleton(Role.DOCTOR));
         if (doctor.getPassword() == null || doctor.getPassword().isEmpty()) {
-            doctor.setPassword(generatePassword());
-            sendPassword(doctor.getEmail(), doctor.getName(), doctor.getPassword());
+            String doctorPassword = generatePassword();
+            doctor.setPassword(passwordEncoder.encode(doctorPassword));
+            sendPassword(doctor.getEmail(), doctor.getName(), doctorPassword);
         }
         doctorRepository.save(doctor);
     }

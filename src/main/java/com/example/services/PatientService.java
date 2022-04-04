@@ -8,9 +8,11 @@ import com.example.repo.PatientRepository;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
@@ -25,8 +27,8 @@ public class PatientService implements UserDetailsService {
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
     private final MailSender mailSender;
-    @Autowired
-    private SmartValidator validator;
+    private final SmartValidator validator;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -34,10 +36,14 @@ public class PatientService implements UserDetailsService {
     @Autowired
     public PatientService(PatientRepository patientRepository,
                           DoctorRepository doctorRepository,
-                          MailSender mailSender) {
+                          MailSender mailSender,
+                          SmartValidator validator,
+                          PasswordEncoder passwordEncoder) {
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
         this.mailSender = mailSender;
+        this.validator = validator;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public ModelAndView findAllPatients(ModelAndView modelAndView) {
@@ -104,6 +110,7 @@ public class PatientService implements UserDetailsService {
     public void savePatientWithEmail(Patient patient) {
         patient.setActive(true);
         patient.setConfirmed(false);
+        patient.setPassword(passwordEncoder.encode(patient.getPassword()));
         patient.setRoles(Collections.singleton(Role.USER));
         patient.setActivationCode(UUID.randomUUID().toString());
         patientRepository.save(patient);
@@ -206,6 +213,7 @@ public class PatientService implements UserDetailsService {
             }
             else {
                 patient.setActivationCode(null);
+                patient.setPassword(passwordEncoder.encode(patient.getPassword()));
                 patientRepository.save(patient);
                 modelAndView.addObject("email", patient.getEmail());
                 modelAndView.setViewName("main/login");
@@ -213,7 +221,6 @@ public class PatientService implements UserDetailsService {
         }
         return modelAndView;
     }
-
 
     public void sendDeleteConfirmationMail(String patientEmail, String confirmationCode) {
         if (!patientEmail.isEmpty()) {
@@ -229,10 +236,15 @@ public class PatientService implements UserDetailsService {
     }
 
     public void sendConfirmationEmail(String patientEmail, String patientName, String activationCode) {
+        if (activationCode == null || activationCode.isBlank()) {
+            Patient patient = patientRepository.findByEmail(patientEmail);
+            patient.setActivationCode(UUID.randomUUID().toString());
+            patientRepository.save(patient);
+        }
         if (!patientEmail.isEmpty()) {
             String message = String.format(
                     "Добро пожаловать в RecoveryMed, %s! \n" +
-                            "Для подтверждения email-а, пожалуйста, перейдите по ссылке: http://localhost:8081/patients/activate/%s \n" +
+                            "Для подтверждения email-а, пожалуйста, перейдите по ссылке: https://localhost:443/patients/activate/%s \n" +
                                 "С уважением команда RecoveryMed❤",
                     patientName, activationCode
             );
@@ -248,7 +260,7 @@ public class PatientService implements UserDetailsService {
             patientRepository.save(patient);
             String message = String.format(
                     "Привет, %s! \n" +
-                            "Для сброса вашего пароля и создания нового, пожалуйста, перейдите по ссылке: http://localhost:8081/patients/reset/%s \n" +
+                            "Для сброса вашего пароля и создания нового, пожалуйста, перейдите по ссылке: https://localhost:443/patients/reset/%s \n" +
                             "С уважением команда RecoveryMed❤",
                     patient.getName(), activationCode
             );
@@ -258,5 +270,27 @@ public class PatientService implements UserDetailsService {
 
     public String checkIfPatientExists(String email) {
         return new Gson().toJson(patientRepository.existsByEmail(email));
+    }
+
+    public String comparePasswords(String providedPassword, Long patientId) {
+        Patient patient = patientRepository.findById(patientId).orElse(null);
+        String compare = "";
+        if (patient != null) {
+            if (passwordEncoder.matches(providedPassword,patient.getPassword())) {
+            compare = "true";
+            } else {
+                compare = passwordEncoder.encode(providedPassword);
+            }
+        }
+        return compare;
+    }
+
+    // erase all activation codes every day
+    @Scheduled(cron = "0 0 10 * * *")
+    public void resetActivationCodes() {
+        for (Patient patient : patientRepository.findAll()) {
+            patient.setActivationCode(null);
+            patientRepository.save(patient);
+        }
     }
 }

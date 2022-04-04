@@ -14,7 +14,7 @@
                 <div class="card-header">Добавление нового специалиста</div>
                 <div class="card-body">
                     <form th:method="POST" th:action="@{/doctors/new}" th:object="${doctor}"
-                          enctype="multipart/form-data">
+                          enctype="multipart/form-data" onsubmit='$("#regSubmit").prop("disabled",true); return true;'>
                         <!--Ошибка существующего email-a-->
                         <div class="alert alert-danger" role="alert" th:if="${emailMessage != null}"
                              th:text="${emailMessage}"></div>
@@ -108,7 +108,7 @@
                                      th:errors="*{workPlaces}"></div>
                             </div>
                         </div>
-                        <input class="btn btn-primary" type="submit" value="Зарегистрировать"><br><br>
+                        <input class="btn btn-primary" id="regSubmit" type="submit" value="Зарегистрировать"><br><br>
                     </form>
                 </div>
             </div>

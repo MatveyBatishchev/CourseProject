@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 /applicationFiles/
 /src/main/resources/application.properties
+/localhost.p12
 
 ### STS ###
 .apt_generated

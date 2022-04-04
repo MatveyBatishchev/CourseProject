@@ -22,12 +22,12 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
         List<Rule> rules = new ArrayList<>();
-        rules.add(new LengthRule(8, 30));
+        rules.add(new LengthRule(8, 100));
         rules.add(new UppercaseCharacterRule(1));
         rules.add(new DigitCharacterRule(1));
         rules.add(new SpecialCharacterRule(1));
-        rules.add(new NumericalSequenceRule(3,false));
-        rules.add(new AlphabeticalSequenceRule(3,false));
+        rules.add(new NumericalSequenceRule(5,false));
+        rules.add(new AlphabeticalSequenceRule(5,false));
         rules.add(new WhitespaceRule());
 
         Properties props = new Properties();

@@ -11,131 +11,73 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
             crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://unpkg.com/smooth-scrollbar@8.7.4/dist/smooth-scrollbar.js"></script>
 </head>
-<script>
-    $(document).ready(function () {
-
-        $('#checkPasswordModal').modal({
-            backdrop: 'static',
-            keyboard: true
-        });
-        $('#changePasswordModal').modal({
-            backdrop: 'static',
-            keyboard: true
-        });
-
-        const togglePassword = $(".togglePasswordClass").on("click", function () {
-            $(".inputPasswordClass").each(function () {
-                const type = $(this).prop("type") === "password" ? "text" : "password";
-                $(this).prop("type", type);
-                togglePassword.toggleClass("bi-eye");
-            })
-        });
-
-        const inputPassword = $('#inputPassword');
-        const inputConfirmPassword = $('#inputConfirmPassword');
-        const passwordMessage = $('#passwordMessage');
-        const submitChangePassword = $('#submitChangePassword');
-
-        inputConfirmPassword.on('keyup', function () {
-            if ((inputPassword.val() === inputConfirmPassword.val()) && (inputPassword.val() !== "")) {
-                passwordMessage.prop("class", "text-success");
-                passwordMessage.html('matching');
-                submitChangePassword.prop("disabled", false);
-            } else {
-                passwordMessage.prop("class", "text-danger");
-                passwordMessage.html('not matching');
-                submitChangePassword.prop("disabled", true);
-            }
-        });
-
-        let checkPassword = $('#checkActualPassword');
-        checkPassword.on('keyup', function () {
-            let submitCheckPassword = $('#submitCheckPassword');
-            if (checkPassword.val() === "") submitCheckPassword.prop("disabled", true);
-            else submitCheckPassword.prop("disabled", false);
-        });
-
-    });
-</script>
 <style>
-    .textarea-addon {
-        border-bottom-left-radius: 0 !important;
-        background-color: #FFFFFF;
-        border-top-left-radius: 0;
-    !important;
-    }
+* {
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    margin: 0;
+    font-size: 2em;
+}
+
+section {
+    padding: 8em;
+    height: 100vh;
+    margin-bottom: 3em;
+}
+
+section:nth-of-type(2) {
+    background-color: #1f1fd9;
+    color: white;
+}
+
+.custom {
+    width: 500px;
+    height: 500px;
+    overflow: auto;
+}
+
 </style>
-<body>
+<body id="my-scrollbar">
+<section>
+    <h1>What's up!</h1>
+    <p>Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне.
+        Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века.
+        В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов,
+        используя Lorem Ipsum для распечатки образцов.</p>
+</section>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkPasswordModal">
-    Изменить пароль
-</button>
+<section>
+    <h1>What's up!</h1>
+    <p>Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне.
+        Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века.
+        В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов,
+        используя Lorem Ipsum для распечатки образцов.</p>
+</section>
 
-<!-- Окно вода текущего пароля -->
-<div class="modal fade" id="checkPasswordModal" tabindex="-1" role="dialog" aria-labelledby="checkPasswordModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="checkPasswordModalLabel">Изменение пароля</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Введите свой текущий пароль:</p>
-                <div class="input-group mb-3">
-                    <input class="form-control border-end-0 inputPasswordClass" type="password" id="checkActualPassword"
-                           value="" aria-describedby="basic-addon1">
-                    <div class="input-group-addon">
-                        <span class="input-group-text rounded-start-0 textarea-addon" id="basic-addon1">
-                            <i class="bi bi-eye-slash togglePasswordClass"></i>
-                        </span>
-                    </div>
-                </div>
-                <div id="incorrectPassword"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary" id="submitCheckPassword" data-bs-toggle="modal"
-                        data-bs-target="#changePasswordModal" disabled>Подтвердить
-                </button>
-            </div>
-        </div>
+<section>
+    <div class="custom" id="custom">
+        <p>Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне.
+            Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века.
+            В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов,
+            используя Lorem Ipsum для распечатки образцов.
+            Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне.
+            Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века.
+            В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов,
+            используя Lorem Ipsum для распечатки образцов.</p>
     </div>
-</div>
+</section>
 
-<!-- Окно вода нового пароля -->
-<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="changePasswordModalLabel">Изменение пароля</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Введите новый пароль:</p>
-                <div class="input-group mb-3">
-                    <input class="form-control border-end-0 inputPasswordClass" type="password" id="inputPassword"
-                           value="" aria-describedby="basic-addon2">
-                    <div class="input-group-addon">
-                        <span class="input-group-text rounded-start-0 textarea-addon" id="basic-addon2">
-                            <i class="bi bi-eye-slash togglePasswordClass"></i>
-                        </span>
-                    </div>
-                </div>
-                <p>Подтвердите новый пароль:</p>
-                <input class="form-control inputPasswordClass" type="password" id="inputConfirmPassword" value="">
-                <span id="passwordMessage"></span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary" id="submitChangePassword" disabled>Подтвердить</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
+<script>
+    var options = {
+        'damping': 0.03
+    }
+    Scrollbar.init(document.querySelector('.custom'), options);
+</script>
+<br>
 </body>
 </html>
