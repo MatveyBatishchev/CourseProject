@@ -1,6 +1,7 @@
 package com.example.services;
 
 import com.example.files.FileUploadUtil;
+import com.example.mappers.PatientMapper;
 import com.example.models.Patient;
 import com.example.models.Role;
 import com.example.repo.DoctorRepository;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,7 +49,8 @@ public class PatientService implements UserDetailsService {
     }
 
     public ModelAndView findAllPatients(ModelAndView modelAndView) {
-        modelAndView.addObject("patients",patientRepository.findByOrderByIdAsc());
+        List<Patient> allPatients = patientRepository.findByOrderByIdAsc();
+        modelAndView.addObject("patients", allPatients);
         modelAndView.setViewName("patients/getAll");
         return modelAndView;
     }
@@ -114,14 +117,16 @@ public class PatientService implements UserDetailsService {
         patient.setRoles(Collections.singleton(Role.USER));
         patient.setActivationCode(UUID.randomUUID().toString());
         patientRepository.save(patient);
-        //sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
+        sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
     }
 
-    public void savePatient(Patient patient) {
-        patient.setActive(true);
-        patient.setRoles(Collections.singleton(Role.USER));
-        if (patient.getActivationCode().isBlank()) patient.setActivationCode(null);
-        patientRepository.save(patient);
+    // partial patient update
+    public void updatePatient(Patient updatedPatient) {
+        Patient patient = patientRepository.findById(updatedPatient.getId()).orElse(null);
+        if (patient != null) {
+            PatientMapper.INSTANCE.updatePatientFromUpdatedEntity(updatedPatient, patient);
+            patientRepository.save(patient);
+        }
     }
 
     public void savePatientFile(Patient patient, MultipartFile multipartFile) {
@@ -141,7 +146,7 @@ public class PatientService implements UserDetailsService {
         }
         else {
             if (!multipartFile.isEmpty()) savePatientFile(patient, multipartFile);
-            savePatient(patient);
+            updatePatient(patient);
             modelAndView.setViewName("redirect:/patients/" + patient.getId());
         }
         return modelAndView;
@@ -196,7 +201,7 @@ public class PatientService implements UserDetailsService {
         return modelAndView;
     }
 
-    public ModelAndView saveNewPassword(String code, String newPassword, ModelAndView modelAndView, BindingResult bindingResult) {
+    public ModelAndView saveResetPassword(String code, String newPassword, ModelAndView modelAndView, BindingResult bindingResult) {
         Patient patient = patientRepository.findByActivationCode(code);
         if (patient == null) {
             modelAndView.addObject("message", "Произошла ошибка в процессе изменения пароля!");
@@ -222,13 +227,49 @@ public class PatientService implements UserDetailsService {
         return modelAndView;
     }
 
+    public String comparePasswords(String providedPassword, Long patientId) {
+        Patient patient = patientRepository.findById(patientId).orElse(null);
+        String compare = "false";
+        if (patient != null) {
+            if (passwordEncoder.matches(providedPassword,patient.getPassword())) {
+                compare = "true";
+            }
+        }
+        return compare;
+    }
+
+    public String saveNewPassword(String providedPassword, Long patientId) {
+        Patient patient = patientRepository.findById(patientId).orElse(null);
+        if (patient != null) {
+            if (passwordEncoder.matches(providedPassword, patient.getPassword())) {
+                return new Gson().toJson("same");
+            }
+            else {
+                patient.setPassword(providedPassword);
+                BindingResult bindingResult = new BindException(patient, "patient");
+                validator.validate(patient, bindingResult);
+                if (bindingResult.hasErrors()) {
+                    String[] errors = bindingResult.getFieldError("password").getDefaultMessage().split(",");
+                    return new Gson().toJson(errors);
+                }
+                else {
+                   patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+                   patientRepository.save(patient);
+                   return new Gson().toJson("success");
+                }
+                }
+            }
+        return new Gson().toJson("Произошла ошибка в процесссе изменения пароля! Повторите попытку позже.");
+    }
+
     public void sendDeleteConfirmationMail(String patientEmail, String confirmationCode) {
         if (!patientEmail.isEmpty()) {
             String message = String.format(
-                    "Здравствуйте, с вашего аккаунта был отправлен запрос на удаление. \n" +
-                            "Никому не сообщайте код подтверждения! Если не вы отправляли запрос, обратитесь по телефону клиники. \n" +
-                            "Код подтверждения удаления аккаунта: %s \n" +
-                            "С уважением команда RecoveryMed❤",
+                    """
+                            Здравствуйте, с вашего аккаунта был отправлен запрос на удаление.\s
+                            Никому не сообщайте код подтверждения! Если не вы отправляли запрос, обратитесь по телефону клиники.\s
+                            Код подтверждения удаления аккаунта: %s\s
+                            С уважением команда RecoveryMed❤""",
                     confirmationCode
             );
             mailSender.send(patientEmail,"Код для удаления аккаунта", message);
@@ -243,9 +284,10 @@ public class PatientService implements UserDetailsService {
         }
         if (!patientEmail.isEmpty()) {
             String message = String.format(
-                    "Добро пожаловать в RecoveryMed, %s! \n" +
-                            "Для подтверждения email-а, пожалуйста, перейдите по ссылке: https://localhost:443/patients/activate/%s \n" +
-                                "С уважением команда RecoveryMed❤",
+                    """
+                            Добро пожаловать в RecoveryMed, %s!\s
+                            Для подтверждения email-а, пожалуйста, перейдите по ссылке: https://localhost:443/patients/activate/%s\s
+                            С уважением команда RecoveryMed❤""",
                     patientName, activationCode
             );
             mailSender.send(patientEmail,"Подтвердите электронную почту", message);
@@ -259,9 +301,10 @@ public class PatientService implements UserDetailsService {
             patient.setActivationCode(activationCode);
             patientRepository.save(patient);
             String message = String.format(
-                    "Привет, %s! \n" +
-                            "Для сброса вашего пароля и создания нового, пожалуйста, перейдите по ссылке: https://localhost:443/patients/reset/%s \n" +
-                            "С уважением команда RecoveryMed❤",
+                    """
+                            Привет, %s!\s
+                            Для сброса вашего пароля и создания нового, пожалуйста, перейдите по ссылке: https://localhost:443/patients/reset/%s\s
+                            С уважением команда RecoveryMed❤""",
                     patient.getName(), activationCode
             );
             mailSender.send(patientEmail,"Восстановление пароля", message);
@@ -272,25 +315,13 @@ public class PatientService implements UserDetailsService {
         return new Gson().toJson(patientRepository.existsByEmail(email));
     }
 
-    public String comparePasswords(String providedPassword, Long patientId) {
-        Patient patient = patientRepository.findById(patientId).orElse(null);
-        String compare = "";
-        if (patient != null) {
-            if (passwordEncoder.matches(providedPassword,patient.getPassword())) {
-            compare = "true";
-            } else {
-                compare = passwordEncoder.encode(providedPassword);
-            }
-        }
-        return compare;
-    }
-
     // erase all activation codes every day
-    @Scheduled(cron = "0 0 10 * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void resetActivationCodes() {
         for (Patient patient : patientRepository.findAll()) {
             patient.setActivationCode(null);
             patientRepository.save(patient);
         }
     }
+
 }

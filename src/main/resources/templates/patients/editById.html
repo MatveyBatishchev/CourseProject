@@ -16,14 +16,13 @@
 </head>
 <script>
     $(document).ready(function() {
-        setDatepicker($("#inputBirthDate"));
+        setDatepicker($("#inputBirthDate"), $("#editSubmit"));
     });
 </script>
 <body>
 <div class="wrapper">
     <div class="content">
         <header th:insert="blocks/header :: header"></header>
-
         <div class="container-fluid" style="padding-left: 85px">
             <div class="row">
                 <!--Профиль-->
@@ -112,35 +111,19 @@
                                 <h5 class="btn col-5 btn-link buttonFont aStyleButton"
                                     th:if="${patient.isConfirmed() == false}">Подтвердить почту</h5>
                             </div>
-                            <!--Ряд ошибки нового пароля-->
-                            <div class="row d-flex justify-content-center" th:if="${#fields.hasErrors('password')}">
-                                <div class="col-11 messageAlert">
-                                    <p>Произошла ошибка в процессе изменения пароля! Возможные причины:</p>
-                                    <ul class="alert alert-warning" th:each="error: ${#fields.errors('password')}">
-                                        <li th:each="message : ${error.split(',')}">
-                                            <p class="error-message" th:text="${message}"></p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
                             <!--Спрятанные поля-->
                             <div>
                                 <input id="inputId" th:value="${patient.getId()}" hidden>
-                                <input id="hiddenPassword" th:field="*{password}" th:value="${patient.getPassword()}"
-                                       hidden>
                                 <input id="hiddenBirthDate" type="date" th:field="*{birthDate}" hidden>
-                                <input th:field="*{email}" th:value="${patient.getEmail()}" hidden>
-                                <input th:field="*{image}" th:value="${patient.getImage()}" hidden>
-                                <input th:field="*{activationCode}" th:value="${patient.getActivationCode()}" hidden>
-                                <input th:field="*{appointments}" th:value="${patient.getAppointments()}" hidden>
-                                <input th:field="*{confirmed}" th:value="${patient.isConfirmed()}" hidden>
+                                <input th:field="*{email}" hidden>
+                                <input th:field="*{password}" hidden>
                             </div>
                         </div>
                         <!--Кнопка-->
                         <div class="mt-4">
                             <!--Подтвердить-->
                             <div class="d-flex justify-content-center align-items-center">
-                                <input class="btn btn-primary button mt-5 mb-3 px-4" type="submit"
+                                <input class="btn btn-primary button mt-5 mb-3 px-4" id="editSubmit" type="submit"
                                        value="Подтвердить"/>
                             </div>
                             <!--Изменить пароль-->
@@ -201,7 +184,7 @@
                                             <!--Личные данные-->
                                             <div class="col text-start">
                                                 <!--ФИО-->
-                                                <h4 class="themes"
+                                                <h4 class="doctorName"
                                                     th:text="${appointment.getDoctor().getSurname() + ' ' + appointment.getDoctor().getName() + ' ' + appointment.getDoctor().getPatronymic()}"></h4>
                                                 <!--Описание специалиста-->
                                                 <h5 class="headlines"
@@ -361,7 +344,7 @@
                            onkeyup='check($("#submitChangePassword"));' value="">
                     <span id="passwordMessage"></span>
                     <br>
-                    <div id="samePassword"></div>
+                    <div id="errorsPassword"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                         <button type="button" class="btn btn-primary" id="submitChangePassword" disabled>Подтвердить

@@ -12,7 +12,7 @@
 </head>
 <script>
     $(document).ready(function() {
-        setDatepicker($("#dateInput"));
+        setDatepicker($("#dateInput"), $("#regSubmit"));
     });
 </script>
 <body>
@@ -50,7 +50,7 @@
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="dateInput">Дата рождения</label>
-                                <input class="form-control" id="dateInput" type="text" placeholder="дд.мм.гггг" required>
+                                <input class="form-control" id="dateInput" type="text" autocomplete="off">
                                 <input id="hiddenBirthDate" type="date" th:field="*{birthDate}" hidden>
                             </div>
                             <div class="alert alert-warning" th:if="${#fields.hasErrors('birthDate')}"

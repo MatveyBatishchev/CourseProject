@@ -2,6 +2,7 @@ package com.example.services;
 
 
 import com.example.files.FileUploadUtil;
+import com.example.mappers.DoctorMapper;
 import com.example.models.Doctor;
 import com.example.models.Patient;
 import com.example.models.Role;
@@ -121,6 +122,14 @@ public class DoctorService {
         doctorRepository.save(doctor);
     }
 
+    public void updateDoctor(Doctor updatedDoctor) {
+        Doctor doctor = doctorRepository.findById(updatedDoctor.getId()).orElse(null);
+        if (doctor != null) {
+            DoctorMapper.INSTANCE.updateDoctorFromUpdatedEntity(updatedDoctor, doctor);
+            doctorRepository.save(doctor);
+        }
+    }
+
     public void saveDoctorFile(Doctor doctor, MultipartFile multipartFile) {
         try {
             String uploadDir = uploadPath + "/doctors/" + doctor.getId();
@@ -138,7 +147,7 @@ public class DoctorService {
         }
         else {
             if (!multipartFile.isEmpty()) saveDoctorFile(doctor, multipartFile);
-            saveDoctor(doctor);
+            updateDoctor(doctor);
             modelAndView.setViewName("redirect:/doctors/" + doctor.getId());
         }
         return modelAndView;

@@ -40,7 +40,7 @@ public class PatientController {
     }
 
     @GetMapping("/new")
-    public String addNewPatient(@ModelAttribute("patient")  Patient patient) {
+    public String addNewPatient(@ModelAttribute("patient") Patient patient) {
         return "main/registration";
     }
 
@@ -90,7 +90,7 @@ public class PatientController {
                                                    @RequestParam("password") String newPassword,
                                                    ModelAndView modelAndView,
                                                    BindingResult bindingResult) {
-        return patientService.saveNewPassword(code, newPassword, modelAndView, bindingResult);
+        return patientService.saveResetPassword(code, newPassword, modelAndView, bindingResult);
     }
 
     @PostMapping("/passwordEmail")
@@ -99,7 +99,6 @@ public class PatientController {
         patientService.sendResetPasswordEmail(resetEmail);
         return "Письмо для восстановления пароля было успешно отправлено вам на почту!";
     }
-
 
     @PostMapping("/sendDeleteCode")
     @ResponseBody
@@ -119,5 +118,12 @@ public class PatientController {
     @ResponseBody
     public String comparePasswords(@RequestParam("providedPassword") String providedPassword, @RequestParam("patientId") Long patientId) {
         return patientService.comparePasswords(providedPassword, patientId);
+    }
+
+    @PostMapping("/newPassword")
+    @ResponseBody
+    public String newPassword(@RequestParam("providedPassword") String providedPassword,
+                              @RequestParam("patientId") Long patientId) {
+        return patientService.saveNewPassword(providedPassword, patientId);
     }
 }

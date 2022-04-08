@@ -9,14 +9,15 @@
     /*<![CDATA[*/
     $(document).ready(function () {
         let disabledDays = [];
-        let schedules = /*[[${schedules}]]*/ 'default';
-        if (JSON.parse(schedules) != null) {
-            JSON.parse(schedules).each(schedule => {
+        let schedulesJson = /*[[${schedules}]]*/ 'default';
+        let schedules = JSON.parse(schedulesJson);
+        if (schedules != null && schedules.length !== 0) {
+            schedules.forEach(schedule => {
                 disabledDays.push(schedule.date);
             });
         }
 
-        //$.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
+        $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
         console.log($("#datepicker"));
         $("#datepicker").datepicker({
             dateFormat: 'dd-mm-yy',

@@ -190,6 +190,15 @@ input:disabled {
     font-size: 19px;
     line-height: 19px;
 }
+
+.doctorName{
+    font-family: 'FFormular';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 29px;
+}
+
 .spanStyle{
     font-weight: 600;
     color: #DD9919;

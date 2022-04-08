@@ -128,17 +128,13 @@
                                              th:errors="*{workPlaces}"></div>
                                     </div>
                                 </div>
+                                <!--Спрятанные поля-->
+                                <input th:field="*{email}" th:value="${doctor.getEmail()}" hidden>
                                 <!--Ряд кнопок-->
                                 <div class="col-md-6">
                                     <input class="btn btn-primary" type="submit" value="Подтвердить"/>
                                     <input class="btn btn-danger" type="submit" form="deleteForm" value="Удалить">
                                 </div>
-                                <!--Спрятанные поля-->
-                                <input th:field="*{image}" th:value="${doctor.getImage()}" hidden>
-                                <input th:field="*{email}" th:value="${doctor.getEmail()}" hidden>
-                                <input th:field="*{password}" th:value="${doctor.getPassword()}" hidden>
-                                <input th:field="*{schedules}" th:value="${doctor.getSchedules()}" hidden>
-                                <input th:field="*{appointments}" th:value="${doctor.getSchedules()}" hidden>
                             </form>
                             <form id="deleteForm" th:method="DELETE"
                                   th:action="@{/doctors/{id}(id=${doctor.getId()})}"></form>
