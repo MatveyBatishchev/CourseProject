@@ -116,7 +116,7 @@
                                 <input id="inputId" th:value="${patient.getId()}" hidden>
                                 <input id="hiddenBirthDate" type="date" th:field="*{birthDate}" hidden>
                                 <input th:field="*{email}" hidden>
-                                <input th:field="*{password}" hidden>
+                                <input th:field="*{password}" th:value="${'Password915#'}" hidden>
                             </div>
                         </div>
                         <!--Кнопка-->

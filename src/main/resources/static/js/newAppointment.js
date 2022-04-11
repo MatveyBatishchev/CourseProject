@@ -140,11 +140,8 @@ $(document).ready(function () {
                 time: clickedButtonText,
                 callbackInfo: $("#inputSurname").val() + " " + $("#inputName").val() + " " + $("#inputTelephone").val()
             },
-            success: function (data) {
+            success: function(data) {
                 window.location.href = "https://localhost:443" + data;
-            },
-            error: function (error) {
-                console.log("ERROR : ", error);
             }
         })
     });

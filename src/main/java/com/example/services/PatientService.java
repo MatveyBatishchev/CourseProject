@@ -117,7 +117,7 @@ public class PatientService implements UserDetailsService {
         patient.setRoles(Collections.singleton(Role.USER));
         patient.setActivationCode(UUID.randomUUID().toString());
         patientRepository.save(patient);
-        sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
+        //sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
     }
 
     // partial patient update
@@ -316,7 +316,7 @@ public class PatientService implements UserDetailsService {
     }
 
     // erase all activation codes every day
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 12 * * *")
     public void resetActivationCodes() {
         for (Patient patient : patientRepository.findAll()) {
             patient.setActivationCode(null);

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -117,7 +118,17 @@ public class ScheduleService {
         return sqlDate;
     }
 
-
+    // delete all schedules which date is expired for more than 5 days
+    @Scheduled(cron = "0 0 12 * * *")
+    public void deleteExpiredSchedules() {
+        List<Schedule> schedules = scheduleRepository.findAll();
+        java.util.Date currentDate = new java.util.Date();
+        for (Schedule schedule : schedules) {
+            if (Math.abs(schedule.getDate().getTime() - currentDate.getTime()) > 432000000) {
+                scheduleRepository.delete(schedule);
+            }
+        }
+    }
 
 }
 

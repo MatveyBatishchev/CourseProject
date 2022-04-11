@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <title>Завершение записи</title>
+    <div th:insert="blocks/webjars :: webjars"></div>
+</head>
+<body>
+<div class="wrapper">
+    <div class="content">
+        <header th:insert="blocks/header :: header"></header>
+        <div class="container mt-5">
+            <h1>Вы успешно записались на приём!</h1>
+            <div class="card mb-2 mt-3">
+                <div class="card-header">Запись на приём к врачу</div>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${'Специалист: ' + appointment.getDoctor().getSurname() + ' ' + appointment.getDoctor().getName() + ' ' + appointment.getDoctor().getPatronymic()}"></h5>
+                    <p class="card-text" th:text="${'Специальность: ' + #strings.setJoin(appointment.getDoctor().getSpecialities(), ', ')}"></p>
+                    <p class="card-text" th:text="${'Стаж: ' + appointment.getDoctor().getExperience()}"></p>
+                    <p class="card-text" th:text="${'Категория: ' + appointment.getDoctor().getCategory()}"></p>
+                    <hr>
+<!--                    + ' ' + ${#temporals.format(appointment.getTime(), 'HH:mm')}-->
+                    <p class="card-text" th:text="${'Время приёма: ' + #dates.format(appointment.getDate(), 'dd-MM-yyyy') + ' ' + appointment.getTime().format(T(java.time.format.DateTimeFormatter).ofPattern('HH:mm'))}"></p>
+                    <p class="card-text">Кабинет: 317</p>
+                    <p class="card-text">«RecoveryMed» клиника на Большой Семёновской (м. Электрозаводская)</p>
+                    <hr>
+                  <p class="card-text">Файловая версия вашей записи:</p>
+                    <p class="card-text"><a th:text="${'talon_' + appointment.getId() + '.pdf'}" th:href="@{/appointments/exportPdf/{id}(id=${appointment.getId()})}"></a></p>
+                </div>
+            </div>
+            <p>Если у вас отстались вопросы в процессе записи позвоните на телефон 8 (999) 123-45-67 или свяжитесь по
+                почте recoverymed.info@gmail.com</p>
+            <a class="btn btn-primary mt-2" href="/medtouch/home">Вернутся на главную странциу</a>
+        </div>
+    </div>
+    <footer th:insert="blocks/footer :: footer"></footer>
+</div>
+</body>
+</html>

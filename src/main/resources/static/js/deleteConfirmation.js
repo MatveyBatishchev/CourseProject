@@ -69,7 +69,7 @@ $(document).ready(function() {
                 $("#modalBody").html('<p>Ваш аккаунт успешно удалён. Возвращайтесь к нам как можно скорее!</p>');
                 $("#modalFooter").prop("hidden", true);
                 $("#closeSecondModal").on("click", function() {
-                    window.location = "http://localhost:8081/logout";
+                    window.location = "http://localhost:443/logout";
                 })
             }
             else $("#incorrectCode").html('<div class="mt-2 alert alert-danger alert-dismissible fade show messageAlert" role="alert">Неверный код подтверждения!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');

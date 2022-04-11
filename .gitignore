@@ -6,6 +6,7 @@ target/
 /applicationFiles/
 /src/main/resources/application.properties
 /localhost.p12
+/appointmentFiles
 
 ### STS ###
 .apt_generated

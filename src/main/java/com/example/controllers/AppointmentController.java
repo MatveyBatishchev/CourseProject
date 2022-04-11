@@ -4,6 +4,7 @@ import com.example.models.Appointment;
 import com.example.models.Patient;
 import com.example.services.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,9 +52,14 @@ public class AppointmentController {
             @RequestParam("time") String time,
             @RequestParam("doctorId") Long doctorId,
             @RequestParam("callbackInfo") String callbackInfo) {
-        System.out.println(callbackInfo);
-        appointmentService.saveAppointment(patient, date, time, doctorId, callbackInfo);
-        return "/appointments/all";
+        Long appointmentId = appointmentService.saveAppointment(patient, date, time, doctorId, callbackInfo);
+        return "/appointments/success/" + appointmentId;
+    }
+
+    @GetMapping("/success/{id}")
+    public String getResultAppointment(@PathVariable("id") Long appointmentId, Model model) {
+        model.addAttribute("appointment", appointmentService.findAppointmentById(appointmentId));
+        return "/appointments/success";
     }
 
     @GetMapping("/{id}/edit")
@@ -84,6 +90,12 @@ public class AppointmentController {
     @DeleteMapping("/{id}")
     public void deleteAppointmentById(@PathVariable("id") Long id) {
         appointmentService.deleteAppointment(id);
+    }
+
+
+    @GetMapping("/exportPdf/{id}")
+    public ResponseEntity<byte[]> getPDF(@PathVariable("id") Long appointmentId) {
+        return appointmentService.exportPdf(appointmentId);
     }
 
 }
