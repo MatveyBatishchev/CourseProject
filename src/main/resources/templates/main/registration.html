@@ -13,6 +13,15 @@
 <script>
     $(document).ready(function() {
         setDatepicker($("#dateInput"), $("#regSubmit"));
+
+        $("#agreementCheckbox").on("change", function() {
+            if ($("#agreementCheckbox").is(":checked")) {
+                $("#regSubmit").prop("disabled", false)
+            }
+            else {
+                $("#regSubmit").prop("disabled", true)
+            }
+        });
     });
 </script>
 <body>
@@ -120,7 +129,14 @@
                                 <span id='passwordMessage'></span>
                             </div>
                         </div>
-                        <button class="btn btn-primary" id="regSubmit" type="submit">Зарегистрироваться</button>
+                        <!-- Пользовательское соглашение-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <input class="form-check-input" type="checkbox" value="" id="agreementCheckbox">
+                                <label class="form-check-label mt-1" for="agreementCheckbox">Я согласен на обработку персональных данных и с условиями <a href="">Пользовательского соглашения</a></label>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="regSubmit" type="submit" disabled>Зарегистрироваться</button>
                         <br><br>
                     </form>
                 </div>

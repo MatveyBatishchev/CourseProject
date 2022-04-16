@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <title>Врачи</title>
+    <div th:insert="blocks/webjars :: webjars"></div>
+    <script type="text/javascript" th:src="@{/js/doctorsJs.js}"></script>
+</head>
+<style>
+    .card {
+        display: flex !important;
+        width: 100% !important;
+    }
+
+    .m-tabs {
+        font-size: 19px;
+        line-height: 32px !important;
+    }
+
+    .m-tabs .card {
+        background-color: #e7e7e7 !important;
+        border: 0;
+        border-radius: 10px !important;
+    }
+
+    div {
+        display: block;
+    }
+
+    .m-tabs-inner_tab {
+        display: block;
+    }
+
+    .abc-list__cols {
+        column-count: 4;
+        margin: 0 0 10px;
+        padding: 20px;
+    }
+
+    .abc-list__item {
+        position: relative;
+        padding: 5px 0 0 45px;
+        margin: 0 0 20px;
+        z-index: 11;
+        box-sizing: border-box;
+    }
+
+    .abc-list__letter {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-weight: 700;
+        color: #243528;
+        font-size: 24px;
+        line-height: 25px;
+    }
+
+    .photo {
+        width: 134px;
+        height: 152px;
+
+        border: 1px solid #000000;
+        box-sizing: border-box;
+        border-radius: 10px;
+    }
+
+</style>
+<body>
+<div class="wrapper">
+    <div class="content">
+        <header th:replace="blocks/header :: header"></header>
+        <div class="container mt-5">
+            <h1>Врачи</h1>
+        </div>
+        <hr>
+        <div class="container">
+            <div class="m-tabs">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="m-tabs__tab active">
+                            <div class="m-tabs-inner">
+                                <div class="m-tabs-inner_tab">
+                                    <div class="abc-list__cols">
+                                        <div class="abc-list__col">
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">А</div>
+                                                <a>Аллерголог</a><br>
+                                                <a style="margin-top: 3px">Андролог</a><br>
+                                                <a>Анестезиолог</a><br>
+                                                <a>Аритмолог</a><br>
+                                                <a>Артролог</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">В</div>
+                                                <a>Венеролог</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">Г</div>
+                                                <a>Гастроэнтеролог</a><br>
+                                                <a>Гематолог</a><br>
+                                                <a>Гемостазиолог</a><br>
+                                                <a>Генетик</a><br>
+                                                <a>Гепатолог</a><br>
+                                                <a>Гинеколог</a><br>
+                                                <a>Гирудотерапевт</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">Д</div>
+                                                <a>Дерматолог</a><br>
+                                                <a>Диетолог</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">И</div>
+                                                <a>Иммунолог</a><br>
+                                                <a>Инфекционист</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">К</div>
+                                                <a>Кардиолог</a><br>
+                                                <a>Косметолог</a><br>
+                                                <a>КТ-диагност</a><br>
+                                            </div>
+                                        </div>
+                                        <div class="abc-list__col">
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">Л</div>
+                                                <a>Логопед</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">М</div>
+                                                <a>Маммолог</a><br>
+                                                <a>Мануальный терапевт</a><br>
+                                                <a>Массажист</a><br>
+                                                <a>Мастер маникюра-педикюра</a><br>
+                                                <a>Миколог</a><br>
+                                                <a>МРТ-диагност</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">Н</div>
+                                                <a>Невролог</a><br>
+                                                <a>Нейрохирург</a><br>
+                                                <a>Нефролог</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">О</div>
+                                                <a>Онколог</a><br>
+                                                <a>Остеопат</a><br>
+                                                <a>Отоларинголог (ЛОР)</a><br>
+                                                <a>Офтальмолог (окулист)</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">П</div>
+                                                <a>Педиатр</a><br>
+                                                <a>Пластический хирург</a><br>
+                                                <a>Подолог</a><br>
+                                                <a>Проктолог</a><br>
+                                                <a>Психиатр</a><br>
+                                                <a>Психолог</a><br>
+                                                <a>Психотерапевт</a><br>
+                                                <a>Пульмонолог</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">Р</div>
+                                                <a>Реабилитолог</a><br>
+                                                <a>Ревматолог</a><br>
+                                                <a>Рентгенолог</a><br>
+                                                <a>Репродуктолог</a><br>
+                                                <a>Рефлексотерапевт</a><br>
+                                            </div>
+                                        </div>
+                                        <div class="abc-list__col">
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">С</div>
+                                                <a>Сексолог</a><br>
+                                                <a>Сердечно-сосудистый хирург</a><br>
+                                                <a>Сомнолог</a><br>
+                                                <a>Стоматолог</a><br>
+                                                <a>Сурдолог</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">Т</div>
+                                                <a>Терапевт</a><br>
+                                                <a>Травматолог-ортопед</a><br>
+                                                <a>Трансфузиолог</a><br>
+                                                <a>Трихолог</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">У</div>
+                                                <a>УЗ-диагност</a><br>
+                                                <a>Уролог</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">Ф</div>
+                                                <a>Физиотерапевт</a><br>
+                                                <a>Флеболог</a><br>
+                                                <a>Фониатр</a><br>
+                                                <a>Функциональный диагност</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">Х</div>
+                                                <a>Хирург</a><br>
+                                            </div>
+                                            <div class="abc-list__item">
+                                                <div class="abc-list__letter">Э</div>
+                                                <a>Эмбриолог</a><br>
+                                                <a>Эндокринолог</a><br>
+                                                <a>Эндокринолог-гинеколог</a><br>
+                                                <a>Эндоскопист</a><br>
+                                                <a>Эпилептолог</a><br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="mt-5">Найти специалиста</h2>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-5">
+                            <input class="form-control" id="inputDoctorFullName" type="text" placeholder="Введите ФИО">
+                        </div>
+                        <div class="col-md-5">
+                            <select class="form-control" id="inputDoctorSpeciality">
+                                <option value="" selected>Выберите направление</option>
+                                <option th:each="speciality : ${T(com.example.models.Speciality).values()}"
+                                        th:value="${{speciality}}" th:text="${speciality.label}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 justify-content-end">
+                            <button class="btn btn-primary" id="findDoctorButton" style="width: 150px;">Найти</button>
+                        </div>
+                    </div>
+                    <div id="foundDoctors">
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-4">
+                                <div class="card" style="width: 18rem;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Card title</h5>
+                                        <div class="photo mt-2"></div>
+                                        <p class="card-text mt-4">Some quick example text to build on the card title and
+                                            make up the bulk of the card's content.</p>
+                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card" style="width: 18rem;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Card title</h5>
+                                        <div class="photo mt-2"></div>
+                                        <p class="card-text mt-4">Some quick example text to build on the card title and
+                                            make up the bulk of the card's content.</p>
+                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card" style="width: 18rem;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Card title</h5>
+                                        <div class="photo mt-2"></div>
+                                        <p class="card-text mt-4">Some quick example text to build on the card title and
+                                            make up the bulk of the card's content.</p>
+                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer th:insert="blocks/footer :: footer"></footer>
+</div>
+</body>
+</html>

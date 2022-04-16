@@ -1,26 +1,28 @@
 <div th:fragment="header" xmlns:sec="http://www.w3.org/1999/xhtml">
-    <div class="header">
-        <div class="container-fluid py-4 row">
+    <div class="header d-flex align-items-center">
+        <div class="container-fluid py-4 row" style="padding-left: 6rem;">
             <!--Label-->
-            <div class="d-flex col-7" style="padding-left: 6rem;">
-                <a href="/medtouch/home"
-                   class="d-flex align-items-center mr-8">
+            <div class="d-flex col-2">
+                <a href="/recoverymed/home"
+                   class="d-flex align-items-center">
                     <span class="mainLabel">RecoveryMed</span>
                 </a>
             </div>
             <!--Кнопки-->
-            <div class="col-5">
-                <ul class="nav nav-pills">
+            <div class="col">
+                <ul class="nav nav-pills justify-content-end">
                     <!--Th запись на прием-->
-                    <li class=""><a href="/appointments/new" class="nav-link themes">Записаться на прием</a></li>
-                    <li class=""><a href="/medtouch/aboutUs" class="nav-link themes">О нас</a></li>
-                    <li class=""><a href="/medtouch/contacts" class="nav-link themes">Контакты</a></li>
-                    <li class="" sec:authorize="!isAuthenticated()"><a href="/login" class="nav-link themes">Войти</a></li>
+                    <li class=""><a href="/appointments/new" class="nav-link headlines">Записаться на прием</a></li>
+                    <li class=""><a href="/recoverymed/services" class="nav-link headlines">Услуги</a></li>
+                    <li class=""><a href="/recoverymed/doctors" class="nav-link headlines">Врачи</a></li>
+                    <li class=""><a href="/recoverymed/aboutUs" class="nav-link headlines">О нас</a></li>
+                    <li class=""><a href="/recoverymed/contacts" class="nav-link headlines">Контакты</a></li>
+                    <li class="" sec:authorize="!isAuthenticated()"><a href="/login" class="nav-link headlines">Войти</a></li>
                     <li class="" sec:authorize="isAuthenticated()">
-                        <a class="nav-link themes" th:href="@{/{link}(link=${#authentication.getPrincipal().getProfileLink()})}">Профиль</a>
+                        <a class="nav-link headlines" th:href="@{/{link}(link=${#authentication.getPrincipal().getProfileLink()})}">Профиль</a>
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link themes" type="button" id="logout">Выйти</a>
+                        <a class="nav-link headlines" type="button" id="logout">Выйти</a>
                     </li>
                     <script>
                         $(document).ready(function() {

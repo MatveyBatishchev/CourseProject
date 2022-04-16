@@ -61,6 +61,10 @@ public class Doctor implements User {
     @NotBlank(message = "Это поле является обязательным")
     private String email;
 
+    @Column(name="cabinet", nullable=true)
+    @Expose
+    private String cabinet;
+
     @Column(name="experience",nullable=false)
     @Min(value=1, message="Недопустимое значение")
     @Expose
@@ -112,6 +116,7 @@ public class Doctor implements User {
     @ElementCollection(targetClass = Speciality.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "doctor_speciality", joinColumns = @JoinColumn(name = "doctor_id"))
     @Enumerated(EnumType.STRING)
+    @Expose
     private Set<Speciality> specialities;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

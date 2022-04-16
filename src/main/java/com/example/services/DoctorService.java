@@ -6,6 +6,7 @@ import com.example.mappers.DoctorMapper;
 import com.example.models.Doctor;
 import com.example.models.Patient;
 import com.example.models.Role;
+import com.example.models.Speciality;
 import com.example.repo.DoctorRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DoctorService {
@@ -82,7 +84,7 @@ public class DoctorService {
 
     public String findDoctorsBySpeciality(String speciality) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        return gson.toJson(doctorRepository.findDoctorsBySpeciality(speciality));
+        return gson.toJson(doctorRepository.findDoctorsBySpeciality(speciality).stream().filter(doctor -> doctor.getSchedules().size() != 0).collect(Collectors.toList()));
     }
 
     public HashSet<Doctor> findDoctorsBySearch(String search) {
@@ -94,6 +96,29 @@ public class DoctorService {
         }
         else doctorsList = doctorRepository.findAll();
         return new HashSet<>(doctorsList);
+    }
+
+    public String findDoctorsBySpecialityAndFullName(String fullName, String speciality) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        String doctors = "";
+        if (fullName.isBlank() && speciality.isBlank()) {
+            doctors = gson.toJson(doctorRepository.findAll());
+        }
+        else {
+            if (!fullName.isBlank() && !speciality.isBlank()) {
+                doctors = gson.toJson(findDoctorsBySearch(fullName)
+                        .stream()
+                        .filter(doctor -> doctor.getSpecialities().contains(Speciality.valueOf(speciality)))
+                        .collect(Collectors.toList()));
+            } else {
+                if (!speciality.isBlank()) {
+                    doctors = gson.toJson(doctorRepository.findDoctorsBySpeciality(speciality));
+                } else {
+                    doctors = gson.toJson(findDoctorsBySearch(fullName));
+                }
+            }
+        }
+        return doctors;
     }
 
     public ModelAndView saveNewDoctor(Doctor doctor, BindingResult bindingResult, ModelAndView modelAndView) {
@@ -117,7 +142,7 @@ public class DoctorService {
         if (doctor.getPassword() == null || doctor.getPassword().isEmpty()) {
             String doctorPassword = generatePassword();
             doctor.setPassword(passwordEncoder.encode(doctorPassword));
-            sendPassword(doctor.getEmail(), doctor.getName(), doctorPassword);
+            //sendPassword(doctor.getEmail(), doctor.getName(), doctorPassword);
         }
         doctorRepository.save(doctor);
     }

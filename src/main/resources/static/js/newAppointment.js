@@ -13,12 +13,22 @@ $(document).ready(function () {
                 },
             success: function (data) {
                 let doctors = JSON.parse(data);
-                let s = '<option value="" disabled selected>Выберите специалиста</option>';
-                doctors.forEach(doctor => {
-                    s += '<option value="' + doctor.id + '">' + doctor.surname + ' ' + doctor.name + ' ' + doctor.patronymic + '</option>';
-                })
-
-                $("#inputDoctor").html(s);
+                console.log(doctors.length);
+                if (doctors.length != 0) {
+                    let s = '<option value="" disabled selected>Выберите специалиста</option>';
+                    doctors.forEach(doctor => {
+                        s += '<option value="' + doctor.id + '">' + doctor.surname + ' ' + doctor.name + ' ' + doctor.patronymic + '</option>';
+                    })
+                    $("#inputDoctor").html(s);
+                }
+                else {
+                    $("#selectDoctorCol").html('<div class="card align-items-center justify-content-center mt-3">\n' +
+                        '                                <div class="m-3">\n' +
+                        '                                    <h4 class="themes">К сожалению на данным момент нет свободных специалистов. Мы постараемся как можно скорее исправить ситуацию</h4>\n' +
+                        '                                    <i class="las la-sad-cry la-3x"></i>\n' +
+                        '                                </div>\n' +
+                        '                            </div>');
+                }
                 $("#doctorsRow").prop("hidden", false);
                 $("#schedulesRow").prop("hidden", true);
                 $("#timetablesRow").prop("hidden", true);
@@ -113,12 +123,16 @@ $(document).ready(function () {
                 doctorId: $("#inputDoctor").val(),
             },
             success: function (data) {
+                console.log(data);
                 let doctor = JSON.parse(data).doctor;
                 $("#previewAppointment").html(data);
                 $("#previewDoctorName")[0].innerHTML = 'Специалист: ' + doctor.surname + ' ' + doctor.name + ' ' + doctor.patronymic;
+                $("#previewDoctorPhoto").prop("src", "/applicationFiles/doctors/" + doctor.id + "/" + doctor.image);
+                $("#previewDoctorSpeciality")[0].innerHTML = 'Специальность: ' + $("#inputSpeciality option:selected").text();
                 $("#previewExperience")[0].innerHTML = 'Стаж: ' + doctor.experience + ' лет';
                 $("#previewCategory")[0].innerHTML = "Категория: " + doctor.category;
                 $("#previewDate")[0].innerHTML = 'Время приёма: ' + $("#inputSchedule").datepicker({dateFormat: 'dd-mm-yy'}).val() + ' в ' + clickedButtonText;
+                $("#previewCabinet")[0].innerHTML = 'Кабинет: ' + doctor.cabinet;
                 $("#previewRow").prop("hidden", false);
                 $("#callbackRow").prop("hidden", doctor.reg);
             },

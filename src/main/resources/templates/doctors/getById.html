@@ -49,6 +49,13 @@
                                            th:value="${doctor.getEmail()}" disabled>
                                 </div>
                             </div>
+                            <!--Ряд кабинета-->
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputCabinet">Кабинет</label>
+                                    <input class="form-control" id="inputCabinet" type="text" th:value="${doctor.getCabinet()}" disabled>
+                                </div>
+                            </div>
                             <!--Ряд стажа и специальностей-->
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6">

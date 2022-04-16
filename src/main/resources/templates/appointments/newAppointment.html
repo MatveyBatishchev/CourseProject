@@ -30,7 +30,7 @@
                         </div>
                         <!--Ряд специалиста-->
                         <div class="row gx-3 mb-3" id="doctorsRow" hidden>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="selectDoctorCol">
                                 <label class="small mb-1" for="inputDoctor">Выберите специалиста</label>
                                 <select class="form-control" id="inputDoctor" required>
                                 </select>
@@ -53,10 +53,20 @@
                         <div class="card mb-2" id="previewRow" hidden>
                             <div class="card-header">Превью приёма</div>
                             <div class="card-body">
-                                <h5 class="card-title" id="previewDoctorName"></h5>
-                                <p class="card-text" id="previewExperience"></p>
-                                <p class="card-text" id="previewCategory"></p>
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title" id="previewDoctorName"></h5>
+                                        <p class="card-text" id="previewDoctorSpeciality"></p>
+                                        <p class="card-text" id="previewExperience"></p>
+                                        <p class="card-text" id="previewCategory"></p>
+                                    </div>
+                                    <div class="col-2 mt-0">
+                                        <img class="doctorPhoto" style="width: 150px; height: 150px" id="previewDoctorPhoto" alt="" src="">
+                                    </div>
+                                </div>
+                                <hr>
                                 <p class="card-text" id="previewDate"></p>
+                                <p class="card-text" id="previewCabinet"></p>
                             </div>
                         </div>
                         <!--Контактной информации-->

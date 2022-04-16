@@ -2,12 +2,24 @@ $(document).ready(function () {
 
     $('#checkPasswordModal').modal({
         backdrop: 'static',
-        keyboard: true
     });
     $('#changePasswordModal').modal({
         backdrop: 'static',
-        keyboard: true
     });
+
+    $('#checkPasswordModal, #changePasswordModal, #warningDeleteModal, #confirmDeleteModal').on('hidden.bs.modal', function () {
+        $("#checkActualPassword").val("");
+        $("#inputPassword").val("");
+        $("#inputConfirmPassword").val("");
+        if ($(".togglePasswordClass")[0].classList.contains("bi-eye") === true)
+            $(".togglePasswordClass")[0].click();
+        $(".squareInput").each(function() {
+            $(this).val('');
+        });
+        $(".alert").each(function() {
+            $(this).alert('close');
+        });
+    })
 
     // проверка совпадения паролей
     $("#submitCheckPassword").on("click", function () {
@@ -41,25 +53,22 @@ $(document).ready(function () {
             },
             success: function (data) {
                 var message = JSON.parse(data);
-                console.log(JSON.parse(data));
-                console.log(typeof JSON.parse(data));
                 if (typeof message === "object") {
-                    var errors = "<ul>";
+                    var errors = '';
                     message.forEach( err => {
-                        errors += '<li>' + err + '</li>';
+                        errors += '<li class="mt-2 alert alert-danger alert-dismissible fade show messageAlert" ' +
+                            'role="alert"><div class="me-3">' + err + '</div><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></li>';
                     });
-                    errors += "<ul>";
-                    $("#errorsPassword").html('<div class="mt-2 alert alert-danger alert-dismissible fade show messageAlert" role="alert">'+ errors +
-                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                    $("#errorsPassword").html(errors);
                 }
                 else {
                     switch (message) {
                         case "same":
-                            $("#errorsPassword").html('<div class="mt-2 alert alert-danger alert-dismissible fade show messageAlert" role="alert">Новый пароль совпадает с предыдущим!' +
-                                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                            $("#errorsPassword").html('<li class="mt-2 alert alert-danger alert-dismissible fade show messageAlert" ' +
+                                'role="alert">Новый пароль не должен совпадать с предыдущим<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></li>');
                             break;
                         case "success":
-                            $("#changePasswordModalBody").html('<p>Новый пароль был успешно установлен!</p>');
+                            $("#changePasswordModalBody").html('<p class="buttonFont text-center" style="margin-top: 4rem; font-size: 19px;" >Новый пароль был успешно установлен!</p>');
                             break;
                         default:
                             $("#changePasswordModalBody").html('<p>' + data + '</p>');
@@ -78,14 +87,9 @@ $(document).ready(function () {
         else submitCheckPassword.prop("disabled", false);
     });
 
-    // сброс паролей и видимости при закрытии окна
-    $(".btn-close").on('click', function() {
-        $("#checkActualPassword").val("");
-        $("#inputPassword").val("");
-        $("#inputConfirmPassword").val("");
-        console.log($(".togglePasswordClass")[0].classList);
-        console.log($(".togglePasswordClass")[0].classList.contains("bi-eye"));
-        if ($(".togglePasswordClass")[0].classList.contains("bi-eye") === true)
-            $(".togglePasswordClass")[0].click();
-    });
+    // // сброс форм и видимости при закрытии окна
+    // $(".buttonCloseModal").on('click', function() {
+    //
+    // });
+
 });

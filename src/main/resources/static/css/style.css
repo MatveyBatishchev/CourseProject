@@ -108,7 +108,7 @@ input:disabled {
     transition: all.5s;
 }
 .nav-link:hover:after{
-    transform: scale(1);
+    transform: scale(0.99);
 }
 
 /*Footer at the bottom*/
@@ -187,17 +187,10 @@ input:disabled {
     font-family: 'FFormular';
     font-style: normal;
     font-weight: 300;
-    font-size: 19px;
+    font-size: 24px;
     line-height: 19px;
 }
 
-.doctorName{
-    font-family: 'FFormular';
-    font-style: normal;
-    font-weight: 300;
-    font-size: 24px;
-    line-height: 29px;
-}
 
 .spanStyle{
     font-weight: 600;
@@ -208,7 +201,7 @@ input:disabled {
     font-family: 'FFormular';
     font-style: normal;
     font-weight: 300;
-    font-size: 20px;
+    font-size: 19px;
     line-height: 24px;
 }
 .buttonFont{
@@ -301,4 +294,8 @@ select{
 .modal-backdrop {
     width: 100% !important;
     height: 100% !important;
+}
+
+.alert-dismissible .btn-close {
+    padding: 0.65rem 0.6rem !important;
 }

@@ -164,7 +164,7 @@
                                             <!--Личные данные-->
                                             <div class="col text-start">
                                                 <!--ФИО-->
-                                                <h4 class="doctorName"
+                                                <h4 class="themes mt-1"
                                                     th:text="${appointment.getDoctor().getSurname() + ' ' + appointment.getDoctor().getName() + ' ' + appointment.getDoctor().getPatronymic()}"></h4>
                                                 <!--Описание специалиста-->
                                                 <h5 class="headlines"
@@ -186,7 +186,7 @@
                                                 </div>
                                                 <div class="col text-start">
                                                     <h5>Кабинет:</h5><span class="p-1 spanStyle"
-                                                                           th:text="${'210 каб'}"></span>
+                                                                           th:text="${appointment.getDoctor().getCabinet() + ' каб'}"></span>
                                                 </div>
                                             </div>
                                             <!--Подробнее кнопка-->

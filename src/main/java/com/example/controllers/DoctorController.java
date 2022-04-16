@@ -48,9 +48,16 @@ public class DoctorController {
     }
 
     @GetMapping("/search")
-    public String getPatientBySearch(@RequestParam("search") String search, Model model) {
+    public String getDoctorBySearch(@RequestParam("search") String search, Model model) {
         model.addAttribute("doctors", doctorService.findDoctorsBySearch(search));
         return "/doctors/getAll";
+    }
+
+    @GetMapping("/find")
+    @ResponseBody
+    public String findDoctorBySearch(@RequestParam("fullName") String fullName,
+                                     @RequestParam("speciality") String speciality) {
+        return doctorService.findDoctorsBySpecialityAndFullName(fullName, speciality);
     }
 
     @GetMapping("/new")

@@ -55,7 +55,7 @@
     object-position: center;
 }
 .greenDoctorHeader{
-    width: 200%;
+    width: 100%;
     background: #1f4326;
     height: 0.8rem;
 }
@@ -124,4 +124,7 @@
     height: 40px;
     text-align: center;
     display: inline;
+    margin: 0 10px 0;
+    background: #DADADA;
+    border-radius: 10px;
 }

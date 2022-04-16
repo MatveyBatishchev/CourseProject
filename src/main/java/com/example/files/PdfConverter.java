@@ -4,6 +4,8 @@ import com.example.models.Appointment;
 import com.example.models.Doctor;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.CMYKColor;
+import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.stereotype.Component;
 
@@ -20,20 +22,33 @@ public class PdfConverter {
     public void createPDF(Appointment appointment) throws IOException, DocumentException {
 
         Document document = new Document();
-        PdfWriter.getInstance(document,
+        PdfWriter writer = PdfWriter.getInstance(document,
                 new FileOutputStream("appointmentFiles/appointment" + appointment.getId() + ".pdf"));
 
-        Rectangle one = new Rectangle(297,382);
-        document.setPageSize(one);
+        Rectangle page = new Rectangle(280,365);
+        document.setPageSize(page);
         document.setMargins(20, 20, 10, 10);
 
         document.open();
+
+        // Green lines
+        PdfContentByte canvas = writer.getDirectContent();
+        CMYKColor magentaColor = new CMYKColor(1.f, 0.70F, 1.f, 0.f);
+        Rectangle rect1 = new Rectangle(0, 0, 280, 5);
+        Rectangle rect2 = new Rectangle(0, 360, 280, 365);
+        rect1.setBackgroundColor(magentaColor);
+        rect2.setBackgroundColor(magentaColor);
+        canvas.rectangle(rect1);
+        canvas.rectangle(rect2);
+        canvas.closePathStroke();
 
         // Fonts
         BaseFont formular = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         Font fontHeader = new Font(formular, 15.3F, Font.NORMAL);
         Font fontText = new Font(formular, 12.5F, Font.NORMAL);
         Font fontBold = new Font(formular, 12.5F, Font.UNDERLINE);
+        Font fontInfo = new Font(formular, 9.5F, Font.NORMAL);
+
 
         Paragraph address = new Paragraph("Талон на приём к врачу\n№" + appointment.getId(), fontHeader);
         address.setAlignment(Element.ALIGN_CENTER);
@@ -43,7 +58,7 @@ public class PdfConverter {
         String para1 = "\"RecoveryMed\" клиника на Электрозаводской \n Москва, Большая Семеновская ул, д. 38";
         Paragraph talon = new Paragraph(para1, fontText);
         talon.setAlignment(Element.ALIGN_CENTER);
-        talon.setSpacingAfter(15f);
+        talon.setSpacingAfter(10f);
         document.add(talon);
 
         Date date = appointment.getDate();
@@ -64,12 +79,12 @@ public class PdfConverter {
         doctor.setSpacingAfter(10f);
         document.add(doctor);
 
-        Paragraph cabinet = new Paragraph("Кабинет №317", fontBold);
+        Paragraph cabinet = new Paragraph("Кабинет №" + appointmentDoctor.getCabinet(), fontBold);
         cabinet.setAlignment(Element.ALIGN_CENTER);
-        cabinet.setSpacingAfter(15f);
+        cabinet.setSpacingAfter(18f);
         document.add(cabinet);
 
-        Paragraph info = new Paragraph("Если вы не можете прийти на приём в указана время, сообщите об этом по телефону 8 (999) 123-45-67", fontText);
+        Paragraph info = new Paragraph("Если вы не можете прийти на приём в указанное время, сообщите об этом по телефону\n8 (999) 123-45-67", fontInfo);
         info.setAlignment(Element.ALIGN_CENTER);
         document.add(info);
 

@@ -19,9 +19,8 @@
                     <p class="card-text" th:text="${'Стаж: ' + appointment.getDoctor().getExperience()}"></p>
                     <p class="card-text" th:text="${'Категория: ' + appointment.getDoctor().getCategory()}"></p>
                     <hr>
-<!--                    + ' ' + ${#temporals.format(appointment.getTime(), 'HH:mm')}-->
                     <p class="card-text" th:text="${'Время приёма: ' + #dates.format(appointment.getDate(), 'dd-MM-yyyy') + ' ' + appointment.getTime().format(T(java.time.format.DateTimeFormatter).ofPattern('HH:mm'))}"></p>
-                    <p class="card-text">Кабинет: 317</p>
+                    <p class="card-text" th:text="${'Кабинет: ' + appointment.getDoctor().getCabinet()}"></p>
                     <p class="card-text">«RecoveryMed» клиника на Большой Семёновской (м. Электрозаводская)</p>
                     <hr>
                   <p class="card-text">Файловая версия вашей записи:</p>
@@ -30,7 +29,7 @@
             </div>
             <p>Если у вас отстались вопросы в процессе записи позвоните на телефон 8 (999) 123-45-67 или свяжитесь по
                 почте recoverymed.info@gmail.com</p>
-            <a class="btn btn-primary mt-2" href="/medtouch/home">Вернутся на главную странциу</a>
+            <a class="btn btn-primary mt-2" href="/recoverymed/home">Вернутся на главную странциу</a>
         </div>
     </div>
     <footer th:insert="blocks/footer :: footer"></footer>

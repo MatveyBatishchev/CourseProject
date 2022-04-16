@@ -206,7 +206,7 @@
                                                 </div>
                                                 <div class="col text-start">
                                                     <h5>Кабинет:</h5><span class="p-1 spanStyle"
-                                                                           th:text="${'210 каб'}"></span>
+                                                                           th:text="${appointment.getDoctor().getCabinet() + ' каб'}"></span>
                                                 </div>
                                             </div>
                                             <!--Подробнее кнопка-->
@@ -231,124 +231,148 @@
 <div class="container">
     <!-- Окно удаления -->
     <div class="modal fade" id="warningDeleteModal" tabindex="-1" role="dialog"
-         aria-labelledby="warningDeleteModalLabel" aria-hidden="true">
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="warningDeleteModalLabel">Удаление аккаунта</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content doctorBody mt-4 ">
+                <div class="greenDoctorHeader d-flex align-items-center justify-content-end" >
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            style="margin: 4rem 1rem 0 0; position: absolute;"></button>
                 </div>
-                <div class="modal-body">
-                    <p>
-                        При удалении аккаунта связанные с ним данные будут удалены без возможности восстановления.
-                        Это действие нельзя будет отменить, вы абсолютно уверены?
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    <button type="button" id="warningDeleteButton" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#confirmDeleteModal">Подтвердить
-                    </button>
+                <div class="container-fluid mt-3" style=" margin-left: auto;">
+                    <div>
+                        <h5 class="headlines d-flex align-items-center justify-content-center">Удаление аккаунта</h5>
+                        <p class="buttonFont">
+                            При удалении аккаунта связанные с ним данные будут удалены без возможности восстановления.
+                            Это действие нельзя будет отменить, вы абсолютно уверены?
+                        </p>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center mb-3">
+                        <button type="button" class="btn buttonFont" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="button" id="warningDeleteButton" class="btn btn-primary button" data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal">Подтвердить
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Окно подтверждения удаления -->
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
-         aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteModalLabel">Удаление аккаунта</h5>
-                    <button type="button" id="closeSecondModal" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+            <div class="modal-content doctorBody">
+                <!--Плажка зеленая-->
+                <div class="greenDoctorHeader d-flex align-items-center justify-content-end">
+                    <button id="closeConfirmDeleteModal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            style="margin: 4rem 1rem 0 0; position: absolute;"></button>
                 </div>
-                <div class="modal-body" id="modalBody">
-                    <p>
-                        На вашу почту было отправлено письмо с кодом подтверждения.
-                        Для подтверждения удаления введите код в форму ниже:
-                    </p>
-                    <form id="confirmDeleteForm">
-                        <input name='code' class='code-input form-control squareInput' required/>
-                        <input name='code' class='code-input form-control squareInput' required/>
-                        <input name='code' class='code-input form-control squareInput' required/>
-                        <span>-</span>
-                        <input name='code' class='code-input form-control squareInput' required/>
-                        <input name='code' class='code-input form-control squareInput' required/>
-                        <input name='code' class='code-input form-control squareInput' required/>
-                        <br>
-                        <div id="incorrectCode"></div>
-                    </form>
-                </div>
-                <div class="modal-footer" id="modalFooter">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    <button type="button" id="confirmDeleteButton" class="btn btn-danger">Подтвердить</button>
+                <div class="container-fluid mt-3" style=" margin-left: auto;">
+                    <div id="confirmDeleteModalBody">
+                        <h5 class="headlines d-flex align-items-center justify-content-center">Удаление аккаунта</h5>
+                        <p class="buttonFont">
+                            На вашу почту было отправлено письмо с кодом подтверждения.
+                            Для подтверждения удаления введите код в форму ниже:
+                        </p>
+                        <form id="confirmDeleteForm" class="d-flex align-items-center justify-content-center mb-1">
+                            <input name='code' class='code-input form-control squareInput'/>
+                            <input name='code' class='code-input form-control squareInput'/>
+                            <input name='code' class='code-input form-control squareInput'/>
+                            <span>-</span>
+                            <input name='code' class='code-input form-control squareInput'/>
+                            <input name='code' class='code-input form-control squareInput'/>
+                            <input name='code' class='code-input form-control squareInput'/>
+                            <br>
+                        </form>
+                        <div class="d-flex align-items-center justify-content-center mb-3">
+                            <div style="width: 360px;" id="incorrectCode"></div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center mb-3" id="confirmDeleteModalFooter">
+                        <button type="button" class="btn buttonFont" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="button" id="confirmDeleteButton"  class="btn btn-primary button">Подтвердить</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Окно ввода текущего пароля -->
     <div class="modal fade" id="checkPasswordModal" tabindex="-1" role="dialog"
-         aria-labelledby="checkPasswordModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="checkPasswordModalLabel">Изменение пароля</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content doctorBody">
+                <div class="greenDoctorHeader d-flex align-items-center justify-content-end">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="margin: 4rem 1rem 0 0; position: absolute;"></button>
                 </div>
-                <div class="modal-body">
-                    <p>Введите свой текущий пароль:</p>
-                    <div class="input-group mb-3">
-                        <input class="form-control border-end-0 inputPasswordClass" type="password"
-                               id="checkActualPassword"
-                               value="" aria-describedby="basic-addon1">
-                        <div class="input-group-addon">
-                        <span class="input-group-text rounded-start-0 textarea-addon" id="basic-addon1">
-                            <i class="bi bi-eye-slash togglePasswordClass"></i>
-                        </span>
+                <div class="container-fluid mt-3" style=" margin-left: auto;">
+                    <div>
+                        <h5 class="headlines d-flex align-items-center justify-content-center">Изменение пароля</h5>
+                        <p class="buttonFont d-flex justify-content-center">
+                            Введите свой текущий пароль:
+                        </p>
+                        <!--Форма-->
+                        <div class="input-group mb-3 ms-4" style="width: 400px">
+                            <input class="form-control border-end-0 inputPasswordClass" type="password"
+                                   id="checkActualPassword"
+                                   value="" aria-describedby="basic-addon1">
+                            <div class="input-group-addon">
+                                <span class="input-group-text rounded-start-0 textarea-addon" id="basic-addon1">
+                                    <i class="bi bi-eye-slash togglePasswordClass"></i>
+                                </span>
+                            </div>
                         </div>
+                        <div class="ms-4" style="width: 400px" id="incorrectPassword"></div>
                     </div>
-                    <div id="incorrectPassword"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary" id="submitCheckPassword" disabled>Подтвердить</button>
+                    <div class="d-flex align-items-center justify-content-center mb-3">
+                        <button type="button" class="btn buttonFont" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="button" id="submitCheckPassword"  class="btn btn-primary button">Подтвердить
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Окно ввода нового пароля -->
-    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog"
+    <div class="modal fade " id="changePasswordModal" tabindex="-1" role="dialog"
          aria-labelledby="changePasswordModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="changePasswordModalLabel">Изменение пароля</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content doctorBody">
+                <div class="greenDoctorHeader d-flex align-items-center justify-content-end">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="margin: 4rem 1rem 0 0; position: absolute;"></button>
                 </div>
-                <div class="modal-body" id="changePasswordModalBody">
-                    <p>Введите новый пароль:</p>
-                    <div class="input-group mb-3">
-                        <input class="form-control border-end-0 inputPasswordClass" type="password" id="inputPassword"
-                               value="" onkeyup='check($("#submitChangePassword"));' aria-describedby="basic-addon2">
-                        <div class="input-group-addon">
+                <div id="changePasswordModalBody">
+                    <h5 class="headlines d-flex align-items-center justify-content-center mt-3">Изменение пароля</h5>
+                    <div class="container-fluid" style=" margin-left: auto;">
+                        <p class="buttonFont d-flex justify-content-center">Введите новый пароль:</p>
+                        <div class="input-group mb-3  ms-4" style="width: 400px">
+                            <input class="form-control border-end-0 inputPasswordClass" type="password" id="inputPassword"
+                                   value="" onkeyup='check($("#submitChangePassword"));' aria-describedby="basic-addon2">
+                            <div class="input-group-addon">
                         <span class="input-group-text rounded-start-0 textarea-addon" id="basic-addon2">
                             <i class="bi bi-eye-slash togglePasswordClass"></i>
                         </span>
+                            </div>
                         </div>
+                        <p class="buttonFont d-flex justify-content-center">Подтвердите новый пароль:</p>
+                        <input class="form-control inputPasswordClass  ms-4" type="password" id="inputConfirmPassword"
+                               onkeyup='check($("#submitChangePassword"));' value="" style="width: 400px">
+                        <!--Matching-->
+                        <div class="ms-4">
+                            <span id="passwordMessage"></span>
+                        </div>
+
                     </div>
-                    <p>Подтвердите новый пароль:</p>
-                    <input class="form-control inputPasswordClass" type="password" id="inputConfirmPassword"
-                           onkeyup='check($("#submitChangePassword"));' value="">
-                    <span id="passwordMessage"></span>
-                    <br>
-                    <div id="errorsPassword"></div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                        <button type="button" class="btn btn-primary" id="submitChangePassword" disabled>Подтвердить
+                    <div class="d-flex align-items-center justify-content-center mb-3 mt-3">
+                        <button type="button" class="btn buttonFont" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="button" id="submitChangePassword"  class="btn btn-primary">Подтвердить
                         </button>
+                    </div>
+                    <!--Ошибки-->
+                        <div class="mx-5">
+                            <ul class="p-0" id="errorsPassword">
+
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

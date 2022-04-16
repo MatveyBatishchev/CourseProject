@@ -48,32 +48,30 @@ $(document).ready(function() {
         });
     });
 
-    $(document).ready(function () {
-        $("#confirmDeleteButton").on("click", function() {
-            var enteredCode = "";
-            $('#confirmDeleteForm :input').each(function() {
-                enteredCode += $(this).val();
-            });
-            if (enteredCode == confirmationCode) {
-                let patientId = $("#inputId").val();
-                $.ajax({
-                    type: "DELETE",
-                    url: '/patients/' + patientId,
-                    success: function (data) {
-                        console.log("SUCCESS : ", data);
-                    },
-                    error: function (error) {
-                        console.log("ERROR : ", error);
-                    }
-                });
-                $("#modalBody").html('<p>Ваш аккаунт успешно удалён. Возвращайтесь к нам как можно скорее!</p>');
-                $("#modalFooter").prop("hidden", true);
-                $("#closeSecondModal").on("click", function() {
-                    window.location = "http://localhost:443/logout";
-                })
-            }
-            else $("#incorrectCode").html('<div class="mt-2 alert alert-danger alert-dismissible fade show messageAlert" role="alert">Неверный код подтверждения!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+    $("#confirmDeleteButton").on("click", function() {
+        var enteredCode = "";
+        $('#confirmDeleteForm :input').each(function() {
+            enteredCode += $(this).val();
         });
+        if (enteredCode == confirmationCode) {
+            let patientId = $("#inputId").val();
+            $.ajax({
+                type: "DELETE",
+                url: '/patients/' + patientId,
+                success: function (data) {
+                    console.log("SUCCESS : ", data);
+                },
+                error: function (error) {
+                    console.log("ERROR : ", error);
+                }
+            });
+            $("#confirmDeleteModalBody").html('<p class="buttonFont text-center" style="margin-top: 2.5rem; font-size: 19px;" >Ваш аккаунт успешно удалён. Возвращайтесь к нам как можно скорее!</p>');
+            $("#confirmDeleteModalFooter").html('');
+            $("#closeConfirmDeleteModal").on("click", function() {
+                window.location = "http://localhost:443/logout";
+            })
+        }
+        else $("#incorrectCode").html('<div class="mt-2 alert alert-danger alert-dismissible fade show messageAlert" role="alert">Неверный код подтверждения!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
     });
 
     function generateCode() {
