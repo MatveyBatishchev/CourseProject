@@ -129,7 +129,7 @@ $(document).ready(function () {
                 $("#previewDoctorName")[0].innerHTML = 'Специалист: ' + doctor.surname + ' ' + doctor.name + ' ' + doctor.patronymic;
                 $("#previewDoctorPhoto").prop("src", "/applicationFiles/doctors/" + doctor.id + "/" + doctor.image);
                 $("#previewDoctorSpeciality")[0].innerHTML = 'Специальность: ' + $("#inputSpeciality option:selected").text();
-                $("#previewExperience")[0].innerHTML = 'Стаж: ' + doctor.experience + ' лет';
+                $("#previewExperience")[0].innerHTML = 'Стаж: ' + doctor.experience + ' ' + plural(doctor.experience);
                 $("#previewCategory")[0].innerHTML = "Категория: " + doctor.category;
                 $("#previewDate")[0].innerHTML = 'Время приёма: ' + $("#inputSchedule").datepicker({dateFormat: 'dd-mm-yy'}).val() + ' в ' + clickedButtonText;
                 $("#previewCabinet")[0].innerHTML = 'Кабинет: ' + doctor.cabinet;
@@ -169,4 +169,5 @@ $(document).ready(function () {
     }
 
 });
+
 

@@ -188,7 +188,7 @@
                                                     th:text="${appointment.getDoctor().getSurname() + ' ' + appointment.getDoctor().getName() + ' ' + appointment.getDoctor().getPatronymic()}"></h4>
                                                 <!--Описание специалиста-->
                                                 <h5 class="headlines"
-                                                    th:text="${#strings.setJoin(appointment.getDoctor().getSpecialities(), ', ') + ', ' + appointment.getDoctor().getCategory() + ', Стаж ' + appointment.getDoctor().getExperience()}"></h5>
+                                                    th:text="${#strings.setJoin(appointment.getDoctor().getSpecialities(), ', ') + ', ' + appointment.getDoctor().getCategory() + ', Стаж ' + appointment.getDoctor().getExperienceWithPrefix()}"></h5>
                                             </div>
                                         </div>
                                         <!--Данные приема и кнопка-->

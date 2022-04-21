@@ -1,0 +1,111 @@
+$highlight: #5bc0eb;
+$darkhighlight: #fde74c;
+
+/*FontsLink*/
+@font-face {
+  font-family: 'FFormular';
+  src: url('../fonts/Formular.eot');
+  src: local('☺'), url('../fonts/Formular.woff') format('woff'), url('../fonts/Formular.ttf') format('truetype');
+
+}
+
+body {
+  padding: 50px;
+  display: flex;
+  flex-flow: wrap;
+  font-family: "FFormular";
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+.card-container {
+  flex: 100px;
+  margin: 30px;
+
+  .card {
+    position: relative;
+    width: 300px;
+
+    a {
+      padding: 30px;
+      width: 100%;
+      height: 200px;
+      border: 2px solid #1F4326;
+      border-radius: 10px;
+      background: white;
+      text-decoration: none;
+      color: black;
+      display: block;
+      transition: 0.35s ease;
+
+      &:hover {
+        transform: translate(-20px, -20px);
+        border-color: #1F4326;
+        //background: #1F4326;
+        //color: white;
+
+        .card--display {
+          display: none;
+        }
+
+        .card--hover {
+          display: block;
+        }
+      }
+
+      .card--display {
+        text-align: center;
+        i {
+          font-size: 70px;
+          margin-top: 0px;
+          margin-left: -6px;
+        }
+
+        h2 {
+          font-size: 22px;
+          font-weight: lighter;
+          margin: 7px 0 0;
+        }
+      }
+
+      .card--hover {
+        display: none;
+
+        p {
+          margin-top: -17px;
+          line-height: 1.3;
+          text-align: start;
+
+            &.link {
+              margin: 25px 0 0;
+              color: black;
+            }
+        }
+
+        div {
+          margin-top: -5px;
+          position: absolute;
+          left: 30px;
+          width: 240px;
+          height: 0px;
+          border: 1px solid #1F4326;
+        }
+
+      }
+    }
+
+    .card--border {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      background: #1F4326;
+      border-radius: 10px;
+      z-index: -1;
+    }
+
+  }
+}

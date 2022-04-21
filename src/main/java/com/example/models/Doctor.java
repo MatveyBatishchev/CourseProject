@@ -159,4 +159,12 @@ public class Doctor implements User {
         return isActive();
     }
 
+    static final String[] declension = {"год", "года", "лет"};
+    static final int[] cases = {2, 0, 1, 1, 1, 2};
+
+    public String getExperienceWithPrefix() {
+        int experience = getExperience();
+        return experience + " " + declension[ (experience%100>4 &&experience%100<20)? 2 : cases[(experience%10<5)?experience%10:5] ];
+    }
+
 }

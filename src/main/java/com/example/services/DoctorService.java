@@ -6,7 +6,6 @@ import com.example.mappers.DoctorMapper;
 import com.example.models.Doctor;
 import com.example.models.Patient;
 import com.example.models.Role;
-import com.example.models.Speciality;
 import com.example.repo.DoctorRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,6 +13,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -44,6 +47,10 @@ public class DoctorService {
         modelAndView.addObject("doctors", doctorRepository.findByOrderByIdAsc());
         modelAndView.setViewName("/doctors/getAll");
         return modelAndView;
+    }
+
+    public Page<Doctor> findAllDoctorsWithPage(Integer pageNumber) {
+        return doctorRepository.findAll(PageRequest.of(pageNumber, 4, Sort.by("id")));
     }
 
     public ModelAndView findDoctorById(Long doctorId, ModelAndView modelAndView) {
@@ -98,27 +105,61 @@ public class DoctorService {
         return new HashSet<>(doctorsList);
     }
 
-    public String findDoctorsBySpecialityAndFullName(String fullName, String speciality) {
+    public String findDoctorsBySpecialityAndFullNameWithPage(String fullName, String speciality, Integer pageNumber) {
+        int pageSize = 4;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        String doctors = "";
+        JsonObject jsonObject = new JsonObject();
         if (fullName.isBlank() && speciality.isBlank()) {
-            doctors = gson.toJson(doctorRepository.findAll());
+            Page<Doctor> page = findAllDoctorsWithPage(pageNumber);
+            jsonObject.addProperty("doctors", gson.toJson(page.getContent()));
+            jsonObject.addProperty("totalPages", page.getTotalPages());
         }
         else {
             if (!fullName.isBlank() && !speciality.isBlank()) {
-                doctors = gson.toJson(findDoctorsBySearch(fullName)
-                        .stream()
-                        .filter(doctor -> doctor.getSpecialities().contains(Speciality.valueOf(speciality)))
-                        .collect(Collectors.toList()));
-            } else {
+                String[] fullNameParts = fullName.split(" ");
+                Page<Doctor> page = null;
+                switch (fullNameParts.length) {
+                    case 1:
+                        page = doctorRepository.findDoctorBySpecialityAndOneString(speciality, fullNameParts[0], pageable);
+                        break;
+                    case 2:
+                        page = doctorRepository.findDoctorBySpecialityAndTwoStrings(speciality, fullNameParts[0], fullNameParts[1], pageable);
+                        break;
+                    default:
+                        page = doctorRepository.findDoctorBySpecialityAndThreeStrings(speciality, fullNameParts[0], fullNameParts[1], fullNameParts[2], pageable);
+                        break;
+                }
+                jsonObject.addProperty("doctors", gson.toJson(page.getContent()));
+                jsonObject.addProperty("totalPages", page.getTotalPages());
+            }
+            else {
                 if (!speciality.isBlank()) {
-                    doctors = gson.toJson(doctorRepository.findDoctorsBySpeciality(speciality));
-                } else {
-                    doctors = gson.toJson(findDoctorsBySearch(fullName));
+                    Page<Doctor> page = doctorRepository.findDoctorsBySpeciality(speciality, pageable);
+                    jsonObject.addProperty("doctors", gson.toJson(page.getContent()));
+                    jsonObject.addProperty("totalPages", page.getTotalPages());
+                }
+                else {
+                    String[] fullNameParts = fullName.split(" ");
+                    Page<Doctor> page = null;
+                    Arrays.stream(fullNameParts).forEach(System.out::println);
+                    switch (fullNameParts.length) {
+                        case 1:
+                            page = doctorRepository.findDoctorByOneString(fullNameParts[0], pageable);
+                            break;
+                        case 2:
+                            page = doctorRepository.findDoctorByTwoStrings(fullNameParts[0], fullNameParts[1], pageable);
+                            break;
+                        default:
+                            page = doctorRepository.findDoctorByThreeStrings(fullNameParts[0], fullNameParts[1], fullNameParts[2], pageable);
+                            break;
+                    }
+                    jsonObject.addProperty("doctors", gson.toJson(page.getContent()));
+                    jsonObject.addProperty("totalPages", page.getTotalPages());
                 }
             }
         }
-        return doctors;
+        return jsonObject.toString();
     }
 
     public ModelAndView saveNewDoctor(Doctor doctor, BindingResult bindingResult, ModelAndView modelAndView) {

@@ -56,8 +56,9 @@ public class DoctorController {
     @GetMapping("/find")
     @ResponseBody
     public String findDoctorBySearch(@RequestParam("fullName") String fullName,
-                                     @RequestParam("speciality") String speciality) {
-        return doctorService.findDoctorsBySpecialityAndFullName(fullName, speciality);
+                                     @RequestParam("speciality") String speciality,
+                                     @RequestParam("pageNumber") Integer pageNumber) {
+        return doctorService.findDoctorsBySpecialityAndFullNameWithPage(fullName, speciality, pageNumber);
     }
 
     @GetMapping("/new")

@@ -4,7 +4,28 @@
   <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
   <title>Услуги</title>
   <div th:insert="blocks/webjars :: webjars"></div>
+  <link rel="stylesheet" th:href="@{/css/serviceButton2.css}">
 </head>
+<style>
+  .container {
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1500px;
+    padding: 0 15px;
+  }
+
+  .service-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-bottom: 1px;
+  }
+
+  a {
+    cursor: pointer;
+  }
+</style>
 <body>
 <div class="wrapper">
   <div class="content">
@@ -12,6 +33,149 @@
     <div class="container mt-5">
       <h1>Услуги</h1>
     </div>
+    <div class="mt-5">
+      <div class="container">
+        <div class="service-items">
+          <!--Консультация специалиста-->
+          <div class="service-item">
+            <div class="card-container">
+              <div class="card"><a href="worldweb">
+                <div class="card--display">
+                  <i class="las la-user-nurse la-3x"></i>
+                  <h2>Консультации специалистов</h2>
+                </div>
+                <div class="card--hover">
+                  <p>Получайте квалифицированные медицинские консультации по оценке симптомов и рекомендации по дальнейшим действиям</p>
+                  <div class="line"></div>
+                  <p class="link">Подробнее</p>
+                </div></a>
+                <div class="card--border"></div>
+              </div>
+            </div>
+          </div>
+          <!--Вызов врача на дом-->
+          <div class="service-item">
+            <div class="card-container">
+              <div class="card"><a href="worldweb">
+                <div class="card--display">
+                  <i class="las la-ambulance la-3x"></i>
+                  <h2>Вызов врача на дом</h2>
+                </div>
+                <div class="card--hover">
+                  <p>Вызов специалиста на дом для забора анализов, проведения обследования или консультации с портативным оборудованием</p>
+                  <div class="line"></div>
+                  <p class="link">Подробнее</p>
+                </div></a>
+                <div class="card--border"></div>
+              </div>
+            </div>
+          </div>
+          <!--Анализы-->
+          <div class="service-item">
+            <div class="card-container">
+              <div class="card"><a href="worldweb">
+                <div class="card--display">
+                  <i class="las la-prescription-bottle la-3x"></i>
+                  <h2>Анализы</h2>
+                </div>
+                <div class="card--hover">
+                  <p>Высокоточное оборудование в лабораториях «RecoveryMed», позволяет проводить исследования в автоматическом режиме и в кратчайшие сроки</p>
+                  <div class="line"></div>
+                  <p class="link">Подробнее</p>
+                </div></a>
+                <div class="card--border"></div>
+              </div>
+            </div>
+          </div>
+          <!--Диагностика-->
+          <div class="service-item">
+            <div class="card-container">
+              <div class="card"><a href="worldweb">
+                <div class="card--display">
+                  <i class="las la-stethoscope la-3x"></i>
+                  <h2>Диагностика</h2>
+                </div>
+                <div class="card--hover">
+                  <p>Получайте квалифицированные медицинские консультации по оценке симптомов и рекомендации по дальнейшим действиям</p>
+                  <div class="line"></div>
+                  <p class="link">Подробнее</p>
+                </div></a>
+                <div class="card--border"></div>
+              </div>
+            </div>
+          </div>
+          <!--Комплексные программы и CHECK-UP-->
+          <div class="service-item">
+            <div class="card-container">
+              <div class="card"><a href="worldweb" style="padding: 25px !important;">
+                <div class="card--display">
+                  <i class="las la-microscope la-3x"></i>
+                  <h2>Комплексные программы и CHECK-UP</h2>
+                </div>
+                <div class="card--hover">
+                  <p>Check-Up — это комплексная лабораторная диагностика организма с возможностью единовременно выполнить все необходимые обследования</p>
+                  <div class="line"></div>
+                  <p class="link">Подробнее</p>
+                </div></a>
+                <div class="card--border"></div>
+              </div>
+            </div>
+          </div>
+          <!--Стоматология-->
+          <div class="service-item">
+            <div class="card-container">
+              <div class="card"><a href="worldweb">
+                <div class="card--display">
+                  <i class="las la-tooth la-3x"></i>
+                  <h2>Стоматология</h2>
+                </div>
+                <div class="card--hover">
+                  <p>Диагностика и лечению заболеваний зубов, с использованием щадящих технологий и препаратов, помогающих свести к минимуму любой дискомфорт</p>
+                  <div class="line"></div>
+                  <p class="link">Подробнее</p>
+                </div></a>
+                <div class="card--border"></div>
+              </div>
+            </div>
+          </div>
+          <!--Вакцинация-->
+          <div class="service-item">
+            <div class="card-container">
+              <div class="card"><a href="worldweb">
+                <div class="card--display">
+                  <i class="las la-syringe la-3x"></i>
+                  <h2>Вакцинация</h2>
+                </div>
+                <div class="card--hover">
+                  <p>Для иммунопрофилактики используются сертифицированные и эффективные препараты, прошедшие полные цикл клинических исследований</p>
+                  <div class="line"></div>
+                  <p class="link">Подробнее</p>
+                </div></a>
+                <div class="card--border"></div>
+              </div>
+            </div>
+          </div>
+          <!--Медицинские справки-->
+          <div class="service-item">
+            <div class="card-container">
+              <div class="card"><a href="worldweb">
+                <div class="card--display">
+                  <i class="las la-file-medical la-3x"></i>
+                  <h2>Медицинские справки</h2>
+                </div>
+                <div class="card--hover">
+                  <p>Пациентам наших клиник для оформления документов не нужно приходить несколько раз или стоять в очередях, все необходимые процедуры можно пройти единовременно</p>
+                  <div class="line"></div>
+                  <p class="link">Подробнее</p>
+                </div></a>
+                <div class="card--border"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
   <footer th:insert="blocks/footer :: footer"></footer>
 </div>

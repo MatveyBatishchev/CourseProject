@@ -4,7 +4,7 @@
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <title>Врачи</title>
     <div th:insert="blocks/webjars :: webjars"></div>
-    <script type="text/javascript" th:src="@{/js/doctorsJs.js}"></script>
+    <script type="text/javascript" th:src="@{/js/yearSuffix.js}"></script>
 </head>
 <style>
     .card {
@@ -65,6 +65,10 @@
     }
 
 </style>
+<script>
+    var totalPages = [[${totalPages}]];
+</script>
+<script type="text/javascript" th:src="@{/js/doctorsJs.js}"></script>
 <body>
 <div class="wrapper">
     <div class="content">
@@ -236,47 +240,41 @@
                         </div>
                     </div>
                     <div id="foundDoctors">
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-4">
+                        <div class="row gx-3 mb-3" th:each="doctorsRow : ${doctors}">
+                            <div class="col-md-3" th:each="doctor : ${doctorsRow.value}">
                                 <div class="card" style="width: 18rem;">
                                     <div class="card-body">
-                                        <h5 class="card-title">Card title</h5>
-                                        <div class="photo mt-2"></div>
-                                        <p class="card-text mt-4">Some quick example text to build on the card title and
-                                            make up the bulk of the card's content.</p>
-                                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card" style="width: 18rem;">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Card title</h5>
-                                        <div class="photo mt-2"></div>
-                                        <p class="card-text mt-4">Some quick example text to build on the card title and
-                                            make up the bulk of the card's content.</p>
-                                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card" style="width: 18rem;">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Card title</h5>
-                                        <div class="photo mt-2"></div>
-                                        <p class="card-text mt-4">Some quick example text to build on the card title and
-                                            make up the bulk of the card's content.</p>
-                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="photo mt-2"></div>
+                                            </div>
+                                            <div class="col-md-6 pt-2">
+                                                <h5 class="card-title"
+                                                    th:text="${doctor.getSurname() + ' ' + doctor.getName() + ' ' + doctor.getPatronymic()}"></h5>
+                                                <p class="card-text mt-4 font-weight-underline"
+                                                   th:text="${#strings.setJoin(doctor.getSpecialities(), ', ')}"></p>
+                                            </div>
+                                        </div>
+                                        <p class="card-text mt-3"
+                                           th:text="${'Стаж: ' + doctor.getExperienceWithPrefix()}"></p>
+                                        <p class="card-text mt-1" th:text="${'Категория: ' + doctor.getCategory()}"></p>
+                                        <a href="#" class="btn btn-secondary mb-0">Отзывы</a>
+                                        <a th:href="@{/doctors/{id}(id=${doctor.getId()})}" class="btn btn-primary">Записаться
+                                            онлайн</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div id="moreDoctorsPlaceholder"></div>
                     </div>
+                    <button class="btn btn-primary button mt-4 mb-2 px-4" id="moreDoctorsButton" role="button">Показать
+                        ещё
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-    <footer th:insert="blocks/footer :: footer"></footer>
+<footer th:insert="blocks/footer :: footer"></footer>
 </div>
 </body>
 </html>
