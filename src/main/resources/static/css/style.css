@@ -51,6 +51,7 @@ body {
     color: black;
 }
 ::-webkit-scrollbar {
+    height: 0.5rem;
     width: 0.5rem;
     background: #d3d3d3;
     border-radius: 10rem ;
@@ -63,12 +64,6 @@ input{
     text-align: center;
 }
 /*disabled*/
-select:disabled {
-    -webkit-appearance: none;
-    content: none;
-    background-color: #fafafa;
-    /*background: #f8f8f8;*/
-}
 input:disabled {
     text-align: center;
     content: none;
@@ -76,7 +71,17 @@ input:disabled {
     color: black;
     /*background: #f8f8f8;*/
 }
+select:disabled {
+    -webkit-appearance: none;
+    content: none;
+    background-color: #fafafa;
+    /*background: #f8f8f8;*/
+}
 /*disabled*/
+select{
+    text-align: center;
+    color: black;
+}
 /*changing webkits*/
 
 /*Header footer*/
@@ -91,7 +96,7 @@ input:disabled {
     font-size: 28px;
     color: white;
 }
-.nav-link{
+.nav-link {
     margin-left: 1.4rem;
     color: white;
 }
@@ -108,18 +113,9 @@ input:disabled {
     transition: all.5s;
 }
 .nav-link:hover:after{
-    transform: scale(0.99);
+    transform: scale(1);
 }
-
 /*Footer at the bottom*/
-.wrapper {
-    position: relative;
-    min-height: 100%;
-}
-.content {
-    padding-bottom: 10rem;
-}
-
 .footer {
     position: absolute;
     width: 100%;
@@ -129,6 +125,13 @@ input:disabled {
     bottom: 0;
 }
 
+.wrapper {
+    position: relative;
+    min-height: 100%;
+}
+.content {
+    padding-bottom: 10rem;
+}
 /*Modal*/
 .modalBack{
     background: rgba(255, 255, 255, 0.96);
@@ -141,7 +144,6 @@ input:disabled {
     background-color: rgba(0,0,0,0);
     outline: 0;
 }
-
 /*Default alert*/
 .messageAlert{
     margin-top: 15px;
@@ -150,7 +152,6 @@ input:disabled {
     border-radius: 10px;
     text-align: center;
 }
-
 .alert-dismissible .btn-close {
     padding: 0.7rem 1rem !important;
 }
@@ -182,22 +183,25 @@ input:disabled {
     font-size: 35px;
     line-height: 44px;
 }
-/*themes &nav*/
-.themes{
+.themes{/*themes &nav*/
     font-family: 'FFormular';
     font-style: normal;
     font-weight: 300;
     font-size: 24px;
-    line-height: 19px;
+    line-height: 24px;
 }
-
-
 .spanStyle{
     font-weight: 600;
     color: #DD9919;
 }
-
 .headlines{
+    font-family: 'FFormular';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 24px;
+}
+.navFont {
     font-family: 'FFormular';
     font-style: normal;
     font-weight: 300;
@@ -211,32 +215,13 @@ input:disabled {
     font-size: 18px;
     line-height: 23px;
 }
-/*Fonts*/
-
-
-/*common*/
-.button{
-    height: 50px;
-    background: #1F4326;
-    border-radius: 10px;
-    border-color: #1F4326;
-
+.regTexts{
     font-family: 'GGeometria';
     font-style: normal;
     font-weight: 400;
-    font-size: 18px;
-    line-height: 23px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    font-size: 19px;
+    line-height: 25px;
 }
-/*select по центру можно убрать*/
-select{
-    text-align: center;
-    color: black;
-}
-
 .aStyleText{
     color: #DD9919;
     box-sizing: border-box;
@@ -247,7 +232,6 @@ select{
     line-height: 23px;
     text-decoration-style: solid
 }
-
 .aStyleButton{
     color: #DD9919;
     box-sizing: border-box;
@@ -259,7 +243,30 @@ select{
     text-decoration: underline;
     text-decoration-style: solid
 }
+/*Fonts*/
 
+/*common*/
+.button{
+    height: 50px;
+    background: #1F4326 !important;
+    border-radius: 10px;
+    border-color: rgba(31, 67, 38, 0) !important;
+
+    font-family: 'GGeometria';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 23px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.activeButton{
+    color: white !important;
+    background: #1f4326 !important;
+}
+/*select по центру можно убрать*/
 /*Delete Account, Change password*/
 .mutedButton {
     font-family: 'Geometria';
@@ -272,30 +279,22 @@ select{
     transform: scale(0);
     transition: all.5s;
 }
-
 .mutedButton:hover {
     text-decoration: underline;
     color: #9c9b9b;
 }
-
 /*Password input addon*/
 .textarea-addon {
     border-bottom-left-radius: 0 !important;
     background-color: #FFFFFF;
     border-top-left-radius: 0 !important;
 }
-
 /*Кнопка закрытия alert-a*/
 .alert-dismissible .btn-close {
     padding: 1.1rem 1rem;
 }
-
 /*Bootstrap modal*/
 .modal-backdrop {
     width: 100% !important;
     height: 100% !important;
-}
-
-.alert-dismissible .btn-close {
-    padding: 0.65rem 0.6rem !important;
 }

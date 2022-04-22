@@ -91,7 +91,12 @@ public class DoctorService {
 
     public String findDoctorsBySpeciality(String speciality) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        return gson.toJson(doctorRepository.findDoctorsBySpeciality(speciality).stream().filter(doctor -> doctor.getSchedules().size() != 0).collect(Collectors.toList()));
+        Date today = new Date();
+        return gson.toJson(doctorRepository.findDoctorsBySpeciality(speciality)
+                .stream()
+                .filter(doctor -> doctor.getSchedules().stream().anyMatch(schedule ->
+                        schedule.getDate().after(today)))
+                .collect(Collectors.toList()));
     }
 
     public HashSet<Doctor> findDoctorsBySearch(String search) {
@@ -183,6 +188,7 @@ public class DoctorService {
         if (doctor.getPassword() == null || doctor.getPassword().isEmpty()) {
             String doctorPassword = generatePassword();
             doctor.setPassword(passwordEncoder.encode(doctorPassword));
+            System.out.println(doctorPassword);
             //sendPassword(doctor.getEmail(), doctor.getName(), doctorPassword);
         }
         doctorRepository.save(doctor);

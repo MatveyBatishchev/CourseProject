@@ -10,19 +10,19 @@
             </div>
             <!--Кнопки-->
             <div class="col">
-                <ul class="nav nav-pills justify-content-end">
+                <ul class="nav nav-pills justify-content-end navFont">
                     <!--Th запись на прием-->
-                    <li class=""><a href="/appointments/new" class="nav-link headlines">Записаться на прием</a></li>
-                    <li class=""><a href="/recoverymed/services" class="nav-link headlines">Услуги</a></li>
-                    <li class=""><a href="/recoverymed/doctors" class="nav-link headlines">Врачи</a></li>
-                    <li class=""><a href="/recoverymed/aboutUs" class="nav-link headlines">О нас</a></li>
-                    <li class=""><a href="/recoverymed/contacts" class="nav-link headlines">Контакты</a></li>
-                    <li class="" sec:authorize="!isAuthenticated()"><a href="/login" class="nav-link headlines">Войти</a></li>
+                    <li class=""><a href="/appointments/new" class="nav-link">Записаться на прием</a></li>
+                    <li class=""><a href="/recoverymed/services" class="nav-link">Услуги</a></li>
+                    <li class=""><a href="/recoverymed/doctors" class="nav-link">Врачи</a></li>
+                    <li class=""><a href="/recoverymed/aboutUs" class="nav-link">О нас</a></li>
+                    <li class=""><a href="/recoverymed/contacts" class="nav-link">Контакты</a></li>
+                    <li class="" sec:authorize="!isAuthenticated()"><a href="/login" class="nav-link ">Войти</a></li>
                     <li class="" sec:authorize="isAuthenticated()">
-                        <a class="nav-link headlines" th:href="@{/{link}(link=${#authentication.getPrincipal().getProfileLink()})}">Профиль</a>
+                        <a class="nav-link " th:href="@{/{link}(link=${#authentication.getPrincipal().getProfileLink()})}">Профиль</a>
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link headlines" type="button" id="logout">Выйти</a>
+                        <a class="nav-link " type="button" id="logout">Выйти</a>
                     </li>
                     <script>
                         $(document).ready(function() {

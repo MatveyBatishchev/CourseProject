@@ -1,5 +1,11 @@
 function setDatepicker(birthDate, submitButton) {
     $(document).ready(function () {
+
+        var style = $('<style> .ui-datepicker { position: absolute !important; ' +
+                                    'top: ' + (birthDate.offset().top + birthDate.outerHeight()) + 'px !important; left: ' + birthDate.offset().left + 'px !important; }</style>')
+        $('html > head').append(style);
+
+
         $.datepicker.setDefaults($.datepicker.regional["ru"]);
         birthDate.datepicker(
             {
@@ -8,6 +14,7 @@ function setDatepicker(birthDate, submitButton) {
                 changeMonth: true,
                 changeYear: true,
                 yearRange: "1930:2022",
+                orientation: "auto",
             });
 
         var cleave = new Cleave(birthDate, {

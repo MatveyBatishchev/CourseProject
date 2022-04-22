@@ -1,17 +1,15 @@
+/*MainColumns*/
 .leftC{
-    /*background: yellow;*/
-
     text-align: center;
     position: center;
     height: 100%;
 }
-
 .rightC{
-    /*background: blue;*/
     margin-right: 100px;
     text-align: center;
 }
 
+/*for name, e-mail*/
 .attrBlock{
     min-width: 150px;
     height: 50px;
@@ -21,13 +19,12 @@
     border: 1px solid #000000;
     box-sizing: border-box;
     border-radius: 5px;
-    /*margin: 15px 10px 20px;*/
+
 
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
 
 .doctorBody{
     position: center;
@@ -43,7 +40,6 @@
     margin-right: auto;
     overflow: hidden;
 }
-
 .doctorPhoto{
     width: 87px;
     height: 87px;
@@ -71,7 +67,7 @@
     background: #5A7861;
 }
 
-/*Photo change*/
+/*Profile photo attributes*/
 .photoFrame{
     position: relative;
     height: 12rem;
@@ -112,7 +108,6 @@
     opacity: 0;
     transition: 0.5s;
 }
-
 .iconInput:hover{
     opacity: 1;
 }

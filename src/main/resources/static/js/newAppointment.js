@@ -1,53 +1,63 @@
 $(document).ready(function () {
 
-    let clickedButtonVal;
-    let clickedButtonText;
-    let enableDays = [];
+    let submitButton = $("#submitButton");
+    let doctorsRow = $("#doctorsRow");
+    let schedulesRow = $("#schedulesRow");
+    let timetablesRow = $("#timetablesRow");
+    let previewRow = $("#previewRow");
+    let callbackRow = $("#callbackRow");
 
-    $("#inputSpeciality").on("change", function () {
+    let inputSpeciality = $("#inputSpeciality");
+    let inputDoctor = $("#inputDoctor");
+    let inputSchedule = $("#inputSchedule");
+    let inputTimetable = $("#inputTimetable");
+
+    $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
+
+    inputSpeciality.on("change", function () {
         $.ajax({
             type: "GET",
             url: "/doctors/by_speciality",
             data: {
-                    speciality: $("#inputSpeciality").val()
+                    speciality: $(this).val()
                 },
             success: function (data) {
                 let doctors = JSON.parse(data);
-                console.log(doctors.length);
-                if (doctors.length != 0) {
+                if (doctors.length !== 0) {
                     let s = '<option value="" disabled selected>Выберите специалиста</option>';
                     doctors.forEach(doctor => {
                         s += '<option value="' + doctor.id + '">' + doctor.surname + ' ' + doctor.name + ' ' + doctor.patronymic + '</option>';
                     })
-                    $("#inputDoctor").html(s);
+                    $("#noFoundDoctorsMessage").prop('hidden', true);
+                    inputDoctor.html(s);
+                    $("#selectDoctorDiv").prop('hidden', false);
                 }
                 else {
-                    $("#selectDoctorCol").html('<div class="card align-items-center justify-content-center mt-3">\n' +
-                        '                                <div class="m-3">\n' +
-                        '                                    <h4 class="themes">К сожалению на данным момент нет свободных специалистов. Мы постараемся как можно скорее исправить ситуацию</h4>\n' +
-                        '                                    <i class="las la-sad-cry la-3x"></i>\n' +
-                        '                                </div>\n' +
-                        '                            </div>');
+                    $("#noFoundDoctorsMessage").prop('hidden', false);
+                    $("#selectDoctorDiv").prop('hidden', true);
                 }
-                $("#doctorsRow").prop("hidden", false);
-                $("#schedulesRow").prop("hidden", true);
-                $("#timetablesRow").prop("hidden", true);
-                $("#previewRow").prop("hidden", true);
-                $("#callbackRow").prop("hidden", true);
-                $("#submitButton").prop("disabled", true);
+                doctorsRow.prop("hidden", false);
+                schedulesRow.prop("hidden", true);
+                timetablesRow.prop("hidden", true);
+                previewRow.prop("hidden", true);
+                callbackRow.prop("hidden", true);
+                submitButton.prop("disabled", true);
+                reverseAnimation();
             },
             error: function (error) {
                 console.log("ERROR : ", error);
             }
         });
-    }); // появление выбора докторов
+    });
 
-    $("#inputDoctor").on("change", function () {
+    let enableDays = [];
+
+    inputDoctor.on("change", function () {
         $.ajax({
             type: "GET",
             url: "/schedules/getDoctorSchedules",
             data: {
-                doctorId: $("#inputDoctor").val()
+                doctorId: $(this).val()
             },
             success: function (data) {
                 let schedules = JSON.parse(data);
@@ -55,9 +65,8 @@ $(document).ready(function () {
                 schedules.forEach(schedule => {
                     enableDays.push(schedule.date.toString());
                 });
-                $("#inputSchedule").datepicker("destroy");
-                $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
-                $('#inputSchedule').datepicker({
+                inputSchedule.datepicker("destroy");
+                inputSchedule.datepicker({
                     dateFormat: 'dd-mm-yy',
                     minDate: 0,
                     numberOfMonths: 2,
@@ -67,26 +76,27 @@ $(document).ready(function () {
                             type: "GET",
                             url: "/schedules/getTimeTables",
                             data: {
-                                scheduleDate: $("#inputSchedule").datepicker({dateFormat: 'dd-mm-yy'}).val(),
-                                doctorId: $("#inputDoctor").val()
+                                scheduleDate: inputSchedule.datepicker({dateFormat: 'dd-mm-yy'}).val(),
+                                doctorId: inputDoctor.val()
                             },
                             success: function (data) {
                                 let timetables = JSON.parse(data);
-                                let s = '<div class="row-cols-4 mt-2 mb-3">';
+                                let s = '<div class="row justify-content-center buttonFont mt-2 mb-2">';
                                 for (let i = 0; i < timetables.length; i++) {
-                                    if (i % 3 === 0)
-                                        s += '</div><div class="row-cols-4 mt-2 mb-3 ml-2">';
+                                    if (i % 4 === 0 && i !== 0)
+                                        s += '</div><div class="row justify-content-center buttonFont mb-2">';
                                     let sec = timetables[i].startTime[1];
                                     if (sec <= 9)
                                         sec = '0' + sec;
-                                    s += '<a class="btn btn-secondary offset-1 col-md-2">' + timetables[i].startTime[0] + ':' + sec + '</a>';
+                                    s += '<button type="button" class="timeBlocks">' + timetables[i].startTime[0] + ':' + sec + '</button>';
                                 }
                                 s += '</div>';
-                                $("#inputTimetable").html(s);
-                                $("#timetablesRow").prop("hidden", false);
-                                $("#previewRow").prop("hidden", true);
-                                $("#callbackRow").prop("hidden", true);
-                                $("#submitButton").prop("disabled", true);
+                                inputTimetable.html(s);
+                                timetablesRow.prop("hidden", false);
+                                previewRow.prop("hidden", true);
+                                callbackRow.prop("hidden", true);
+                                submitButton.prop("disabled", true);
+                                reverseAnimation();
                             },
                             error: function (error) {
                                 console.log("ERROR : ", error);
@@ -94,65 +104,82 @@ $(document).ready(function () {
                         });
                     } // появление кнопок времени
                 });
-                $("#schedulesRow").prop("hidden", false);
-                $("#timetablesRow").prop("hidden", true);
-                $("#previewRow").prop("hidden", true);
-                $("#callbackRow").prop("hidden", true);
-                $("#submitButton").prop("disabled", true);
+                schedulesRow.prop("hidden", false);
+                timetablesRow.prop("hidden", true);
+                previewRow.prop("hidden", true);
+                callbackRow.prop("hidden", true);
+                submitButton.prop("disabled", true);
+                reverseAnimation();
             },
             error: function (error) {
                 console.log("ERROR : ", error);
             }
         });
-    }); // появление календаря дат
+    });
 
-    $("#inputSchedule").on("change", function () {
-    }); // появление кнопок времени
+    let clickedButtonVal;
+    let clickedButtonText;
+    let previewDoctorName = $("#previewDoctorName")[0];
+    let previewDoctorPhoto = $("#previewDoctorPhoto");
+    let previewDoctorSpeciality = $("#previewDoctorSpeciality")[0];
+    let previewDoctorExperience = $("#previewDoctorExperience")[0];
+    let previewDoctorCategory = $("#previewDoctorCategory")[0];
+    let previewAppointmentDate = $("#previewAppointmentDate")[0];
+    let previewDoctorCabinet = $("#previewDoctorCabinet")[0];
 
-    $("#inputTimetable").on("click", "a.btn", function () {
+    inputTimetable.on("click", "button.timeBlocks", function () {
         if (typeof clickedButtonVal !== "undefined")
-            clickedButtonVal.prop("class", "btn btn-secondary offset-1 col-md-2") // возвращаем стиль кнопки при нажатии другой
+            clickedButtonVal.removeClass("activeButton");
         clickedButtonVal = $(this);
         clickedButtonText = $(this).html();
-        $(this).prop("class", "btn btn-primary offset-1 col-md-2")
+        $(this).addClass("activeButton");
 
         $.ajax({
             type: "GET",
             url: "/doctors/getById",
             data: {
-                doctorId: $("#inputDoctor").val(),
+                doctorId: inputDoctor.val(),
             },
             success: function (data) {
-                console.log(data);
                 let doctor = JSON.parse(data).doctor;
-                $("#previewAppointment").html(data);
-                $("#previewDoctorName")[0].innerHTML = 'Специалист: ' + doctor.surname + ' ' + doctor.name + ' ' + doctor.patronymic;
-                $("#previewDoctorPhoto").prop("src", "/applicationFiles/doctors/" + doctor.id + "/" + doctor.image);
-                $("#previewDoctorSpeciality")[0].innerHTML = 'Специальность: ' + $("#inputSpeciality option:selected").text();
-                $("#previewExperience")[0].innerHTML = 'Стаж: ' + doctor.experience + ' ' + plural(doctor.experience);
-                $("#previewCategory")[0].innerHTML = "Категория: " + doctor.category;
-                $("#previewDate")[0].innerHTML = 'Время приёма: ' + $("#inputSchedule").datepicker({dateFormat: 'dd-mm-yy'}).val() + ' в ' + clickedButtonText;
-                $("#previewCabinet")[0].innerHTML = 'Кабинет: ' + doctor.cabinet;
-                $("#previewRow").prop("hidden", false);
-                $("#callbackRow").prop("hidden", doctor.reg);
+                previewDoctorName.innerHTML = 'Специалист: ' + doctor.surname + ' ' + doctor.name + ' ' + doctor.patronymic;
+                previewDoctorPhoto.prop("src", "/applicationFiles/doctors/" + doctor.id + "/" + doctor.image);
+                previewDoctorSpeciality.innerHTML = 'Специальность: ' + $("#inputSpeciality option:selected").text();
+                previewDoctorExperience.innerHTML = 'Стаж: ' + doctor.experience + ' ' + plural(doctor.experience);
+                previewDoctorCategory.innerHTML = "Категория: " + doctor.category;
+                previewAppointmentDate.innerHTML = 'Время приёма: ' + $("#inputSchedule").datepicker({dateFormat: 'dd-mm-yy'}).val() + ' в ' + clickedButtonText;
+                previewDoctorCabinet.innerHTML = 'Кабинет: ' + doctor.cabinet;
+                previewRow.prop("hidden", false);
+                callbackRow.prop("hidden", doctor.reg);
+                if (doctor.reg) submitButton.prop("disabled", false);
+                directAnimation();
             },
             error: function (error) {
                 console.log("ERROR : ", error);
             }
-        }) // берём данные доктора для превью
-
-        $("#submitButton").prop("disabled", false);
+        });
     });
 
-    $("#submitButton").on("click", function () {
+    let inputName = $("#inputName");
+    let inputSurname = $("#inputSurname");
+    let inputTelephone = $("#inputTelephone");
+
+    $(".callbackInput").on('change', function() {
+        if ($(this).prop('hidden') !== true && inputName.val() !== "" && inputSurname.val() !== "" && inputTelephone.val().length >= 17) {
+            submitButton.prop('disabled', false);
+        }
+        else submitButton.prop('disabled', true);
+    })
+
+    submitButton.on("click", function () {
         $.ajax({
             type: "POST",
             url: "/appointments/new",
             data: {
-                doctorId: $("#inputDoctor").val(),
-                date: $("#inputSchedule").datepicker({dateFormat: 'dd-mm-yy'}).val(),
+                doctorId: inputDoctor.val(),
+                date: inputSchedule.datepicker({dateFormat: 'dd-mm-yy'}).val(),
                 time: clickedButtonText,
-                callbackInfo: $("#inputSurname").val() + " " + $("#inputName").val() + " " + $("#inputTelephone").val()
+                callbackInfo: inputSurname.val() + " " + inputName.val() + " " + inputTelephone.val()
             },
             success: function(data) {
                 window.location.href = "https://localhost:443" + data;
@@ -166,6 +193,31 @@ $(document).ready(function () {
             return [true];
         }
         return [false];
+    }
+
+    let firstBlock = $('.firstBlock');
+    let secondBlock = $('.secondBlock');
+    let thirdBlock = $('.thirdBlock');
+    let attrTransition = $('.attrTransition');
+    let wordsTransition = $('.wordsTransition');
+    let greenTriangles = $(".greenTriangles");
+
+    function directAnimation() {
+        firstBlock.addClass('firstBlockAfter');
+        secondBlock.addClass('secondBlockAfter');
+        thirdBlock.addClass('thirdBlockAfter');
+        attrTransition.addClass('attrTransitionAfter');
+        wordsTransition.addClass('wordsTransitionAfter');
+        greenTriangles.addClass('greenTrianglesAfter');
+    }
+
+    function reverseAnimation() {
+        firstBlock.removeClass('firstBlockAfter');
+        secondBlock.removeClass('secondBlockAfter');
+        thirdBlock.removeClass('thirdBlockAfter');
+        attrTransition.removeClass('attrTransitionAfter');
+        wordsTransition.removeClass('wordsTransitionAfter');
+        greenTriangles.removeClass('greenTrianglesAfter');
     }
 
 });

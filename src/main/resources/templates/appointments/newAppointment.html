@@ -7,96 +7,140 @@
     <script type="text/javascript" th:src="@{/js/newAppointment.js}"></script>
     <script type="text/javascript" th:src="@{/js/yearSuffix.js}"></script>
     <script type="text/javascript" th:src="@{/js/phoneForm.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/profileStyle.css}">
+    <link rel="stylesheet" th:href="@{/css/newAppointment.css}">
+    <link rel="stylesheet" th:href="@{/css/datepickerStyle.css}">
 </head>
 <body>
 <div class="wrapper">
     <div class="content">
         <header th:insert="blocks/header :: header"></header>
-        <div class="container mt-5">
-            <div class="card mb-4">
-                <div class="card-header">Запись на приём</div>
-                <div class="card-body">
-                    <form>
-                        <!--Ряд специальности-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputSpeciality">Выберите направление</label>
-                                <select class="form-control" id="inputSpeciality" required>
-                                    <option value="" disabled selected>Выберите направление</option>
-                                    <option th:each="speciality : ${T(com.example.models.Speciality).values()}"
-                                            th:value="${{speciality}}" th:text="${speciality.label}">
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <!--Ряд специалиста-->
-                        <div class="row gx-3 mb-3" id="doctorsRow" hidden>
-                            <div class="col-md-6" id="selectDoctorCol">
-                                <label class="small mb-1" for="inputDoctor">Выберите специалиста</label>
-                                <select class="form-control" id="inputDoctor" required>
-                                </select>
-                            </div>
-                        </div>
-                        <!--Ряд даты-->
-                        <div class="row gx-3 mb-3" id="schedulesRow" hidden>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputSchedule">Выберите дату приёма</label>
-                                <div id="inputSchedule"></div>
-                            </div>
-                        </div>
-                        <!--Ряд времени-->
-                        <div class="row gx-3 mb-3" id="timetablesRow" hidden>
-                            <label class="small mb-1" for="inputTimetable">Выберите дату приёма</label>
-                            <div class="container" id="inputTimetable">
-                            </div>
-                        </div>
-                        <!--Ряд готового приёма-->
-                        <div class="card mb-2" id="previewRow" hidden>
-                            <div class="card-header">Превью приёма</div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <h5 class="card-title" id="previewDoctorName"></h5>
-                                        <p class="card-text" id="previewDoctorSpeciality"></p>
-                                        <p class="card-text" id="previewExperience"></p>
-                                        <p class="card-text" id="previewCategory"></p>
-                                    </div>
-                                    <div class="col-2 mt-0">
-                                        <img class="doctorPhoto" style="width: 150px; height: 150px" id="previewDoctorPhoto" alt="" src="">
-                                    </div>
-                                </div>
-                                <hr>
-                                <p class="card-text" id="previewDate"></p>
-                                <p class="card-text" id="previewCabinet"></p>
-                            </div>
-                        </div>
-                        <!--Контактной информации-->
-                        <div class="card mb-4" id="callbackRow" hidden>
-                            <div class="card-header">Контактные данные</div>
-                            <div class="card-body">
-                                <div class="row gx-3 mb-3">
-                                    <div class="col-md-6">
-                                        <label class="small mb-1" for="inputName">Имя</label>
-                                        <input class="form-control" id="inputName" type="text">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="small mb-1" for="inputSurname">Фамилия</label>
-                                        <input class="form-control" id="inputSurname" type="text">
-                                    </div>
-                                </div>
-                                <div class="row gx-3 mb-3">
-                                    <div class="col-md-12">
-                                        <label class="small mb-1" for="inputTelephone">Телефон</label>
-                                        <input class="form-control" id="inputTelephone" type="tel" data-tel-input>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <input class="btn btn-primary" value="Подтвердить" id="submitButton" disabled><br><br>
-                    </form>
-                </div>
+        <!--Запись на прием-->
+        <div>
+            <div class="themes my-2 mt-5 text-center">Запись на приём</div>
+            <div class="mb-1 headVerticalLine">
+            </div>
+            <div class="mb-4 headVerticalLine">
             </div>
         </div>
+        <!--Форма-->
+        <form>
+            <!--Левая колонка-->
+            <div class="firstBlock">
+                <div>
+                    <!--Ряд специальности-->
+                    <div class="mt-4">
+                        <div class="regTexts mb-2 wordsTransition">Выберите направление</div>
+                        <div class="attrTransition">
+                            <select class="form-control attrBlock buttonFont m-auto" id="inputSpeciality" style="width: 465px;"
+                                    required>
+                                <option value="" disabled selected>Выберите направление</option>
+                                <option th:each="speciality : ${T(com.example.models.Speciality).values()}"
+                                        th:value="${{speciality}}" th:text="${speciality.label}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--Ряд специалиста-->
+                    <div class="mt-4" id="doctorsRow" hidden>
+                        <div id="noFoundDoctorsMessage" class="card doctorBody align-items-center justify-content-center mt-5" hidden>
+                            <div class="m-3">
+                                <h4 class="themes">К сожалению на данным момент нет свободных специалистов.
+                                    Мы постараемся как можно скорее исправить ситуацию</h4>
+                                <i class="las la-frown-open la-3x"></i>
+                            </div>
+                        </div>
+                        <div id="selectDoctorDiv">
+                            <label class="regTexts mb-2 wordsTransition" for="inputDoctor">Выберите специалиста</label>
+                            <div class="attrTransition">
+                                <select class="form-control attrBlock buttonFont" id="inputDoctor"
+                                        style="width: 465px; margin: 0 auto;" required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Ряд даты-->
+                    <div class="mt-4" id="schedulesRow" hidden>
+                        <div>
+                            <label class="regTexts mb-2 wordsTransition" for="inputSchedule">Выберите дату приёма</label>
+                            <div id="inputSchedule" style="width: auto"></div>
+                        </div>
+                    </div>
+                    <!--Ряд времени-->
+                    <div class="mt-4" id="timetablesRow" hidden>
+                        <label class="regTexts mb-2 wordsTransition" for="inputTimetable">Выберите время приёма</label>
+                        <div class="container-fluid doctorBody greenDoctorHeader pb-3"
+                             style="max-width: 600px; min-height: 180px;">
+                            <div class="timePicker" id="inputTimetable"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Ряд готового приёма-->
+            <div class="secondBlock">
+                <div class="doctorBody" id="previewRow" style="width: 460px; background: white;" hidden>
+                    <div class="card-header headlines" style="background: #1f4326; color: white; margin: -0.1em"></div>
+                    <div class="d-flex justify-content-center  mb-3">
+                        <div class="mt-3">
+                            <div class="d-flex justify-content-center  mb-3 mt-1">
+                                <img class="doctorPhoto" style=" height: 140px; width: 140px" id="previewDoctorPhoto"
+                                     src="" alt="">
+                            </div>
+                            <h5 class="headlines" id="previewDoctorName"></h5>
+                            <p class="headlines" id="previewDoctorSpeciality"></p>
+                            <p class="headlines" id="previewDoctorExperience"></p>
+                            <p class="headlines" id="previewDoctorCategory"></p>
+                            <hr>
+                            <p class="headlines" id="previewAppointmentDate"></p>
+                            <p class="headlines" id="previewDoctorCabinet"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Нижняя панель-->
+            <div class="d-flex justify-content-center thirdBlock my-5" style="">
+                <div class="doctorBody" id="callbackRow" style="max-width: 1500px;width: 1210px; background: white;" hidden>
+                    <div class="card-header regTexts" style="text-align: center">Контактные данные</div>
+                    <div class="card-body">
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="regTexts" for="inputName">Имя</label>
+                                <input class="form-control attrBlock buttonFont callbackInput" style=" height: 40px;" id="inputName"
+                                       type="text">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="regTexts" for="inputSurname">Фамилия</label>
+                                <input class="form-control attrBlock buttonFont callbackInput" style=" height: 40px;" id="inputSurname"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-12">
+                                <label class="regTexts" for="inputTelephone">Телефон</label>
+                                <input class="form-control attrBlock buttonFont callbackInput" style=" height: 40px;" id="inputTelephone"
+                                       type="tel" data-tel-input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Кнопка-->
+            <div>
+                <input class="d-flex justify-content-center m-auto btn btn-primary button mb-2" value="Подтвердить"
+                       id="submitButton" disabled>
+            </div>
+        </form>
+
+        <!--Зелёные блоки-->
+        <div class="triangleBlock">
+            <div class="greenTriangles">
+                <img th:src="@{/applicationFiles/designElements/greenTriangle1.svg}" alt="">
+            </div>
+            <div class="greenTriangles greenTriangles2">
+                <img th:src="@{/applicationFiles/designElements/greenTriangle2.svg}" alt="">
+            </div>
+        </div>
+
     </div>
     <footer th:insert="blocks/footer :: footer"></footer>
 </div>
