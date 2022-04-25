@@ -103,41 +103,11 @@
                                              th:errors="*{category}"></div>
                                     </div>
                                 </div>
-                                <!--Ряд О враче-->
-                                <div class="row gx-3 mb-3">
-                                    <div class="col-md-6">
-                                        <label class="small mb-1" for="inputAboutDoctor">О враче</label>
-                                        <textarea class="form-control" id="inputAboutDoctor" type="text"
-                                                  th:field="*{aboutDoctor}"
-                                                  th:text="${doctor.getAboutDoctor()}"></textarea>
-                                        <div class="alert alert-warning" th:if="${#fields.hasErrors('aboutDoctor')}"
-                                             th:errors="*{aboutDoctor}"></div>
-                                    </div>
-                                </div>
-                                <!--Ряд специализации и навыков-->
-                                <div class="row gx-3 mb-3">
-                                    <div class="col-md-6">
-                                        <label class="small mb-1" for="inputSkills">Специализация и профессиональные
-                                            навыки врача</label>
-                                        <textarea class="form-control" id="inputSkills" type="text"
-                                                  th:field="*{skills}" th:text="${doctor.getSkills()}"></textarea>
-                                        <div class="alert alert-warning" th:if="${#fields.hasErrors('skills')}"
-                                             th:errors="*{skills}"></div>
-                                    </div>
-                                </div>
-                                <!--Ряд мест работы-->
-                                <div class="row gx-3 mb-3">
-                                    <div class="col-md-6">
-                                        <label class="small mb-1" for="inputWorkPlaces">Опыт работы</label>
-                                        <textarea class="form-control" id="inputWorkPlaces" type="text"
-                                                  th:field="*{workPlaces}"
-                                                  th:text="${doctor.getWorkPlaces()}"></textarea>
-                                        <div class="alert alert-warning" th:if="${#fields.hasErrors('workPlaces')}"
-                                             th:errors="*{workPlaces}"></div>
-                                    </div>
-                                </div>
                                 <!--Спрятанные поля-->
                                 <input th:field="*{email}" th:value="${doctor.getEmail()}" hidden>
+                                <input th:field="*{aboutDoctor}" th:value="${doctor.getAboutDoctor()}" hidden>
+                                <input th:field="*{education}" th:value="${doctor.getEducation()}" hidden>
+                                <input th:field="*{workPlaces}" th:value="${doctor.getWorkPlaces()}" hidden>
                                 <!--Ряд кнопок-->
                                 <div class="col-md-6">
                                     <input class="btn btn-primary" type="submit" value="Подтвердить"/>

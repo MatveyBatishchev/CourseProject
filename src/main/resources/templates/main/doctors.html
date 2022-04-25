@@ -258,7 +258,7 @@
                                         <p class="card-text mt-3"
                                            th:text="${'Стаж: ' + doctor.getExperienceWithPrefix()}"></p>
                                         <p class="card-text mt-1" th:text="${'Категория: ' + doctor.getCategory()}"></p>
-                                        <a href="#" class="btn btn-secondary mb-0">Отзывы</a>
+                                        <a href="#" class="btn btn-secondary mb-0">Подробнее</a>
                                         <a th:href="@{/doctors/{id}(id=${doctor.getId()})}" class="btn btn-primary">Записаться
                                             онлайн</a>
                                     </div>

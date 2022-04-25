@@ -21,6 +21,7 @@ $(document).ready(function() {
                     pageNumber: 0
                 },
                 success: function (data) {
+                    console.log(data);
                     let jsonObject = JSON.parse(data);
                     let doctors = JSON.parse(jsonObject.doctors);
                     if (doctors.length > 0) {

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <title th:text="${doctor.getSurname() + ' ' + doctor.getName() + ' ' + doctor.getPatronymic()}"></title>
+    <div th:insert="blocks/webjars :: webjars"></div>
+    <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.js"></script>
+    <script type="text/javascript" th:src="@{/js/yearSuffix.js}"></script>
+    <script type="text/javascript" th:src="@{/js/resumeJs.js}"></script>
+</head>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+        var doctorSpecialities = /*[[${doctor.getSpecialitiesLabels()}]]*/ 'doctorSpecialities';
+        var aboutDoctor = /*[[${doctor.getAboutDoctor()}]]*/ 'aboutDoctor';
+        var education = /*[[${doctor.getEducation()}]]*/ 'eduction';
+        var workPlaces = /*[[${doctor.getWorkPlaces()}]]*/ 'workPlaces';
+    /*]]>*/
+</script>
+<style>
+    .container {
+        font-family: 'FFormular';
+        font-style: normal;
+        color: black;
+    }
+
+    .card {
+        border: 1px solid black !important;
+        border-radius: 10px;
+    }
+
+    .grayCard {
+        border: none !important;
+        background: #ececec !important;
+        padding: 2rem 2rem 1.4rem 2rem !important;
+        font-size: 17px !important;
+    }
+
+    .linksCard {
+        border-radius: 0 !important;
+        border-left: 0 !important;
+        border-right: 0 !important;
+        border-top: 0 !important;
+    }
+
+    .row {
+        justify-content: start;
+        align-items: center;
+    }
+
+    .photo {
+        width: 200px;
+        height: 270px;
+        background: transparent;
+        border: 1px solid rgba(114, 113, 113, 0.96);
+        border-radius: 10px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        object-fit: contain;
+    }
+
+
+    .container a {
+        color: black !important;
+    }
+
+    .tag {
+        height: 40px;
+        width: 140px !important;
+        font-size: 16px !important;
+        color: black !important;
+        border: 1px solid black !important;
+        background: white !important;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .tag:hover {
+        color: white !important;
+        background: #1f4326 !important;
+    }
+
+    .MyButton {
+        height: 33px !important;
+        font-size: 17px !important;
+        color: white !important;
+        background-color: #1f4326 !important;
+    }
+
+    img {
+        width: auto;
+        height: 270px;
+        max-width: 200%;
+        max-height: 120%;
+    }
+
+    span {
+        white-space:nowrap;
+    }
+
+    .imgMetro {
+        width: 25px;
+        height: 25px;
+    }
+
+    .spanStyle {
+        font-weight: 500 !important;
+    }
+
+    .blockVerticalLine {
+        margin: 0.5rem auto;
+        width: 100%;
+        height: 0;
+        background: #1f4326;
+        border-radius: 5px;
+        border: 2px solid #1f4326 !important;
+    }
+
+    .infoUl li {
+        list-style-type: disc;
+        position: relative;
+        padding: 8px 0 8px 25px;
+    }
+
+</style>
+<body>
+<div class="wrapper">
+    <div class="content">
+        <header th:replace="blocks/header :: header"></header>
+        <div class="container mt-5">
+            <!--Заголовок-->
+            <span style="font-size: 34px;" th:text="${doctor.getSurname() + ' ' + doctor.getName() + ' ' + doctor.getPatronymic()}"></span>
+            <!--Ссылки на части резюме-->
+            <div class="card linksCard col-md-7 mt-4 p-1">
+                <div class="row buttonFont">
+                    <div class="col-md-3">
+                        <a href="#">О враче</a>
+                    </div>
+                    <div class="col-md-3 ps-0">
+                        <a href="#">Образование</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#">Опыт работы</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#">Отзывы</a>
+                    </div>
+                </div>
+            </div>
+            <!--Общие данные-->
+            <div class="mt-2 p-4">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="photo"><img class="imgDoctor" th:if="${doctor.getImage() != null && !doctor.getImage().isEmpty()}"
+                                                    th:src="@{/applicationFiles/doctors/{id}/{image}(id=${doctor.getId()}, image=${doctor.getImage()})}" alt="doctorPhoto"/></div>
+                        </div>
+                        <div class="col-9">
+                            <div class="card">
+                                <div class="row p-3">
+                                    <!--Левая колонка-->
+                                    <div class="col" style="font-size: 18px;">
+                                        <!--Теги специальности-->
+                                        <div class="row col-md-12 ms-1 mt-1" id="doctorSpecialities">
+                                            <div class="col col-md-4 p-0">
+                                                <button class="button tag">Невролог</button>
+                                            </div>
+                                            <div class="col col-md-4 p-0">
+                                                <button class="button tag">Сомнолог</button>
+                                            </div>
+                                            <div class="col col-md-4 p-0">
+                                                <button class="button tag">Эпилептолог</button>
+                                            </div>
+                                        </div>
+                                        <!--Стаж-->
+                                        <div class="row mt-3 ms-1">
+                                            <div>
+                                                <span class="spanStyle">Врачебный стаж: </span>
+                                                <span style="font-size: 25px;" id="doctorExperience" th:text="${doctor.getExperience()}"></span>
+                                                <span id="yearPrefix"></span>
+                                            </div>
+                                        </div>
+                                        <!--Категория-->
+                                        <div class="row mt-4 ms-1">
+                                            <span class="spanStyle">Категория специалиста:</span>
+                                            <span class="mt-2" id="doctorCategory" th:text="${doctor.getCategory()}">кандидат медицинских наук, врач высшей категории</span>
+                                        </div>
+                                        <!--Адрес клиники-->
+                                        <div class="row mt-4 col-md-12">
+                                            <div class="col-md-11 ms-3 experienceRow">
+                                                <span class="mt-1 spanStyle">Работает в клиниках:</span>
+                                                <div class="card mt-2 p-2" style="border: 0 !important; background: rgba(245,245,245,0.87) !important; font-size: 17px !important;">
+                                                    <div class="mt-1 d-flex align-items-center"><img class="imgMetro me-2" src="/applicationFiles/designElements/metroIcon.png"/>Электрозаводская</div>
+                                                    <div class="mt-1">Большая Семеновская ул, д. 38</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Правая колонка-->
+                                    <div class="col">
+                                        <p>
+                                            При создании генератора мы использовали
+                                            небезизвестный универсальный код речей. При создании генератора мы использовали
+                                            небезизвестный универсальный код речей. Текст генерируется абзацами случайным
+                                            образом от двух до десяти предложений в абзаце, что позволяет сделать текст
+                                            более привлекательным и живым для визуально-слухового восприятия.
+                                        </p>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <button class="button MyButton mt-1" style="width: 250px;">Записаться на приём</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!--Тут появляется демоверсия формы записи-->
+
+            <!--О враче + специализация-->
+            <div class="card grayCard mt-5">
+                <span style="font-size: 28px;">О враче</span>
+                <div class="blockVerticalLine"></div>
+                <div class="mt-3" id="aboutDoctorDiv"></div>
+            </div>
+            <!--Образование-->
+            <div class="card grayCard mt-5">
+                <span style="font-size: 28px;">Образование</span>
+                <div class="blockVerticalLine mb-3"></div>
+                <div class="mt-3" id="educationDiv"></div>
+            </div>
+            <!--Опыт работы-->
+            <div class="card grayCard mt-5">
+                <span style="font-size: 28px;">Опыт работы</span>
+                <div class="blockVerticalLine mb-3"></div>
+                <div class="mt-3" id="workPlacesDiv"></div>
+            </div>
+            <!--Отзывы-->
+            <div class="card grayCard mt-5">
+                <span style="font-size: 28px;">Отзывы</span>
+                <div class="blockVerticalLine mb-3"></div>
+            </div>
+
+        </div>
+    </div>
+    <footer th:insert="blocks/footer :: footer"></footer>
+</div>
+</body>
+</html>

@@ -7,8 +7,14 @@ import com.example.models.Role;
 import com.example.repo.DoctorRepository;
 import com.example.repo.PatientRepository;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,7 +27,10 @@ import org.springframework.validation.SmartValidator;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class PatientService implements UserDetailsService {
@@ -55,6 +64,20 @@ public class PatientService implements UserDetailsService {
         return modelAndView;
     }
 
+    public ModelAndView findAllPatientsWithPage(ModelAndView modelAndView) {
+        Page<Patient> page = patientRepository.findAll(PageRequest.of(0, 2, Sort.by("id")));
+        modelAndView.addObject("patients", page.getContent());
+        modelAndView.addObject("totalPages", page.getTotalPages());
+        modelAndView.setViewName("patients/getAll");
+        return modelAndView;
+    }
+
+    public String findPatientsWithPage(Integer pageNumber) {
+        Page<Patient> page = patientRepository.findAll(PageRequest.of(pageNumber, 2, Sort.by("id")));
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        return gson.toJson(page.getContent());
+    }
+
     public ModelAndView findPatientById(Long patientId, ModelAndView modelAndView) {
         Patient patientById = patientRepository.findById(patientId).orElse(null);
         if (patientById == null) {
@@ -81,15 +104,25 @@ public class PatientService implements UserDetailsService {
         return modelAndView;
     }
 
-    public HashSet<Patient> findPatientBySearch(String search) {
-        List<Patient> patientsList = new ArrayList<>();
-        if (search != null && !search.isEmpty()) {
-            for (String s : search.split(" ")) {
-                patientsList.addAll(patientRepository.findByNameIgnoreCaseOrSurnameIgnoreCase(s, s));
-            }
+    public String findPatientBySearchWithPage(String search, Integer pageNumber) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        JsonObject jsonObject = new JsonObject();
+        String[] fullNameParts = search.split(" ");
+        Pageable pageable = PageRequest.of(pageNumber, 1, Sort.by("id"));
+        Page<Patient> page  = null;
+        switch (fullNameParts.length) {
+            case 0:
+                return null;
+            case 1:
+                page = patientRepository.findPatientByOneString(fullNameParts[0], pageable);
+                break;
+            default:
+                page = patientRepository.findPatientByTwoStrings(fullNameParts[0], fullNameParts[1], pageable);
+                break;
         }
-        else  patientsList = patientRepository.findAll();
-        return new HashSet<>(patientsList);
+        jsonObject.addProperty("entities", gson.toJson(page.getContent()));
+        jsonObject.addProperty("totalPages", page.getTotalPages());
+        return jsonObject.toString();
     }
 
     public ModelAndView saveNewPatient(Patient patient, BindingResult bindingResult, ModelAndView modelAndView) {

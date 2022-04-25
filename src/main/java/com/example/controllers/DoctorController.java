@@ -6,7 +6,6 @@ import com.example.services.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +26,7 @@ public class DoctorController {
 
     @GetMapping("/all")
     public ModelAndView getAllDoctors(ModelAndView modelAndView) {
-        return doctorService.findAllDoctors(modelAndView);
+        return doctorService.findAllDoctorsWithPage(modelAndView);
     }
 
     @GetMapping("/{id}")
@@ -41,21 +40,34 @@ public class DoctorController {
         return doctorService.findDoctorByIdJson(patient, doctorId);
     }
 
+    @GetMapping("/{id}/resume")
+    public ModelAndView getDoctorResumeById(@PathVariable("id") Long doctorId, ModelAndView modelAndView) {
+        return doctorService.findDoctorResumeById(doctorId, modelAndView);
+    }
+
+
     @GetMapping("/by_speciality")
     @ResponseBody
     public String getDoctorsBySpeciality(@RequestParam("speciality") String speciality) {
         return doctorService.findDoctorsBySpeciality(speciality);
     }
 
+    @GetMapping("/getPage")
+    @ResponseBody
+    public String getDoctorsWithPage(@RequestParam("pageNumber") Integer pageNumber) {
+        return doctorService.findDoctorsWithPage(pageNumber);
+    }
+
     @GetMapping("/search")
-    public String getDoctorBySearch(@RequestParam("search") String search, Model model) {
-        model.addAttribute("doctors", doctorService.findDoctorsBySearch(search));
-        return "/doctors/getAll";
+    @ResponseBody
+    public String getDoctorsBySearch(@RequestParam("search") String search,
+                                    @RequestParam("pageNumber") Integer pageNumber) {
+        return doctorService.findDoctorBySearchWithPage(search, pageNumber);
     }
 
     @GetMapping("/find")
     @ResponseBody
-    public String findDoctorBySearch(@RequestParam("fullName") String fullName,
+    public String getDoctorsByExpandedSearchWithPage(@RequestParam("fullName") String fullName,
                                      @RequestParam("speciality") String speciality,
                                      @RequestParam("pageNumber") Integer pageNumber) {
         return doctorService.findDoctorsBySpecialityAndFullNameWithPage(fullName, speciality, pageNumber);

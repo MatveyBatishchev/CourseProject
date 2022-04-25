@@ -4,7 +4,17 @@
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <title>Регистрация нового специалиста</title>
     <div th:insert="blocks/webjars :: webjars"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.23.2/dist/editor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@1.7.0/dist/bundle.js"></script>
+    <script type="text/javascript" th:src="@{/js/newDoctor.js}"></script>
 </head>
+<style>
+    .codex-editor__redactor {
+        border: 1px solid #e3e3e3 !important;
+        border-radius: 10px;
+        padding-bottom: 40px !important;
+    }
+</style>
 <body>
 <div class="wrapper">
     <div class="content">
@@ -86,31 +96,30 @@
                         </div>
                         <!--Ряд О враче-->
                         <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-7" style="width: 62% !important;">
                                 <label class="small mb-1" for="inputAboutDoctor">О враче</label>
-                                <textarea class="form-control" id="inputAboutDoctor" type="text"
-                                          th:field="*{aboutDoctor}"></textarea>
+                                <div id="inputAboutDoctor"></div>
+                                <input id="inputAboutDoctorResult" type="text" th:field="*{aboutDoctor}" hidden/>
                                 <div class="alert alert-warning" th:if="${#fields.hasErrors('aboutDoctor')}"
                                      th:errors="*{aboutDoctor}"></div>
                             </div>
                         </div>
-                        <!--Ряд специализации и профессиональных навыков-->
+                        <!--Ряд образования-->
                         <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputSkills">Специализация и профессиональные навыки
-                                    врача</label>
-                                <textarea class="form-control" id="inputSkills" type="text"
-                                          th:field="*{skills}"></textarea>
-                                <div class="alert alert-warning" th:if="${#fields.hasErrors('skills')}"
-                                     th:errors="*{skills}"></div>
+                            <div class="col-md-7" style="width: 62% !important;">
+                                <label class="small mb-1" for="inputEducation">Образование</label>
+                                <div id="inputEducation"></div>
+                                <input id="inputEducationResult" type="text" th:field="*{education}" hidden/>
+                                <div class="alert alert-warning" th:if="${#fields.hasErrors('education')}"
+                                     th:errors="*{education}"></div>
                             </div>
                         </div>
                         <!--Ряд опыта работы-->
                         <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-7" style="width: 62% !important;">
                                 <label class="small mb-1" for="inputWorkPlaces">Опыт работы</label>
-                                <textarea class="form-control" id="inputWorkPlaces" type="text"
-                                          th:field="*{workPlaces}"></textarea>
+                                <div id="inputWorkPlaces"></div>
+                                <input id="inputWorkPlacesResult" type="text" th:field="*{workPlaces}" hidden/>
                                 <div class="alert alert-warning" th:if="${#fields.hasErrors('workPlaces')}"
                                      th:errors="*{workPlaces}"></div>
                             </div>

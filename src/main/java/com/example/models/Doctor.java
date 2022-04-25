@@ -16,7 +16,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -79,9 +81,9 @@ public class Doctor implements User {
     @NotBlank(message = "Это поле является обязательным")
     private String aboutDoctor;
 
-    @Column(name="skills",nullable=false)
+    @Column(name="education",nullable=false)
     @NotBlank(message = "Это поле является обязательным")
-    private String skills;
+    private String education;
 
     @Column(name="work_places",nullable=false)
     @NotBlank(message = "Это поле является обязательным")
@@ -165,6 +167,10 @@ public class Doctor implements User {
     public String getExperienceWithPrefix() {
         int experience = getExperience();
         return experience + " " + declension[ (experience%100>4 &&experience%100<20)? 2 : cases[(experience%10<5)?experience%10:5] ];
+    }
+
+    public List<String> getSpecialitiesLabels() {
+        return specialities.stream().map(Speciality::toString).collect(Collectors.toList());
     }
 
 }

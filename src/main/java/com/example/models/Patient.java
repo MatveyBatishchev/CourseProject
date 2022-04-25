@@ -1,6 +1,7 @@
 package com.example.models;
 
 import com.example.validation.ValidPassword;
+import com.google.gson.annotations.Expose;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,35 +34,42 @@ public class Patient implements User {
                     @Parameter(name = "increment_size", value = "1")
             }
     )
+    @Expose
     private Long id;
 
     @Column(name="name", nullable=false)
     @Size(min=2, max=30, message = "Имя должно быть от 2-х до 30 букв")
     @NotBlank(message = "Это поле является обязательным")
+    @Expose
     private String name;
 
     @Column(name="surname", nullable=false)
     @Size(min=2, max=30, message = "Фамилия должна быть от 2-х до 30 букв")
     @NotBlank(message = "Это поле является обязательным")
+    @Expose
     private String surname;
 
     @Column(name="birth_date", nullable=false)
     @NotNull(message = "Это поле является обязательным")
+    @Expose
     private Date birthDate;
 
     @Column(name="sex", nullable=false)
     @Min(value=1, message="Недопустимое значение")
     @NotNull(message = "Это поле является обязательным")
+    @Expose
     private int sex;
 
     @Column(name="telephone", nullable=false)
     @Size(min=17, max=18, message = "Недопустимое значение")
     @NotBlank(message = "Это поле является обязательным")
+    @Expose
     private String telephone;
 
     @Column(name="email", nullable=false)
     @Email(message = "Недопустимое значение")
     @NotBlank(message = "Это поле является обязательным")
+    @Expose
     private String email;
 
     @Column(name="password", nullable=false)

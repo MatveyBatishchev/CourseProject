@@ -77,33 +77,6 @@
                                            th:value="${doctor.getCategory()}" disabled>
                                 </div>
                             </div>
-                            <!--Ряд О враче-->
-                            <div class="row gx-3 mb-3">
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputAboutDoctor">О враче</label>
-                                    <textarea class="form-control" id="inputAboutDoctor" type="text"
-                                              th:text="${doctor.getAboutDoctor()}" disabled></textarea>
-                                </div>
-                            </div>
-                            <!--Ряд специализации и навыков-->
-                            <div class="row gx-3 mb-3">
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputSkills">Специализация и профессиональные навыки
-                                        врача</label>
-                                    <textarea class="form-control" id="inputSkills" type="text"
-                                              value="Умеет много разного" th:text="${doctor.getSkills()}"
-                                              disabled></textarea>
-                                </div>
-                            </div>
-                            <!--Ряд мест работы-->
-                            <div class="row gx-3 mb-3">
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputWorkPlaces">Опыт работы</label>
-                                    <textarea class="form-control" id="inputWorkPlaces" type="text"
-                                              value="Большой опыт" th:text="${doctor.getWorkPlaces()}"
-                                              disabled></textarea>
-                                </div>
-                            </div>
                         </form>
                         <a class="btn btn-primary" role="button" th:href="@{/doctors/{id}/edit(id=${doctor.getId()})}">Редактировать</a>
                     </div>

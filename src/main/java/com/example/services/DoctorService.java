@@ -53,6 +53,44 @@ public class DoctorService {
         return doctorRepository.findAll(PageRequest.of(pageNumber, 4, Sort.by("id")));
     }
 
+    public ModelAndView findAllDoctorsWithPage(ModelAndView modelAndView) {
+        Page<Doctor> page = doctorRepository.findAll(PageRequest.of(0, 2, Sort.by("id")));
+        modelAndView.addObject("doctors", page.getContent());
+        modelAndView.addObject("totalPages", page.getTotalPages());
+        modelAndView.setViewName("doctors/getAll");
+        return modelAndView;
+    }
+
+    public String findDoctorsWithPage(Integer pageNumber) {
+        Page<Doctor> page = doctorRepository.findAll(PageRequest.of(pageNumber, 2, Sort.by("id")));
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        return gson.toJson(page.getContent());
+    }
+
+    public String findDoctorBySearchWithPage(String search, Integer pageNumber) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        JsonObject jsonObject = new JsonObject();
+        String[] fullNameParts = search.split(" ");
+        Pageable pageable = PageRequest.of(pageNumber, 1, Sort.by("id"));
+        Page<Doctor> page  = null;
+        switch (fullNameParts.length) {
+            case 0:
+                return null;
+            case 1:
+                page = doctorRepository.findDoctorByOneString(fullNameParts[0], pageable);
+                break;
+            case 2:
+                page = doctorRepository.findDoctorByTwoStrings(fullNameParts[0], fullNameParts[1], pageable);
+                break;
+            default:
+                page = doctorRepository.findDoctorByThreeStrings(fullNameParts[0], fullNameParts[1], fullNameParts[2], pageable);
+                break;
+        }
+        jsonObject.addProperty("entities", gson.toJson(page.getContent()));
+        jsonObject.addProperty("totalPages", page.getTotalPages());
+        return jsonObject.toString();
+    }
+
     public ModelAndView findDoctorById(Long doctorId, ModelAndView modelAndView) {
         Doctor doctorById = doctorRepository.findById(doctorId).orElse(null);
         if (doctorById == null) {
@@ -99,15 +137,17 @@ public class DoctorService {
                 .collect(Collectors.toList()));
     }
 
-    public HashSet<Doctor> findDoctorsBySearch(String search) {
-        List<Doctor> doctorsList = new ArrayList<>();
-        if (search != null && !search.isEmpty()) {
-            for (String s : search.split(" ")) {
-                doctorsList.addAll(doctorRepository.findByNameIgnoreCaseOrSurnameIgnoreCaseOrPatronymicIgnoreCase(s, s, s));
-            }
+    public ModelAndView findDoctorResumeById(Long doctorId, ModelAndView modelAndView) {
+        Doctor doctorById = doctorRepository.findById(doctorId).orElse(null);
+        if (doctorById == null) {
+            modelAndView.addObject("object", "Доктор");
+            modelAndView.setViewName("mistakes/notFound");
         }
-        else doctorsList = doctorRepository.findAll();
-        return new HashSet<>(doctorsList);
+        else {
+            modelAndView.addObject("doctor", doctorById);
+            modelAndView.setViewName("doctors/resume");
+        }
+        return modelAndView;
     }
 
     public String findDoctorsBySpecialityAndFullNameWithPage(String fullName, String speciality, Integer pageNumber) {

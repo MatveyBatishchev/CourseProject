@@ -4,7 +4,6 @@ import com.example.models.Patient;
 import com.example.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +24,7 @@ public class PatientController {
 
     @GetMapping("/all")
     public ModelAndView getAllPatients(ModelAndView modelAndView) {
-        return patientService.findAllPatients(modelAndView);
+        return patientService.findAllPatientsWithPage(modelAndView);
     }
 
     @GetMapping("/{id}")
@@ -34,9 +33,16 @@ public class PatientController {
     }
 
     @GetMapping("/search")
-    public String getPatientBySearch(@RequestParam("search") String search, Model model) {
-        model.addAttribute("patients", patientService.findPatientBySearch(search));
-        return "/patients/getAll";
+    @ResponseBody
+    public String getPatientBySearch(@RequestParam("search") String search,
+                                     @RequestParam("pageNumber") Integer pageNumber) {
+        return patientService.findPatientBySearchWithPage(search, pageNumber);
+    }
+
+    @GetMapping("/getPage")
+    @ResponseBody
+    public String getPatientsWithPage(@RequestParam("pageNumber") Integer pageNumber) {
+        return patientService.findPatientsWithPage(pageNumber);
     }
 
     @GetMapping("/new")
