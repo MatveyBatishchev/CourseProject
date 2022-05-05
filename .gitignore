@@ -3,7 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-/applicationFiles/
+/applicationFiles
 /src/main/resources/application.properties
 /localhost.p12
 /appointmentFiles

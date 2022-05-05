@@ -10,7 +10,7 @@
         defineStatusStyle();
 
         $(".appointmentStatus select").on("change", function () {
-            var appointmentId = $(this).parent().parent().find(".appointmentId").text();
+            var appointmentId = $(this).parent().parent().find(".appointmentId").text(); // damn
             switch ($(this).find("option:selected").val()) {
                 case '1':
                     setStatusAjax(appointmentId, 1)
@@ -31,12 +31,11 @@
     function setStatusAjax(appointmentId, status) {
         $.ajax({
             type: "PUT",
-            url: "/appointments/setStatus",
+            url: "/appointments/" + appointmentId + "/setStatus",
             data: {
-                appointmentId: appointmentId,
                 status: status
             },
-            success: function (data) {
+            success: function () {
                 console.log("SUCCESS : ", data);
             },
             error: function (error) {

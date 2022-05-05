@@ -1,20 +1,22 @@
 package com.example.services;
 
-import com.example.files.PdfConverter;
 import com.example.models.Appointment;
 import com.example.models.Patient;
 import com.example.models.TimeTable;
 import com.example.repo.AppointmentRepository;
 import com.example.repo.DoctorRepository;
 import com.example.repo.TimeTableRepository;
+import com.example.util.PdfConverter;
 import com.itextpdf.text.DocumentException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,7 +25,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 
+@AllArgsConstructor
 @Service
 public class AppointmentService {
 
@@ -32,71 +36,62 @@ public class AppointmentService {
     private final TimeTableRepository timeTableRepository;
     private final PdfConverter pdfConverter;
 
-    @Autowired
-    public AppointmentService(AppointmentRepository appointmentRepository, DoctorRepository doctorRepository,
-                              TimeTableRepository timeTableRepository, PdfConverter pdfConverter) {
-        this.appointmentRepository = appointmentRepository;
-        this.doctorRepository = doctorRepository;
-        this.timeTableRepository = timeTableRepository;
-        this.pdfConverter = pdfConverter;
+    public Appointment findAppointmentById(Long id) {
+        return appointmentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Запись на приём с id " + id + "не была найдена!"));
     }
 
     public List<Appointment> findAllAppointmentsAsc() {
         return appointmentRepository.findByOrderByIdAsc();
     }
 
-    public Appointment findAppointmentById(Long id) {
-        return appointmentRepository.findById(id).orElse(null);
-    }
-
-    public void saveAppointment(Appointment appointment) {
-        appointmentRepository.save(appointment);
+    public ModelAndView findAppointmentByIdView(Long id, ModelAndView modelAndView, String viewName) {
+        Appointment appointmentById = findAppointmentById(id);
+        modelAndView.addObject("appointment", appointmentById);
+        modelAndView.setViewName(viewName);
+        return modelAndView;
     }
 
     public Long saveAppointment(Patient patient, String date, String time, Long doctorId, String callbackInfo) {
-        Appointment appointment = new Appointment();
+        Appointment newAppointment = new Appointment();
 
         // Date
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         java.util.Date parsed = null;
         try {
-            parsed = format.parse(date);
+            parsed = new SimpleDateFormat("dd-MM-yyyy").parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        java.sql.Date sqlDate = new Date(parsed.getTime());
-        appointment.setDate(sqlDate);
+        java.sql.Date sqlDate = new Date(Objects.requireNonNull(parsed).getTime());
+        newAppointment.setDate(sqlDate);
 
         // Time
         LocalTime localTime = LocalTime.parse(time + ":00");
-        System.out.println(localTime);
-        appointment.setTime(localTime);
+        newAppointment.setTime(localTime);
 
         // Doctor
-        appointment.setDoctor(doctorRepository.findById(doctorId).get());
+        newAppointment.setDoctor(doctorRepository.findById(doctorId).orElseThrow(() -> new EntityNotFoundException("Доктор с id " + doctorId + "не был найден!")));
 
         // Patient
         if (patient != null) {
-            appointment.setPatient(patient);
-            appointment.setStatus(0);
+            newAppointment.setPatient(patient);
+            newAppointment.setStatus(0);
         }
-        else appointment.setStatus(1);
+        else newAppointment.setStatus(1);
 
         // TimeTable set isAvailable
-        Long timeTableId = timeTableRepository.findTimeTableIdByDateAndTimeAbdDoctorId(sqlDate,localTime,doctorId);
-        TimeTable timeTable = timeTableRepository.findById(timeTableId).get();
+        TimeTable timeTable = timeTableRepository.findTimeTableIdByDateAndTimeAndDoctorId(sqlDate,localTime,doctorId);
         timeTable.setAvailable(false);
         timeTableRepository.save(timeTable);
 
-        if (!callbackInfo.isBlank()) appointment.setCallbackInfo(callbackInfo);
+        if (!callbackInfo.isBlank()) newAppointment.setCallbackInfo(callbackInfo);
 
-        appointmentRepository.save(appointment);
+        appointmentRepository.save(newAppointment);
 
-        return appointment.getId();
+        return newAppointment.getId();
     }
 
-    public void editAppointmentStatus(Long appointmentId, int status) {
-        Appointment appointment = findAppointmentById(appointmentId);
+    public void editAppointmentStatus(Long id, Integer status) {
+        Appointment appointment = findAppointmentById(id);
         appointment.setStatus(status);
         appointmentRepository.save(appointment);
     }
@@ -115,7 +110,6 @@ public class AppointmentService {
         byte[] contents = new byte[0];
         try {
             String fileName = "appointmentFiles/appointment" + appointment.getId() + ".pdf";
-            System.out.println("-----------------------");
             contents = (Files.readAllBytes(new File(fileName).toPath()));
             new File(fileName).delete();
         } catch (IOException e) {

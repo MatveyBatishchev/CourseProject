@@ -1,24 +1,21 @@
 package com.example.services;
 
-import com.example.files.FileUploadUtil;
 import com.example.mappers.PatientMapper;
 import com.example.models.Patient;
 import com.example.models.Role;
 import com.example.repo.DoctorRepository;
 import com.example.repo.PatientRepository;
+import com.example.util.FileUploadUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindException;
@@ -27,89 +24,54 @@ import org.springframework.validation.SmartValidator;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @Service
-public class PatientService implements UserDetailsService {
+@RequiredArgsConstructor
+public class PatientService {
 
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
     private final MailSender mailSender;
     private final SmartValidator validator;
     private final PasswordEncoder passwordEncoder;
+    private final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    private final static int pageSize = 4;
 
     @Value("${upload.path}")
     private String uploadPath;
 
-    @Autowired
-    public PatientService(PatientRepository patientRepository,
-                          DoctorRepository doctorRepository,
-                          MailSender mailSender,
-                          SmartValidator validator,
-                          PasswordEncoder passwordEncoder) {
-        this.patientRepository = patientRepository;
-        this.doctorRepository = doctorRepository;
-        this.mailSender = mailSender;
-        this.validator = validator;
-        this.passwordEncoder = passwordEncoder;
+    public Patient findPatientById(Long id) {
+        return patientRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Пациент с id " + id + " не был найден!"));
     }
 
-    public ModelAndView findAllPatients(ModelAndView modelAndView) {
-        List<Patient> allPatients = patientRepository.findByOrderByIdAsc();
-        modelAndView.addObject("patients", allPatients);
-        modelAndView.setViewName("patients/getAll");
-        return modelAndView;
-    }
-
-    public ModelAndView findAllPatientsWithPage(ModelAndView modelAndView) {
-        Page<Patient> page = patientRepository.findAll(PageRequest.of(0, 2, Sort.by("id")));
+    public ModelAndView findAllPatientsWithPageView(ModelAndView modelAndView) {
+        Page<Patient> page = patientRepository.findAll(PageRequest.of(0, pageSize, Sort.by("id")));
         modelAndView.addObject("patients", page.getContent());
         modelAndView.addObject("totalPages", page.getTotalPages());
         modelAndView.setViewName("patients/getAll");
         return modelAndView;
     }
 
-    public String findPatientsWithPage(Integer pageNumber) {
-        Page<Patient> page = patientRepository.findAll(PageRequest.of(pageNumber, 2, Sort.by("id")));
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    public ModelAndView findPatientById(Long id, ModelAndView modelAndView, String viewName) {
+        modelAndView.addObject("patient", findPatientById(id));
+        modelAndView.setViewName(viewName);
+        return modelAndView;
+    }
+
+    public String findPatientsWithPageJson(Integer pageNumber) {
+        Page<Patient> page = patientRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by("id")));
         return gson.toJson(page.getContent());
     }
 
-    public ModelAndView findPatientById(Long patientId, ModelAndView modelAndView) {
-        Patient patientById = patientRepository.findById(patientId).orElse(null);
-        if (patientById == null) {
-            modelAndView.addObject("object", "Пациент");
-            modelAndView.setViewName("mistakes/notFound");
-        }
-        else {
-            modelAndView.addObject("patient", patientById);
-            modelAndView.setViewName("patients/getById");
-        }
-        return modelAndView;
-    }
-
-    public ModelAndView findPatientByIdForEdit(Long patientId, ModelAndView modelAndView) {
-        Patient patientById = patientRepository.findById(patientId).orElse(null);
-        if (patientById == null) {
-            modelAndView.addObject("object", "Пациент");
-            modelAndView.setViewName("mistakes/notFound");
-        }
-        else {
-            modelAndView.addObject("patient", patientById);
-            modelAndView.setViewName("patients/editById");
-        }
-        return modelAndView;
-    }
-
-    public String findPatientBySearchWithPage(String search, Integer pageNumber) {
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    public String findPatientBySearchWithPageJson(String search, Integer pageNumber) {
         JsonObject jsonObject = new JsonObject();
         String[] fullNameParts = search.split(" ");
-        Pageable pageable = PageRequest.of(pageNumber, 1, Sort.by("id"));
-        Page<Patient> page  = null;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
+        Page<Patient> page;
         switch (fullNameParts.length) {
             case 0:
                 return null;
@@ -153,13 +115,22 @@ public class PatientService implements UserDetailsService {
         //sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
     }
 
-    // partial patient update
-    public void updatePatient(Patient updatedPatient) {
-        Patient patient = patientRepository.findById(updatedPatient.getId()).orElse(null);
-        if (patient != null) {
-            PatientMapper.INSTANCE.updatePatientFromUpdatedEntity(updatedPatient, patient);
-            patientRepository.save(patient);
+    public ModelAndView editPatient(Patient patient, BindingResult bindingResult, MultipartFile multipartFile, ModelAndView modelAndView) {
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("/patients/editById");
         }
+        else {
+            if (!multipartFile.isEmpty()) savePatientFile(patient, multipartFile);
+            updatePatient(patient);
+            modelAndView.setViewName("redirect:/patients/" + patient.getId());
+        }
+        return modelAndView;
+    }
+
+    public void updatePatient(Patient updatedPatient) {
+        Patient patient = findPatientById(updatedPatient.getId());
+        PatientMapper.INSTANCE.updatePatientFromUpdatedEntity(updatedPatient, patient);
+        patientRepository.save(patient);
     }
 
     public void savePatientFile(Patient patient, MultipartFile multipartFile) {
@@ -173,38 +144,15 @@ public class PatientService implements UserDetailsService {
         }
     }
 
-    public ModelAndView editPatient(Patient patient, BindingResult bindingResult, MultipartFile multipartFile, ModelAndView modelAndView) {
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("/patients/editById");
-        }
-        else {
-            if (!multipartFile.isEmpty()) savePatientFile(patient, multipartFile);
-            updatePatient(patient);
-            modelAndView.setViewName("redirect:/patients/" + patient.getId());
-        }
-        return modelAndView;
-    }
-
     public void deletePatientById(Long id) {
         try {
-            Patient patient = patientRepository.findById(id).orElse(null);
-            if (patient != null) {
-                String patientDir = uploadPath + "patients/" + patient.getId();
-                FileUploadUtil.deleteDirectory(patientDir);
-            }
+            Patient patient = findPatientById(id);
+            String patientDir = uploadPath + "patients/" + patient.getId();
+            FileUploadUtil.deleteDirectory(patientDir);
         } catch (Exception e) {
             System.out.println("Ошибка в удалении файла пациента!");
         }
         patientRepository.deleteById(id);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) {
-        if (patientRepository.findByEmail(email) == null) {
-            if (doctorRepository.findByEmail(email) == null) throw new UsernameNotFoundException("User was not found!");
-            else return doctorRepository.findByEmail(email);
-        }
-        else return patientRepository.findByEmail(email);
     }
 
     public ModelAndView activatePatient(String code, ModelAndView modelAndView) {
@@ -260,39 +208,34 @@ public class PatientService implements UserDetailsService {
         return modelAndView;
     }
 
-    public String comparePasswords(String providedPassword, Long patientId) {
-        Patient patient = patientRepository.findById(patientId).orElse(null);
+    public String comparePasswords(String providedPassword, Long id) {
+        Patient patient = findPatientById(id);
         String compare = "false";
-        if (patient != null) {
-            if (passwordEncoder.matches(providedPassword,patient.getPassword())) {
-                compare = "true";
-            }
+        if (passwordEncoder.matches(providedPassword,patient.getPassword())) {
+            compare = "true";
         }
         return compare;
     }
 
-    public String saveNewPassword(String providedPassword, Long patientId) {
-        Patient patient = patientRepository.findById(patientId).orElse(null);
-        if (patient != null) {
-            if (passwordEncoder.matches(providedPassword, patient.getPassword())) {
-                return new Gson().toJson("same");
+    public String saveNewPassword(String providedPassword, Long id) {
+        Patient patient = findPatientById(id);
+        if (passwordEncoder.matches(providedPassword, patient.getPassword())) {
+            return gson.toJson("same");
+        }
+        else {
+            patient.setPassword(providedPassword);
+            BindingResult bindingResult = new BindException(patient, "patient");
+            validator.validate(patient, bindingResult);
+            if (bindingResult.hasErrors() && bindingResult.getFieldError("password") != null) {
+                String[] errors = bindingResult.getFieldError("password").getDefaultMessage().split(",");
+                return gson.toJson(errors);
             }
             else {
-                patient.setPassword(providedPassword);
-                BindingResult bindingResult = new BindException(patient, "patient");
-                validator.validate(patient, bindingResult);
-                if (bindingResult.hasErrors()) {
-                    String[] errors = bindingResult.getFieldError("password").getDefaultMessage().split(",");
-                    return new Gson().toJson(errors);
-                }
-                else {
-                   patient.setPassword(passwordEncoder.encode(patient.getPassword()));
-                   patientRepository.save(patient);
-                   return new Gson().toJson("success");
-                }
-                }
+               patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+               patientRepository.save(patient);
+               return gson.toJson("success");
             }
-        return new Gson().toJson("Произошла ошибка в процесссе изменения пароля! Повторите попытку позже.");
+        }
     }
 
     public void sendDeleteConfirmationMail(String patientEmail, String confirmationCode) {
@@ -310,8 +253,8 @@ public class PatientService implements UserDetailsService {
     }
 
     public void sendConfirmationEmail(String patientEmail, String patientName, String activationCode) {
+        Patient patient = patientRepository.findByEmail(patientEmail);
         if (activationCode == null || activationCode.isBlank()) {
-            Patient patient = patientRepository.findByEmail(patientEmail);
             patient.setActivationCode(UUID.randomUUID().toString());
             patientRepository.save(patient);
         }
@@ -321,7 +264,7 @@ public class PatientService implements UserDetailsService {
                             Добро пожаловать в RecoveryMed, %s!\s
                             Для подтверждения email-а, пожалуйста, перейдите по ссылке: https://localhost:443/patients/activate/%s\s
                             С уважением команда RecoveryMed❤""",
-                    patientName, activationCode
+                    patientName, patient.getActivationCode()
             );
             mailSender.send(patientEmail,"Подтвердите электронную почту", message);
         }
@@ -329,6 +272,7 @@ public class PatientService implements UserDetailsService {
 
     public void sendResetPasswordEmail(String patientEmail) {
         Patient patient = patientRepository.findByEmail(patientEmail);
+
         if (patient != null) {
             String activationCode = UUID.randomUUID().toString();
             patient.setActivationCode(activationCode);
@@ -345,11 +289,11 @@ public class PatientService implements UserDetailsService {
     }
 
     public String checkIfPatientExists(String email) {
-        return new Gson().toJson(patientRepository.existsByEmail(email));
+        return gson.toJson(patientRepository.existsByEmail(email));
     }
 
     // erase all activation codes every day
-    @Scheduled(cron = "0 0 12 * * *")
+    @Scheduled(cron = "0 0 22 * * *")
     public void resetActivationCodes() {
         for (Patient patient : patientRepository.findAll()) {
             patient.setActivationCode(null);

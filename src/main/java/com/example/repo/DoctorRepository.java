@@ -15,7 +15,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
     Page<Doctor> findAll(Pageable pageable);
     List<Doctor> findByOrderByIdAsc();
-    List<Doctor> findByNameIgnoreCaseOrSurnameIgnoreCaseOrPatronymicIgnoreCase(String name, String surname, String patronymic);
     Doctor findByEmail(String email);
 
     @Query(value = "Select * from doctor d inner join doctor_speciality ds on d.id=ds.doctor_id where ds.specialities=:speciality", nativeQuery = true)
@@ -84,12 +83,12 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     Page<Doctor> findDoctorByTwoStrings(@Param("name") String name, @Param("surname") String surname, Pageable pageable);
 
     @Query(value = """
-            Select * from doctors
+            Select * from doctor
             where LOWER(CONCAT(' ', name, ' ', surname, ' ', patronymic, ' ')) like LOWER(CONCAT('% ', :name, ' %'))
             and LOWER(CONCAT(' ', name, ' ', surname, ' ', patronymic, ' ')) like LOWER(CONCAT('% ', :surname, ' %'))
             and LOWER(CONCAT(' ', name, ' ', surname, ' ', patronymic, ' ')) like LOWER(CONCAT('% ', :patronymic, ' %'))""",
             countQuery = """
-            Select count(*) from doctors
+            Select count(*) from doctor
             where LOWER(CONCAT(' ', name, ' ', surname, ' ', patronymic, ' ')) like LOWER(CONCAT('% ', :name, ' %'))
             and LOWER(CONCAT(' ', name, ' ', surname, ' ', patronymic, ' ')) like LOWER(CONCAT('% ', :surname, ' %'))
             and LOWER(CONCAT(' ', name, ' ', surname, ' ', patronymic, ' ')) like LOWER(CONCAT('% ', :patronymic, ' %'))""",

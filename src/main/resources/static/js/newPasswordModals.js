@@ -25,7 +25,7 @@ $(document).ready(function () {
     $("#submitCheckPassword").on("click", function () {
         $.ajax({
             type: "GET",
-            url: "/patients/comparePasswords",
+            url: "/patients/compare-passwords",
             data: {
                 providedPassword: $("#checkActualPassword").val(),
                 patientId: $("#inputId").val()
@@ -46,7 +46,7 @@ $(document).ready(function () {
     $("#submitChangePassword").on("click", function () {
         $.ajax({
             type: "POST",
-            url: "/patients/newPassword",
+            url: "/patients/save-newPassword",
             data: {
                 providedPassword: $("#inputPassword").val(),
                 patientId: $("#inputId").val()

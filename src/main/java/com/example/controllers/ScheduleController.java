@@ -3,54 +3,60 @@ package com.example.controllers;
 import com.example.models.Doctor;
 import com.example.models.Schedule;
 import com.example.services.ScheduleService;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/schedules")
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    @Autowired
-    public ScheduleController(ScheduleService scheduleService) {
-        this.scheduleService = scheduleService;
-    }
-
+    // not used
     @GetMapping("/all")
-    public String getAllSchedules(Model model) {
-        model.addAttribute("schedules", scheduleService.findAllSchedules());
-        return "schedules/getAll";
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ModelAndView getAllSchedulesView(ModelAndView modelAndView) {
+        return scheduleService.findAllSchedulesView(modelAndView);
     }
 
+    // wait to be realized
     @GetMapping("/{id}")
-    public String getScheduleById(@PathVariable("id") Long id, Model model) {
-        Schedule scheduleById = scheduleService.findScheduleById(id);
-        if (scheduleById == null) {
-            model.addAttribute("object", "Расписание");
-            return "mistakes/notFound";
-        }
-        model.addAttribute("schedule", scheduleById);
-        return "schedules/getById";
+    public ModelAndView getScheduleByIdView(@PathVariable("id") Long id, ModelAndView modelAndView) {
+        return scheduleService.findScheduleByIdView(id, modelAndView, "/schedules/getById");
     }
+
 
     @GetMapping("/new")
-    public String addNewSchedule(@AuthenticationPrincipal Doctor doctor,
-                                 @ModelAttribute("schedule") Schedule schedule,
-                                 Model model) {
-        if (doctor != null) {
-            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("dd-MM-yyyy").create();
-            model.addAttribute("schedules", gson.toJson(doctor.getSchedules()));
-        }
-        return "schedules/newSchedule";
+    @PreAuthorize("hasAuthority('DOCTOR')")
+    public ModelAndView getAddNewScheduleView(@AuthenticationPrincipal Doctor doctor, ModelAndView modelAndView) {
+        return scheduleService.findAddNewScheduleView(doctor, modelAndView);
+    }
+
+    // wait to be realized
+    @GetMapping("/{id}/edit")
+    public ModelAndView getEditScheduleByIdView(@PathVariable("id") Long id, ModelAndView modelAndView) {
+        return scheduleService.findScheduleByIdView(id, modelAndView, "schedules/editById");
+    }
+
+    @GetMapping("/doctor/{doctorId}")
+    @ResponseBody
+    public String getSchedulesOfDoctorJson(@PathVariable("doctorId") Long doctorId) {
+        return scheduleService.findSchedulesByDoctorIdJson(doctorId);
+    }
+
+    @GetMapping("/{id}/timetables")
+    @ResponseBody
+    public String getTimeTablesOfScheduleJson(@PathVariable("id") Long id) {
+        return scheduleService.findTimeTablesOfScheduleJson(id);
     }
 
     @PostMapping("/new")
+    @PreAuthorize("hasAuthority('DOCTOR')")
     public String addNewSchedule(@ModelAttribute("schedule") Schedule schedule,
                                  @AuthenticationPrincipal Doctor doctor,
                                  @RequestParam("scheduleDate") String date,
@@ -60,43 +66,10 @@ public class ScheduleController {
         return "redirect:/schedules/all";
     }
 
-    @GetMapping("/{id}/edit")
-    public String editScheduleById(@PathVariable("id") Long id, Model model) {
-        Schedule scheduleById = scheduleService.findScheduleById(id);
-        if (scheduleById == null) {
-            model.addAttribute("object", "Расписание");
-            return "notFound";
-        }
-        model.addAttribute("schedule", scheduleById);
-        return "schedules/editById";
-    }
-
-    @PutMapping("/{id}")
-    public String editScheduleById(@ModelAttribute("schedule") Schedule schedule,
-                                      @AuthenticationPrincipal Doctor doctor,
-                                      @RequestParam("startTime") String startTime,
-                                      @RequestParam("endTime") String endTime) {
-        //scheduleService.saveNewSchedule(schedule, startTime, endTime, doctor);
-        return "redirect:/schedules/" + schedule.getId();
-    }
-
+    // wait to be realized
     @DeleteMapping("/{id}")
-    public void deleteAppointmentById(@PathVariable("id") Long id) {
+    public void deleteScheduleById(@PathVariable("id") Long id) {
         scheduleService.deleteScheduleById(id);
-    }
-
-    @GetMapping("/getDoctorSchedules")
-    @ResponseBody
-    public String getSchedulesOfDoctor(@RequestParam("doctorId") Long doctorId) {
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("dd-MM-yyyy").create();
-        return gson.toJson(scheduleService.findSchedulesByDoctorId(doctorId));
-    }
-
-    @GetMapping("/getTimeTables")
-    @ResponseBody
-    public String getTimeTablesOfSchedule(@RequestParam("scheduleDate") String scheduleDate,
-                                          @RequestParam("doctorId") Long doctorId) {
-        return scheduleService.findTimeTablesOfSchedule(scheduleDate, doctorId);
     }
 
 }

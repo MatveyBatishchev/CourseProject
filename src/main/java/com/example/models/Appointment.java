@@ -1,8 +1,9 @@
 package com.example.models;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -11,11 +12,13 @@ import java.sql.Date;
 import java.time.LocalTime;
 
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Appointment {
+
     @Id
     @GeneratedValue(generator = "sequence-generator")
     @GenericGenerator(
@@ -35,15 +38,15 @@ public class Appointment {
     @Column(name="time",nullable=false)
     private LocalTime time;
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "patient_id")
-    private Patient patient;
-
-    @Column(name="call_info", nullable=true)
+    @Column(name="call_info")
     String callbackInfo;
 
     @Column(name="status", nullable = false)
     private int status;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "doctor_id")

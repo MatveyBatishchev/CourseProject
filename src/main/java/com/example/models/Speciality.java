@@ -1,7 +1,9 @@
 package com.example.models;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public enum Speciality {
     @SerializedName("Аллерголог") Allergists("Аллерголог"),
     @SerializedName("Андролог") Andrologist("Андролог"),
@@ -86,10 +88,6 @@ public enum Speciality {
     @SerializedName("Эпилептолог") Epileptologist("Эпилептолог");
 
     public final String label;
-
-    Speciality(String label) {
-        this.label = label;
-    }
 
     @Override
     public String toString() {

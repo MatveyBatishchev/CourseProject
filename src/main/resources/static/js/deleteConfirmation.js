@@ -34,7 +34,7 @@ $(document).ready(function() {
         confirmationCode = generateCode();
         $.ajax({
             type: "POST",
-            url: "/patients/sendDeleteCode",
+            url: "/patients/send-deleteCode",
             data: {
                 patientEmail: $("#inputEmail").val(),
                 confirmationCode: confirmationCode

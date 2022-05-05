@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Entity
 public class Doctor implements User {
+
     @Id
     @GeneratedValue(generator = "sequence-generator")
     @GenericGenerator(
@@ -40,19 +41,19 @@ public class Doctor implements User {
     @Expose
     private Long id;
 
-    @Column(name="name",nullable=false)
+    @Column(name="name", nullable=false)
     @Size(min=2, max=30, message = "Имя должно быть от 2-х до 30 букв")
     @NotBlank(message = "Это поле является обязательным")
     @Expose
     private String name;
 
-    @Column(name="surname",nullable=false)
+    @Column(name="surname", nullable=false)
     @Size(min=2, max=30, message = "Фамилия должно быть от 2-х до 30 букв")
     @NotBlank(message = "Это поле является обязательным")
     @Expose
     private String surname;
 
-    @Column(name="patronymic",nullable=false)
+    @Column(name="patronymic", nullable=false)
     @Size(min=2, max=30, message = "Отчество должно быть от 2-х до 30 букв")
     @NotBlank(message = "Это поле является обязательным")
     @Expose
@@ -63,33 +64,33 @@ public class Doctor implements User {
     @NotBlank(message = "Это поле является обязательным")
     private String email;
 
-    @Column(name="cabinet", nullable=true)
+    @Column(name="cabinet")
     @Expose
     private String cabinet;
 
-    @Column(name="experience",nullable=false)
+    @Column(name="experience", nullable=false)
     @Min(value=1, message="Недопустимое значение")
     @Expose
     private int experience;
 
-    @Column(name="category",nullable=false)
+    @Column(name="category", nullable=false)
     @NotBlank(message = "Это поле является обязательным")
     @Expose
     private String category;
 
-    @Column(name="about_doctor",nullable=false)
+    @Column(name="about_doctor", nullable=false)
     @NotBlank(message = "Это поле является обязательным")
     private String aboutDoctor;
 
-    @Column(name="education",nullable=false)
+    @Column(name="education", nullable=false)
     @NotBlank(message = "Это поле является обязательным")
     private String education;
 
-    @Column(name="work_places",nullable=false)
+    @Column(name="work_places", nullable=false)
     @NotBlank(message = "Это поле является обязательным")
     private String workPlaces;
 
-    @Column(name="image",nullable=true)
+    @Column(name="image")
     @Expose
     private String image;
 
@@ -103,7 +104,7 @@ public class Doctor implements User {
             mappedBy = "doctor",
             cascade = CascadeType.PERSIST,
             orphanRemoval = true,
-            fetch = FetchType.EAGER
+            fetch = FetchType.LAZY
     )
     private Set<Appointment> appointments = new HashSet<>();
 
@@ -111,11 +112,20 @@ public class Doctor implements User {
             mappedBy = "doctor",
             cascade = CascadeType.PERSIST,
             orphanRemoval = true,
-            fetch = FetchType.EAGER
+            fetch = FetchType.LAZY
     )
     private Set<Schedule> schedules = new HashSet<>();
 
-    @ElementCollection(targetClass = Speciality.class, fetch = FetchType.EAGER)
+    @OneToMany(
+            mappedBy = "doctor",
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @OrderBy("date DESC")
+    private Set<Review> reviews = new HashSet<>();
+
+    @ElementCollection(targetClass = Speciality.class, fetch = FetchType.LAZY)
     @CollectionTable(name = "doctor_speciality", joinColumns = @JoinColumn(name = "doctor_id"))
     @Enumerated(EnumType.STRING)
     @Expose
@@ -129,6 +139,17 @@ public class Doctor implements User {
     @Override
     public String getProfileLink() {
         return "doctors/" + getId();
+    }
+
+    static final String[] declension = {"год", "года", "лет"};
+    static final int[] cases = {2, 0, 1, 1, 1, 2};
+    public String getExperienceWithPrefix() {
+        int experience = getExperience();
+        return experience + " " + declension[ (experience%100>4 &&experience%100<20)? 2 : cases[Math.min(experience % 10, 5)] ];
+    }
+
+    public List<String> getSpecialitiesLabels() {
+        return specialities.stream().map(Speciality::toString).collect(Collectors.toList());
     }
 
     @Override
@@ -159,18 +180,6 @@ public class Doctor implements User {
     @Override
     public boolean isEnabled() {
         return isActive();
-    }
-
-    static final String[] declension = {"год", "года", "лет"};
-    static final int[] cases = {2, 0, 1, 1, 1, 2};
-
-    public String getExperienceWithPrefix() {
-        int experience = getExperience();
-        return experience + " " + declension[ (experience%100>4 &&experience%100<20)? 2 : cases[(experience%10<5)?experience%10:5] ];
-    }
-
-    public List<String> getSpecialitiesLabels() {
-        return specialities.stream().map(Speciality::toString).collect(Collectors.toList());
     }
 
 }

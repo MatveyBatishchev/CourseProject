@@ -3,7 +3,8 @@ package com.example.controllers;
 import com.example.models.Doctor;
 import com.example.models.Patient;
 import com.example.services.DoctorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -14,89 +15,93 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/doctors")
 public class DoctorController {
 
     private final DoctorService doctorService;
 
-    @Autowired
-    public DoctorController(DoctorService doctorService) {
-        this.doctorService = doctorService;
-    }
-
     @GetMapping("/all")
-    public ModelAndView getAllDoctors(ModelAndView modelAndView) {
-        return doctorService.findAllDoctorsWithPage(modelAndView);
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ModelAndView getAllDoctorsWithPageView(ModelAndView modelAndView) {
+        return doctorService.findAllDoctorsFirstPageView(modelAndView);
     }
 
-    @GetMapping("/{id}")
-    public ModelAndView getDoctorById(@PathVariable("id") Long doctorId, ModelAndView modelAndView) {
-        return doctorService.findDoctorById(doctorId, modelAndView);
-    }
-
-    @GetMapping("/getById")
+    @GetMapping("/all/page/{pageNumber}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseBody
-    public String getDoctorByIdJson(@AuthenticationPrincipal Patient patient, @RequestParam("doctorId") Long doctorId) {
-        return doctorService.findDoctorByIdJson(patient, doctorId);
-    }
-
-    @GetMapping("/{id}/resume")
-    public ModelAndView getDoctorResumeById(@PathVariable("id") Long doctorId, ModelAndView modelAndView) {
-        return doctorService.findDoctorResumeById(doctorId, modelAndView);
-    }
-
-
-    @GetMapping("/by_speciality")
-    @ResponseBody
-    public String getDoctorsBySpeciality(@RequestParam("speciality") String speciality) {
-        return doctorService.findDoctorsBySpeciality(speciality);
-    }
-
-    @GetMapping("/getPage")
-    @ResponseBody
-    public String getDoctorsWithPage(@RequestParam("pageNumber") Integer pageNumber) {
-        return doctorService.findDoctorsWithPage(pageNumber);
-    }
-
-    @GetMapping("/search")
-    @ResponseBody
-    public String getDoctorsBySearch(@RequestParam("search") String search,
-                                    @RequestParam("pageNumber") Integer pageNumber) {
-        return doctorService.findDoctorBySearchWithPage(search, pageNumber);
-    }
-
-    @GetMapping("/find")
-    @ResponseBody
-    public String getDoctorsByExpandedSearchWithPage(@RequestParam("fullName") String fullName,
-                                     @RequestParam("speciality") String speciality,
-                                     @RequestParam("pageNumber") Integer pageNumber) {
-        return doctorService.findDoctorsBySpecialityAndFullNameWithPage(fullName, speciality, pageNumber);
+    public String getDoctorsWithPageJson(@PathVariable("pageNumber") Integer pageNumber) {
+        return doctorService.findDoctorsWithPageJson(pageNumber);
     }
 
     @GetMapping("/new")
-    public String addNewDoctor(@ModelAttribute("doctor") Doctor doctor) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String getNewDoctorView(@ModelAttribute("doctor") Doctor doctor) {
         return "doctors/newDoctor";
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("(#id == authentication.principal.id and hasAuthority('DOCTOR')) or hasAuthority('ADMIN')")
+    public ModelAndView getDoctorByIdView(@PathVariable("id") Long id, ModelAndView modelAndView) {
+        return doctorService.findDoctorByIdView(id, modelAndView, "doctors/getById");
+    }
+
+    @GetMapping("/{id}/edit")
+    @PreAuthorize("(#id == authentication.principal.id and hasAuthority('DOCTOR')) or hasAuthority('ADMIN')")
+    public ModelAndView getEditDoctorByIdView(@PathVariable("id") Long id, ModelAndView modelAndView) {
+        return doctorService.findDoctorByIdView(id, modelAndView, "doctors/editById");
+    }
+
+    @GetMapping("/{id}/resume")
+    public ModelAndView getDoctorResumeByIdView(@PathVariable("id") Long doctorId, ModelAndView modelAndView) {
+        return doctorService.findDoctorResumeByIdView(doctorId, modelAndView);
+    }
+
+    @GetMapping("/{id}/json")
+    @ResponseBody
+    public String getDoctorByIdJson(@AuthenticationPrincipal Patient patient, @PathVariable("id") Long id) {
+        return doctorService.findDoctorByIdJson(patient, id);
+    }
+
+    @GetMapping("/by-search")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseBody
+    public String getDoctorsBySearchWithPageJson(@RequestParam("search") String search,
+                                                 @RequestParam("pageNumber") Integer pageNumber) {
+        return doctorService.findDoctorsBySearchWithPageJson(search, pageNumber);
+    }
+
+    @GetMapping("/by-speciality")
+    @ResponseBody
+    public String getDoctorsBySpecialityJson(@RequestParam("speciality") String speciality) {
+        return doctorService.findDoctorsBySpecialityJson(speciality);
+    }
+
+    @GetMapping("/by-expanded-search")
+    @ResponseBody
+    public String getDoctorsByExpandedSearchWithPageJson(@RequestParam("fullName") String fullName,
+                                                         @RequestParam("speciality") String speciality,
+                                                         @RequestParam("pageNumber") Integer pageNumber) {
+        return doctorService.findDoctorsBySpecialityAndFullNameWithPageJson(fullName, speciality, pageNumber);
+    }
+
     @PostMapping("/new")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ModelAndView addNewDoctor(@ModelAttribute("doctor") @Valid Doctor doctor,
                                      BindingResult bindingResult, ModelAndView modelAndView) {
         return doctorService.saveNewDoctor(doctor, bindingResult, modelAndView);
     }
 
-    @GetMapping("/{id}/edit")
-    public ModelAndView editDoctorById(@PathVariable("id") Long doctorId, ModelAndView modelAndView) {
-        return doctorService.findDoctorByIdForEdit(doctorId, modelAndView);
-    }
-
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority({'ADMIN', 'DOCTOR'})")
     public ModelAndView editDoctorById(@ModelAttribute("doctor") @Valid Doctor doctor, BindingResult bindingResult,
                                        @RequestParam("profileImage") MultipartFile multipartFile, ModelAndView modelAndView) {
         return doctorService.editDoctor(doctor, bindingResult, multipartFile, modelAndView);
     }
 
     @DeleteMapping("/{id}")
-    public String deletePatientById(@PathVariable("id") Long id) {
+    @PreAuthorize("hasAnyAuthority({'ADMIN', 'DOCTOR'})")
+    public String deleteDoctorById(@PathVariable("id") Long id) {
         doctorService.deleteDoctorById(id);
         return "redirect:/doctors/all";
     }

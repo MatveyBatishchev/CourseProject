@@ -1,17 +1,18 @@
 package com.example.services;
 
 
-import com.example.files.FileUploadUtil;
 import com.example.mappers.DoctorMapper;
 import com.example.models.Doctor;
 import com.example.models.Patient;
+import com.example.models.Review;
 import com.example.models.Role;
 import com.example.repo.DoctorRepository;
+import com.example.util.FileUploadUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,147 +24,134 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class DoctorService {
 
     private final DoctorRepository doctorRepository;
     private final MailSender mailSender;
     private final PasswordEncoder passwordEncoder;
+    private final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    private static final int pageSize = 8;
 
     @Value("${upload.path}")
     private String uploadPath;
 
-    @Autowired
-    public DoctorService(DoctorRepository doctorRepository, MailSender mailSender, PasswordEncoder passwordEncoder) {
-        this.doctorRepository = doctorRepository;
-        this.mailSender = mailSender;
-        this.passwordEncoder = passwordEncoder;
+    public Doctor findDoctorById(Long id) {
+        return doctorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Доктор с id " + id + " не был найден!"));
     }
 
-    public ModelAndView findAllDoctors(ModelAndView modelAndView) {
-        modelAndView.addObject("doctors", doctorRepository.findByOrderByIdAsc());
-        modelAndView.setViewName("/doctors/getAll");
-        return modelAndView;
-    }
-
-    public Page<Doctor> findAllDoctorsWithPage(Integer pageNumber) {
-        return doctorRepository.findAll(PageRequest.of(pageNumber, 4, Sort.by("id")));
-    }
-
-    public ModelAndView findAllDoctorsWithPage(ModelAndView modelAndView) {
-        Page<Doctor> page = doctorRepository.findAll(PageRequest.of(0, 2, Sort.by("id")));
+    public ModelAndView findAllDoctorsFirstPageView(ModelAndView modelAndView) {
+        Page<Doctor> page = doctorRepository.findAll(PageRequest.of(0, pageSize, Sort.by("id")));
         modelAndView.addObject("doctors", page.getContent());
         modelAndView.addObject("totalPages", page.getTotalPages());
         modelAndView.setViewName("doctors/getAll");
         return modelAndView;
     }
 
-    public String findDoctorsWithPage(Integer pageNumber) {
-        Page<Doctor> page = doctorRepository.findAll(PageRequest.of(pageNumber, 2, Sort.by("id")));
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        return gson.toJson(page.getContent());
+    public ModelAndView findMainDoctorsFirstPageView(ModelAndView modelAndView) {
+        Page<Doctor> page = findPageOfAllDoctors(0);
+        Map<Integer, List<Doctor>> doctorMap = new HashMap<>();
+        List<Doctor> doctors = new ArrayList<>();
+        doctorMap.put(1, page.stream().limit(4).collect(Collectors.toList()));
+        if (page.getNumberOfElements() > 4) {
+            doctorMap.put(2, page.getContent().subList(4, page.getNumberOfElements()));
+        }
+        modelAndView.addObject("doctors", doctorMap);
+        modelAndView.addObject("totalPages", page.getTotalPages());
+        modelAndView.setViewName("main/doctors");
+        return modelAndView;
     }
 
-    public String findDoctorBySearchWithPage(String search, Integer pageNumber) {
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        JsonObject jsonObject = new JsonObject();
+    public ModelAndView findDoctorByIdView(Long id, ModelAndView modelAndView, String viewName) {
+        Doctor doctorById = findDoctorById(id);
+        modelAndView.addObject("doctor", doctorById);
+        modelAndView.setViewName(viewName);
+        return modelAndView;
+    }
+
+    public ModelAndView findDoctorResumeByIdView(Long id, ModelAndView modelAndView) {
+        Doctor doctorById = findDoctorById(id);
+        modelAndView.addObject("doctor", doctorById);
+        List<Review> reviews = new ArrayList<>();
+        int count = 0;
+        for (Review review : doctorById.getReviews()) {
+            if (review.isApproved()) {
+                if (count < 1) reviews.add(review);
+                count++;
+            }
+        }
+        modelAndView.addObject("doctorReviews", reviews);
+        modelAndView.addObject("reviewsNumber", count);
+        modelAndView.setViewName("doctors/resume");
+        return modelAndView;
+    }
+
+    // ?
+    public Page<Doctor> findPageOfAllDoctors(Integer pageNumber) {
+        return doctorRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by("id")));
+    }
+
+    public Page<Doctor> findPageOfDoctorsBySearch(String search, Integer pageNumber) {
         String[] fullNameParts = search.split(" ");
-        Pageable pageable = PageRequest.of(pageNumber, 1, Sort.by("id"));
-        Page<Doctor> page  = null;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
         switch (fullNameParts.length) {
             case 0:
                 return null;
             case 1:
-                page = doctorRepository.findDoctorByOneString(fullNameParts[0], pageable);
-                break;
+                return doctorRepository.findDoctorByOneString(fullNameParts[0], pageable);
             case 2:
-                page = doctorRepository.findDoctorByTwoStrings(fullNameParts[0], fullNameParts[1], pageable);
-                break;
+                return doctorRepository.findDoctorByTwoStrings(fullNameParts[0], fullNameParts[1], pageable);
             default:
-                page = doctorRepository.findDoctorByThreeStrings(fullNameParts[0], fullNameParts[1], fullNameParts[2], pageable);
-                break;
+                return doctorRepository.findDoctorByThreeStrings(fullNameParts[0], fullNameParts[1], fullNameParts[2], pageable);
         }
+    }
+
+    public String findDoctorsWithPageJson(Integer pageNumber) {
+        Page<Doctor> page = doctorRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by("id")));
+        return gson.toJson(page.getContent());
+    }
+
+    public String findDoctorsBySearchWithPageJson(String search, Integer pageNumber) {
+        JsonObject jsonObject = new JsonObject();
+        Page<Doctor> page = findPageOfDoctorsBySearch(search, pageNumber);
         jsonObject.addProperty("entities", gson.toJson(page.getContent()));
         jsonObject.addProperty("totalPages", page.getTotalPages());
         return jsonObject.toString();
     }
 
-    public ModelAndView findDoctorById(Long doctorId, ModelAndView modelAndView) {
-        Doctor doctorById = doctorRepository.findById(doctorId).orElse(null);
-        if (doctorById == null) {
-            modelAndView.addObject("object", "Доктор");
-            modelAndView.setViewName("mistakes/notFound");
-        }
-        else {
-            modelAndView.addObject("doctor", doctorById);
-            modelAndView.setViewName("doctors/getById");
-        }
-        return modelAndView;
-    }
-
-    public ModelAndView findDoctorByIdForEdit(Long doctorId, ModelAndView modelAndView) {
-        Doctor doctorById = doctorRepository.findById(doctorId).orElse(null);
-        if (doctorById == null) {
-            modelAndView.addObject("object", "Доктор");
-            modelAndView.setViewName("mistakes/notFound");
-        }
-        else {
-            modelAndView.addObject("doctor", doctorById);
-            modelAndView.setViewName("doctors/editById"); }
-        return modelAndView;
-    }
-
-    public String findDoctorByIdJson(Patient patient, Long doctorId) {
-        boolean reg = true;
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    public String findDoctorByIdJson(Patient patient, Long id) {
+        boolean reg = (patient != null);
         JsonObject jsonObject = new JsonObject();
-        JsonElement jsonElement = gson.toJsonTree(doctorRepository.findById(doctorId).orElse(null));
-        if (patient == null) reg = false;
+        JsonElement jsonElement = gson.toJsonTree(findDoctorById(id));
         jsonElement.getAsJsonObject().addProperty("reg", reg);
         jsonObject.add("doctor", jsonElement);
         return jsonObject.toString();
     }
 
-    public String findDoctorsBySpeciality(String speciality) {
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    public String findDoctorsBySpecialityJson(String speciality) {
         Date today = new Date();
         return gson.toJson(doctorRepository.findDoctorsBySpeciality(speciality)
                 .stream()
-                .filter(doctor -> doctor.getSchedules().stream().anyMatch(schedule ->
-                        schedule.getDate().after(today)))
+                .filter(doctor -> doctor.getSchedules().stream()
+                        .anyMatch(schedule -> schedule.getDate().after(today)))
                 .collect(Collectors.toList()));
     }
 
-    public ModelAndView findDoctorResumeById(Long doctorId, ModelAndView modelAndView) {
-        Doctor doctorById = doctorRepository.findById(doctorId).orElse(null);
-        if (doctorById == null) {
-            modelAndView.addObject("object", "Доктор");
-            modelAndView.setViewName("mistakes/notFound");
-        }
-        else {
-            modelAndView.addObject("doctor", doctorById);
-            modelAndView.setViewName("doctors/resume");
-        }
-        return modelAndView;
-    }
-
-    public String findDoctorsBySpecialityAndFullNameWithPage(String fullName, String speciality, Integer pageNumber) {
-        int pageSize = 4;
+    public String findDoctorsBySpecialityAndFullNameWithPageJson(String fullName, String speciality, Integer pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         JsonObject jsonObject = new JsonObject();
+        Page<Doctor> page;
         if (fullName.isBlank() && speciality.isBlank()) {
-            Page<Doctor> page = findAllDoctorsWithPage(pageNumber);
-            jsonObject.addProperty("doctors", gson.toJson(page.getContent()));
-            jsonObject.addProperty("totalPages", page.getTotalPages());
+            page = findPageOfAllDoctors(pageNumber);
         }
         else {
             if (!fullName.isBlank() && !speciality.isBlank()) {
                 String[] fullNameParts = fullName.split(" ");
-                Page<Doctor> page = null;
                 switch (fullNameParts.length) {
                     case 1:
                         page = doctorRepository.findDoctorBySpecialityAndOneString(speciality, fullNameParts[0], pageable);
@@ -175,35 +163,18 @@ public class DoctorService {
                         page = doctorRepository.findDoctorBySpecialityAndThreeStrings(speciality, fullNameParts[0], fullNameParts[1], fullNameParts[2], pageable);
                         break;
                 }
-                jsonObject.addProperty("doctors", gson.toJson(page.getContent()));
-                jsonObject.addProperty("totalPages", page.getTotalPages());
             }
             else {
                 if (!speciality.isBlank()) {
-                    Page<Doctor> page = doctorRepository.findDoctorsBySpeciality(speciality, pageable);
-                    jsonObject.addProperty("doctors", gson.toJson(page.getContent()));
-                    jsonObject.addProperty("totalPages", page.getTotalPages());
+                    page = doctorRepository.findDoctorsBySpeciality(speciality, pageable);
                 }
                 else {
-                    String[] fullNameParts = fullName.split(" ");
-                    Page<Doctor> page = null;
-                    Arrays.stream(fullNameParts).forEach(System.out::println);
-                    switch (fullNameParts.length) {
-                        case 1:
-                            page = doctorRepository.findDoctorByOneString(fullNameParts[0], pageable);
-                            break;
-                        case 2:
-                            page = doctorRepository.findDoctorByTwoStrings(fullNameParts[0], fullNameParts[1], pageable);
-                            break;
-                        default:
-                            page = doctorRepository.findDoctorByThreeStrings(fullNameParts[0], fullNameParts[1], fullNameParts[2], pageable);
-                            break;
-                    }
-                    jsonObject.addProperty("doctors", gson.toJson(page.getContent()));
-                    jsonObject.addProperty("totalPages", page.getTotalPages());
+                    page = findPageOfDoctorsBySearch(fullName, pageNumber);
                 }
             }
         }
+        jsonObject.addProperty("doctors", gson.toJson(Objects.requireNonNull(page).getContent()));
+        jsonObject.addProperty("totalPages", page.getTotalPages());
         return jsonObject.toString();
     }
 
@@ -226,31 +197,12 @@ public class DoctorService {
         doctor.setActive(true);
         doctor.setRoles(Collections.singleton(Role.DOCTOR));
         if (doctor.getPassword() == null || doctor.getPassword().isEmpty()) {
-            String doctorPassword = generatePassword();
+//            String doctorPassword = generatePassword();
+            String doctorPassword = "Kruto2002!";
             doctor.setPassword(passwordEncoder.encode(doctorPassword));
-            System.out.println(doctorPassword);
-            //sendPassword(doctor.getEmail(), doctor.getName(), doctorPassword);
+//            sendPassword(doctor.getEmail(), doctor.getName(), doctorPassword);
         }
         doctorRepository.save(doctor);
-    }
-
-    public void updateDoctor(Doctor updatedDoctor) {
-        Doctor doctor = doctorRepository.findById(updatedDoctor.getId()).orElse(null);
-        if (doctor != null) {
-            DoctorMapper.INSTANCE.updateDoctorFromUpdatedEntity(updatedDoctor, doctor);
-            doctorRepository.save(doctor);
-        }
-    }
-
-    public void saveDoctorFile(Doctor doctor, MultipartFile multipartFile) {
-        try {
-            String uploadDir = uploadPath + "/doctors/" + doctor.getId();
-            String fileName = UUID.randomUUID() + "." + Objects.requireNonNull(multipartFile.getContentType()).substring(6);
-            doctor.setImage(fileName);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-        } catch (Exception e) {
-            System.out.println("Ошибка в сохранении файла!");
-        }
     }
 
     public ModelAndView editDoctor(Doctor doctor, BindingResult bindingResult, MultipartFile multipartFile, ModelAndView modelAndView) {
@@ -265,14 +217,28 @@ public class DoctorService {
         return modelAndView;
     }
 
+    public void updateDoctor(Doctor updatedDoctor) {
+        Doctor doctor = findDoctorById(updatedDoctor.getId());
+        DoctorMapper.INSTANCE.updateDoctorFromUpdatedEntity(updatedDoctor, doctor);
+        doctorRepository.save(doctor);
+    }
+
+    public void saveDoctorFile(Doctor doctor, MultipartFile multipartFile) {
+        try {
+            String uploadDir = uploadPath + "/doctors/" + doctor.getId();
+            String fileName = UUID.randomUUID() + "." + Objects.requireNonNull(multipartFile.getContentType()).substring(6);
+            doctor.setImage(fileName);
+            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        } catch (Exception e) {
+            System.out.println("Ошибка в сохранении файла!");
+        }
+    }
+
     public void deleteDoctorById(Long id) {
         try {
-            Doctor doctor = doctorRepository.findById(id).orElse(null);
-            if (doctor != null) {
-                String doctorDir = uploadPath + "doctors/" + doctor.getId();
-                FileUploadUtil.deleteDirectory(doctorDir);
-            }
-            else throw new Exception("Doctor for delete operation appeared to be null!");
+            Doctor doctor = findDoctorById(id);
+            String doctorDir = uploadPath + "doctors/" + doctor.getId();
+            FileUploadUtil.deleteDirectory(doctorDir);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -291,10 +257,11 @@ public class DoctorService {
     public void sendPassword(String doctorEmail, String doctorName, String doctorPassword) {
         if (!doctorEmail.isEmpty()) {
             String message = String.format(
-                    "Добро пожаловать в систему RecoveryMed, %s! \n" +
-                            "Для входа в систему используете этот пароль: %s \n" +
-                                "Сохраните пароль, это будет ваш единственный способ входа! По возможности удалите данное письмо. \n" +
-                                    "С уважением команда RecoveryMed❤",
+                    """
+                            Добро пожаловать в систему RecoveryMed, %s!\s
+                            Для входа в систему используете этот пароль: %s\s
+                            Сохраните пароль, это будет ваш единственный способ входа! По возможности удалите данное письмо.\s
+                            С уважением команда RecoveryMed❤""",
                     doctorName, doctorPassword
             );
             mailSender.send(doctorEmail,"Пароль к системе RecoveryMed", message);

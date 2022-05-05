@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <title th:text="${doctor.getSurname() + ' ' + doctor.getName() + ' ' + doctor.getPatronymic()}"></title>
@@ -10,10 +10,12 @@
 </head>
 <script th:inline="javascript">
     /*<![CDATA[*/
-        var doctorSpecialities = /*[[${doctor.getSpecialitiesLabels()}]]*/ 'doctorSpecialities';
-        var aboutDoctor = /*[[${doctor.getAboutDoctor()}]]*/ 'aboutDoctor';
-        var education = /*[[${doctor.getEducation()}]]*/ 'eduction';
-        var workPlaces = /*[[${doctor.getWorkPlaces()}]]*/ 'workPlaces';
+        let doctorSpecialities = /*[[${doctor.getSpecialitiesLabels()}]]*/ 'doctorSpecialities';
+        let aboutDoctor = /*[[${doctor.getAboutDoctor()}]]*/ 'aboutDoctor';
+        let education = /*[[${doctor.getEducation()}]]*/ 'eduction';
+        let workPlaces = /*[[${doctor.getWorkPlaces()}]]*/ 'workPlaces';
+        let doctorId = /*[[${doctor.getId()}]]*/ 'doctorId';
+        let reviewsNumber = /*[[${reviewsNumber}]]*/ 'reviewsNumber';
     /*]]>*/
 </script>
 <style>
@@ -23,9 +25,36 @@
         color: black;
     }
 
+    .reviewCard {
+        border: 1px solid rgba(212,212,212,0.93) !important;
+        border-radius: 10px !important;
+        padding: 0.3rem 1rem 0.3rem 1rem !important;
+    }
+
+    .underline {
+        width: 245px;
+        height: 1px;
+        background-color: rgba(113, 122, 129, 0.46);
+        margin-top: 4px;
+        border: none;
+    }
+
     .card {
         border: 1px solid black !important;
         border-radius: 10px;
+    }
+
+    .reviewPhoto {
+        width: 100px;
+        height: 100px;
+        background: transparent;
+        border: 1px solid rgba(180, 180, 180, 0.96);
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        object-fit: contain;
     }
 
     .grayCard {
@@ -190,7 +219,7 @@
                                             <div class="col-md-11 ms-3 experienceRow">
                                                 <span class="mt-1 spanStyle">Работает в клиниках:</span>
                                                 <div class="card mt-2 p-2" style="border: 0 !important; background: rgba(245,245,245,0.87) !important; font-size: 17px !important;">
-                                                    <div class="mt-1 d-flex align-items-center"><img class="imgMetro me-2" src="/applicationFiles/designElements/metroIcon.png"/>Электрозаводская</div>
+                                                    <div class="mt-1 d-flex align-items-center"><img class="imgMetro me-2" src="/applicationFiles/designElements/metroIcon.png" alt="img"/>Электрозаводская</div>
                                                     <div class="mt-1">Большая Семеновская ул, д. 38</div>
                                                 </div>
                                             </div>
@@ -235,11 +264,62 @@
                 <div class="mt-3" id="workPlacesDiv"></div>
             </div>
             <!--Отзывы-->
-            <div class="card grayCard mt-5">
+            <div class="card mt-5" th:if="${doctorReviews.size() != 0}" style="border: 1px solid rgba(212,212,212,0.93) !important; padding: 1rem !important;">
                 <span style="font-size: 28px;">Отзывы</span>
                 <div class="blockVerticalLine mb-3"></div>
+                <!--Список отзывов-->
+                <div th:each="review, iStat : ${doctorReviews}" class="card mt-3 reviewCard">
+                    <!--Дата комментария-->
+                    <span class="text-muted" th:text="'Отзыв от ' + ${T(org.apache.commons.lang3.time.DateFormatUtils).format(review.getDate(), 'dd.MM.yyyy')}"></span>
+                    <div class="underline"></div>
+                    <div class="row col-md-12 mt-3">
+                        <!--Колонка фотографии-->
+                        <div class="col-md-1">
+                            <div class="reviewPhoto"><img src="/applicationFiles/designElements/messageIcon.png" alt="img"></div>
+                        </div>
+                        <!--Колонка комментария-->
+                        <div class="col-md-11 ps-4" >
+                            <span style="font-size: 23px !important;" th:text="${review.getReviewerName}"></span><br>
+                            <div class="row ms-0 mt-1 col-md-12 d-flex align-items-center">
+                                <div class="col ps-0">
+                                    <label class="mt-2 mb-2" for="reviewContent">Комментарий:</label>
+                                    <p id="reviewContent" th:text="${review.getComment()}" style="background: #f5f5f5; border: 0; border-radius: 10px; padding: 0.5rem;"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="moreReviewsPlaceholder"></div>
+                <div class="col-md-3 mt-3">
+                    <button class="btn btn-primary button" id="moreReviews" type="button">Показать ещё</button>
+                </div>
             </div>
-
+            <!--Форма оставления отзыва-->
+            <div class="mt-5" sec:authorize="isAuthenticated()">
+                <span style="font-size: 28px;">Оставить отзыв</span>
+                <div class="card mt-3 reviewCard" style="padding: 1.5rem !important;">
+                    <div id="addReviewForm">
+                        <!--Имя-->
+                        <div class="row">
+                            <lable class="ps-0" for="reviewerName">Имя, которое будет отображаться в заголовке отзыва:</lable>
+                            <div class="col-md-4 ps-0 pt-1 mt-2">
+                                <span style="font-size: 23px;" id="reviewerName" th:text="${#authentication.getPrincipal().getSurname() + ' ' + #authentication.getPrincipal().getName()}"></span>
+                            </div>
+                        </div>
+                        <!--Отзыв-->
+                        <div class="row mt-3">
+                            <lable class="ps-0" for="reviewComment">Введите ваш отзыв:</lable>
+                            <textarea class="form-control mt-2 text-start" id="reviewComment" maxlength="1000" placeholder="Ваш отзыв"></textarea>
+                            <div id="reviewAlert"></div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-2 ps-0">
+                                <button class="btn btn-primary button" id="submitAddReview" type="button">Отправить отзыв</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <footer th:insert="blocks/footer :: footer"></footer>

@@ -14,8 +14,10 @@ $(document).ready(function () {
 function checkEmailExist(resetEmail) {
     $.ajax({
         type: "GET",
-        url: "/patients/findPatient",
-        data: {resetEmail: resetEmail},
+        url: "/patients/email-exists",
+        data: {
+            resetEmail: resetEmail
+        },
         success: function (data) {
             sendResetPassword(data, resetEmail)
         },
@@ -28,9 +30,11 @@ function checkEmailExist(resetEmail) {
 function sendResetPassword(data, resetEmail) {
     if (JSON.parse(data)) {
         $.ajax({
-            type: "POST",
-            url: "/patients/passwordEmail",
-            data: {resetEmail: resetEmail},
+            type: "GET",
+            url: "/patients/email-reset",
+            data: {
+                resetEmail: resetEmail
+            },
             success: function (data) {
                 $("#resetPasswordModalBody").html('<p>' + data + '</p>');
                 $("#resetPasswordModalFooter").html('');

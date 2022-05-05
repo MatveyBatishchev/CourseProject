@@ -1,4 +1,4 @@
-package com.example.validation;
+package com.example.util;
 
 import org.passay.*;
 import org.springframework.context.annotation.PropertySource;
@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 @PropertySource("classpath:/props/passayMessages.properties")
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
@@ -25,7 +24,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
         rules.add(new LengthRule(8, 100));
         rules.add(new UppercaseCharacterRule(1));
         rules.add(new DigitCharacterRule(1));
-        rules.add(new SpecialCharacterRule(1));
+//        rules.add(new SpecialCharacterRule(1));
         rules.add(new NumericalSequenceRule(5,false));
         rules.add(new AlphabeticalSequenceRule(5,false));
         rules.add(new WhitespaceRule());
@@ -45,8 +44,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
         }
         List<String> messages = validator.getMessages(result);
 
-        String messageTemplate = messages.stream()
-                .collect(Collectors.joining(","));
+        String messageTemplate = String.join(",", messages);
         context.buildConstraintViolationWithTemplate(messageTemplate)
                 .addConstraintViolation()
                 .disableDefaultConstraintViolation();

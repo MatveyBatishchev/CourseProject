@@ -14,7 +14,7 @@ $(document).ready(function() {
         //if (pageNumber+1 != totalPages) $("#moreDoctorsButton").prop('hidden', false);
             $.ajax({
                 type: "GET",
-                url: "/doctors/find",
+                url: "/doctors/by-expanded-search",
                 data: {
                     fullName: fullName.val(),
                     speciality: speciality.val(),
@@ -71,10 +71,10 @@ $(document).ready(function() {
 
     moreButton.on('click', function() {
         pageNumber++;
-        if (totalPages == pageNumber+1) $(this).prop('hidden', true);
+        if (totalPages === pageNumber+1) $(this).prop('hidden', true);
         $.ajax({
             type: "GET",
-            url: "/doctors/find",
+            url: "/doctors/by-expanded-search",
             data: {
                 fullName: fullName.val(),
                 speciality: speciality.val(),

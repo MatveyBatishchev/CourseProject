@@ -17,7 +17,7 @@ $(document).ready(function () {
         } else {
             $.ajax({
                 type: "GET",
-                url: "/" + entity + "/search",
+                url: "/" + entity + "/by-search",
                 data: {
                     search: searchInput.val(),
                     pageNumber: 0
@@ -68,10 +68,7 @@ $(document).ready(function () {
     function getEntities(pageNumber) {
         $.ajax({
             type: "GET",
-            url: "/" + entity + "/getPage",
-            data: {
-                pageNumber: pageNumber - 1
-            },
+            url: "/" + entity + "/all/page/" + (pageNumber - 1),
             success: function (data) {
                 let entities = JSON.parse(data);
                 insertEntities(entities);
@@ -84,7 +81,7 @@ $(document).ready(function () {
         let pageNumber = pagination.pagination('getSelectedPageNum');
         $.ajax({
             type: "GET",
-            url: "/" + entity + "/search",
+            url: "/" + entity + "/by-search",
             data: {
                 search: searchInput.val(),
                 pageNumber: pageNumber - 1

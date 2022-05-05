@@ -1,4 +1,4 @@
-package com.example.files;
+package com.example.util;
 
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,13 +13,13 @@ import java.nio.file.StandardCopyOption;
 public class FileUploadUtil {
 
     public static void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
-        Path uploadPath = Paths.get(uploadDir); // создаём объект пути к файлу
-        if (!Files.exists(uploadPath)) { // при отсутствии директории - создаём её
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
         FileUtils.cleanDirectory(uploadPath.toFile());
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            Path filePath = uploadPath.resolve(fileName); // это уже путь к непосредственно файлу
+            Path filePath = uploadPath.resolve(fileName);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ioe) {
             throw new IOException("Could not save image file: " + fileName, ioe);
@@ -27,7 +27,7 @@ public class FileUploadUtil {
     }
 
     public static void deleteDirectory(String patientDir) throws IOException {
-        Path deletePath = Paths.get(patientDir); // создаём объект пути к файлу
+        Path deletePath = Paths.get(patientDir);
         FileUtils.deleteDirectory(deletePath.toFile());
     }
 

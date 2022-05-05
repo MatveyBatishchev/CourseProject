@@ -1,6 +1,6 @@
 package com.example.models;
 
-import com.example.validation.ValidPassword;
+import com.example.util.ValidPassword;
 import com.google.gson.annotations.Expose;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -77,10 +77,10 @@ public class Patient implements User {
     @NotBlank(message = "Это поле является обязательным")
     private String password;
 
-    @Column(name="image", nullable=true)
+    @Column(name="image")
     private String image;
 
-    @Column(name="activation_code", nullable=true)
+    @Column(name="activation_code")
     private String activationCode;
 
     @Column(name="active", nullable=false)
@@ -93,9 +93,18 @@ public class Patient implements User {
             mappedBy = "patient",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            fetch = FetchType.EAGER
+            fetch = FetchType.LAZY
     )
     private Set<Appointment> appointments = new HashSet<>();
+
+    @OneToMany(
+            mappedBy = "patient",
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @OrderBy("date DESC")
+    private Set<Review> reviews = new HashSet<>();
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "patient_role", joinColumns = @JoinColumn(name = "patient_id")) // описывает, что данное поле будет храниться в отдельной таблице, для кторой мы не описывали mapping

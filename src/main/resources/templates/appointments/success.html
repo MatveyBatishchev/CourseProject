@@ -24,12 +24,12 @@
                     <p class="card-text">«RecoveryMed» клиника на Большой Семёновской (м. Электрозаводская)</p>
                     <hr>
                   <p class="card-text">Файловая версия вашей записи:</p>
-                    <p class="card-text"><a th:text="${'talon_' + appointment.getId() + '.pdf'}" th:href="@{/appointments/exportPdf/{id}(id=${appointment.getId()})}"></a></p>
+                    <p class="card-text"><a th:text="${'talon_' + appointment.getId() + '.pdf'}" th:href="@{/appointments/{id}/exportPdf(id=${appointment.getId()})}"></a></p>
                 </div>
             </div>
             <p>Если у вас отстались вопросы в процессе записи позвоните на телефон 8 (999) 123-45-67 или свяжитесь по
                 почте recoverymed.info@gmail.com</p>
-            <a class="btn btn-primary mt-2" href="/recoverymed/home">Вернутся на главную страницу</a>
+            <a class="btn btn-primary mt-2" href="/recoverymed/">Вернутся на главную страницу</a>
         </div>
     </div>
     <footer th:insert="blocks/footer :: footer"></footer>

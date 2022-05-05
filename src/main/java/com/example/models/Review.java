@@ -10,53 +10,49 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Schedule {
+public class Review {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "sequence-generator")
     @GenericGenerator(
             name = "sequence-generator",
             strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {
-                    @Parameter(name = "sequence_name", value = "schedule_sequence"),
+                    @Parameter(name = "sequence_name", value = "user_sequence"),
                     @Parameter(name = "initial_value", value = "1"),
                     @Parameter(name = "increment_size", value = "1")
             }
     )
-    @Expose
     private Long id;
 
-    @Column(name="date",nullable=false)
+    @Column(name="creation_date", nullable=false)
     @Expose
-    Date date;
+    private Date date;
 
-    @Column(name="start_time",nullable=false)
-    private LocalTime startTime;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "patient_id")
+    @Expose
+    private Patient patient;
 
-    @Column(name="end_time",nullable=false)
-    private LocalTime endTime;
+    @Column(name="comment", nullable=false)
+    @Expose
+    private String comment;
 
-    @Column(name="consulting_time",nullable=false)
-    private Integer consultingTime;
+    @Column(name="approved", nullable=false)
+    @Expose
+    private boolean approved;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
-    @OneToMany(
-            mappedBy = "schedule",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    private Set<TimeTable> timeTable = new HashSet<>();
-
+    public String getReviewerName() {
+        return getPatient().getSurname() + " " + getPatient().getName();
+    }
 }

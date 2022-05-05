@@ -2,7 +2,8 @@ package com.example.controllers;
 
 import com.example.models.Patient;
 import com.example.services.PatientService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -12,66 +13,38 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/patients")
 public class PatientController {
 
     private final PatientService patientService;
 
-    @Autowired
-    public PatientController(PatientService patientService) {
-        this.patientService = patientService;
-    }
-
     @GetMapping("/all")
-    public ModelAndView getAllPatients(ModelAndView modelAndView) {
-        return patientService.findAllPatientsWithPage(modelAndView);
-    }
-
-    @GetMapping("/{id}")
-    public ModelAndView getPatientById(@PathVariable("id") Long patientId, ModelAndView modelAndView) {
-        return patientService.findPatientById(patientId, modelAndView);
-    }
-
-    @GetMapping("/search")
-    @ResponseBody
-    public String getPatientBySearch(@RequestParam("search") String search,
-                                     @RequestParam("pageNumber") Integer pageNumber) {
-        return patientService.findPatientBySearchWithPage(search, pageNumber);
-    }
-
-    @GetMapping("/getPage")
-    @ResponseBody
-    public String getPatientsWithPage(@RequestParam("pageNumber") Integer pageNumber) {
-        return patientService.findPatientsWithPage(pageNumber);
+    @PreAuthorize("hasAnyAuthority({'ADMIN','DOCTOR'})")
+    public ModelAndView getAllPatientsWithPageView(ModelAndView modelAndView) {
+        return patientService.findAllPatientsWithPageView(modelAndView);
     }
 
     @GetMapping("/new")
-    public String addNewPatient(@ModelAttribute("patient") Patient patient) {
+    public String getAddNewPatientView(@ModelAttribute("patient") Patient patient) {
         return "main/registration";
     }
 
-    @PostMapping("/new")
-    public ModelAndView addNewPatient(@ModelAttribute("patient") @Valid Patient patient,
-                                BindingResult bindingResult, ModelAndView modelAndView) {
-        return patientService.saveNewPatient(patient, bindingResult, modelAndView);
+    @GetMapping("/{id}")
+    @PreAuthorize("#id == authentication.principal.id or hasAnyAuthority({'ADMIN','DOCTOR'})")
+    public ModelAndView getPatientByIdView(@PathVariable("id") Long id, ModelAndView modelAndView) {
+        return patientService.findPatientById(id, modelAndView, "patients/getById");
     }
 
     @GetMapping("/{id}/edit")
-    public ModelAndView editPatientById( @PathVariable("id") Long patientId, ModelAndView modelAndView) {
-        return patientService.findPatientByIdForEdit(patientId, modelAndView);
+    @PreAuthorize("(#id == authentication.principal.id and hasAuthority({'USER'})) or hasAuthority({'ADMIN'})")
+    public ModelAndView getEditPatientByIdView(@PathVariable("id") Long id, ModelAndView modelAndView) {
+        return patientService.findPatientById(id, modelAndView, "patients/editById");
     }
 
-    @PutMapping("/{id}")
-    public ModelAndView editPatientById(@ModelAttribute("patient") @Valid Patient patient, BindingResult bindingResult,
-                                  @RequestParam("profileImage") MultipartFile multipartFile, ModelAndView modelAndView) {
-        return patientService.editPatient(patient, bindingResult, multipartFile, modelAndView);
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseBody
-    public String deletePatientById(@PathVariable("id") Long patientId) {
-        patientService.deletePatientById(patientId);
-        return "Успешно!\n Аккаунт был удалён!";
+    @GetMapping("/reset/{code}")
+    public ModelAndView getResetPatientPasswordView(@PathVariable("code") String code, ModelAndView modelAndView) {
+        return patientService.resetPassword(code, modelAndView);
     }
 
     @GetMapping("/activate/{code}")
@@ -79,57 +52,91 @@ public class PatientController {
         return patientService.activatePatient(code, modelAndView);
     }
 
-    @PostMapping("/confirmEmail/{id}")
+    @GetMapping("/all/page/{pageNumber}")
+    @PreAuthorize("hasAnyAuthority({'ADMIN','DOCTOR'})")
     @ResponseBody
-    public String confirmPatientEmail(@PathVariable("id") Patient patient) {
-        patientService.sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
-        return "Успешно!\n Письмо с подтверждением было отправлено на почту!";
+    public String getPatientsWithPageJson(@PathVariable("pageNumber") Integer pageNumber) {
+        return patientService.findPatientsWithPageJson(pageNumber);
     }
 
-    @GetMapping("/reset/{code}")
-    public ModelAndView resetPassword(@PathVariable("code") String code, ModelAndView modelAndView) {
-        return patientService.resetPassword(code, modelAndView);
+    @GetMapping("/by-search")
+    @PreAuthorize("hasAnyAuthority({'ADMIN','DOCTOR'})")
+    @ResponseBody
+    public String getPatientBySearchWithPageJson(@RequestParam("search") String search, @RequestParam("pageNumber") Integer pageNumber) {
+        return patientService.findPatientBySearchWithPageJson(search, pageNumber);
     }
 
-    @PostMapping("/reset/{code}")
-    public ModelAndView savePatientWithNewPassword(@PathVariable("code") String code,
-                                                   @RequestParam("password") String newPassword,
-                                                   ModelAndView modelAndView,
-                                                   BindingResult bindingResult) {
-        return patientService.saveResetPassword(code, newPassword, modelAndView, bindingResult);
+    @GetMapping("/email-exists")
+    @ResponseBody
+    public String checkPatientExistJson(@RequestParam("resetEmail") String resetEmail) {
+        return patientService.checkIfPatientExists(resetEmail);
     }
 
-    @PostMapping("/passwordEmail")
+    @GetMapping("/email-reset")
     @ResponseBody
     public String sendResetPasswordEmail(@RequestParam("resetEmail") String resetEmail) {
         patientService.sendResetPasswordEmail(resetEmail);
         return "Письмо для восстановления пароля было успешно отправлено вам на почту!";
     }
 
-    @PostMapping("/sendDeleteCode")
+    @GetMapping("/compare-passwords")
+    @PreAuthorize("#id == authentication.principal.id and hasAuthority({'USER'})")
+    @ResponseBody
+    public String comparePasswordsJson(@RequestParam("providedPassword") String providedPassword, @RequestParam("patientId") Long id) {
+        return patientService.comparePasswords(providedPassword, id);
+    }
+
+    @PostMapping("/new")
+    public ModelAndView addNewPatient(@ModelAttribute("patient") @Valid Patient patient, BindingResult bindingResult,
+                                      ModelAndView modelAndView) {
+        return patientService.saveNewPatient(patient, bindingResult, modelAndView);
+    }
+
+    @PostMapping("/confirmEmail/{id}")
+    @PreAuthorize("#patient.id == authentication.principal.id and hasAuthority('USER')")
+    @ResponseBody
+    public String sendConfirmationEmail(@PathVariable("id") Patient patient) {
+        patientService.sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
+        return "Успешно!\n Письмо с подтверждением было отправлено на почту!";
+    }
+
+    // remake for bind exception
+    @PostMapping("/reset/{code}")
+    public ModelAndView savePatientWithNewPassword(@PathVariable("code") String code, @RequestParam("password") String newPassword,
+                                                   ModelAndView modelAndView, BindingResult bindingResult) {
+        return patientService.saveResetPassword(code, newPassword, modelAndView, bindingResult);
+    }
+
+    @PostMapping("/send-deleteCode")
+    @PreAuthorize("#patientEmail == authentication.principal.username and hasAuthority('USER')")
     @ResponseBody
     public String sendDeleteConfirmationMail(@RequestParam("patientEmail") String patientEmail,
-                                           @RequestParam("confirmationCode") String confirmationCode) {
+                                             @RequestParam("confirmationCode") String confirmationCode) {
+        System.out.println("hi");
         patientService.sendDeleteConfirmationMail(patientEmail, confirmationCode);
         return "Успешно!\n Письмо с кодом подтверждения удаления аккаунта было отправлено на почту!";
     }
 
-    @GetMapping("/findPatient")
+    @PostMapping("/save-newPassword")
+    @PreAuthorize("#id == authentication.principal.id and hasAuthority('USER')")
     @ResponseBody
-    public String checkPatientExist(@RequestParam("resetEmail") String resetEmail) {
-        return patientService.checkIfPatientExists(resetEmail);
+    public String setNewPassword(@RequestParam("providedPassword") String providedPassword, @RequestParam("patientId") Long id) {
+        return patientService.saveNewPassword(providedPassword, id);
     }
 
-    @GetMapping("/comparePasswords")
-    @ResponseBody
-    public String comparePasswords(@RequestParam("providedPassword") String providedPassword, @RequestParam("patientId") Long patientId) {
-        return patientService.comparePasswords(providedPassword, patientId);
+    @PutMapping("/{id}")
+    @PreAuthorize("(#patient.id == authentication.principal.id and hasAuthority('USER')) or hasAuthority('ADMIN')")
+    public ModelAndView editPatientById(@ModelAttribute("patient") @Valid Patient patient, BindingResult bindingResult,
+                                        @RequestParam("profileImage") MultipartFile multipartFile, ModelAndView modelAndView) {
+        return patientService.editPatient(patient, bindingResult, multipartFile, modelAndView);
     }
 
-    @PostMapping("/newPassword")
+    @DeleteMapping("/{id}")
+    @PreAuthorize("(#id == authentication.principal.id and hasAuthority('USER')) or hasAuthority('ADMIN')")
     @ResponseBody
-    public String newPassword(@RequestParam("providedPassword") String providedPassword,
-                              @RequestParam("patientId") Long patientId) {
-        return patientService.saveNewPassword(providedPassword, patientId);
+    public String deletePatientById(@PathVariable("id") Long id) {
+        patientService.deletePatientById(id);
+        return "Успешно!\n Аккаунт был удалён!";
     }
+
 }

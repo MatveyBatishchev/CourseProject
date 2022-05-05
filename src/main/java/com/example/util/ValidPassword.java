@@ -1,4 +1,4 @@
-package com.example.validation;
+package com.example.util;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

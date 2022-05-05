@@ -17,7 +17,7 @@ $(document).ready(function () {
     inputSpeciality.on("change", function () {
         $.ajax({
             type: "GET",
-            url: "/doctors/by_speciality",
+            url: "/doctors/by-speciality",
             data: {
                     speciality: $(this).val()
                 },
@@ -55,10 +55,7 @@ $(document).ready(function () {
     inputDoctor.on("change", function () {
         $.ajax({
             type: "GET",
-            url: "/schedules/getDoctorSchedules",
-            data: {
-                doctorId: $(this).val()
-            },
+            url: "/schedules/doctor/" + $(this).val(),
             success: function (data) {
                 let schedules = JSON.parse(data);
                 enableDays = [];
@@ -72,13 +69,13 @@ $(document).ready(function () {
                     numberOfMonths: 2,
                     beforeShowDay: enableAllTheseDays,
                     onSelect: function () {
+                        let found = schedules.find(function(schedule, index) {
+                            if(schedule.date === inputSchedule.datepicker({dateFormat: 'dd-mm-yy'}).val())
+                                return true;
+                        });
                         $.ajax({
                             type: "GET",
-                            url: "/schedules/getTimeTables",
-                            data: {
-                                scheduleDate: inputSchedule.datepicker({dateFormat: 'dd-mm-yy'}).val(),
-                                doctorId: inputDoctor.val()
-                            },
+                            url: "/schedules/" + found.id + "/timetables",
                             success: function (data) {
                                 let timetables = JSON.parse(data);
                                 let s = '<div class="row justify-content-center buttonFont mt-2 mb-2">';
@@ -136,10 +133,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "GET",
-            url: "/doctors/getById",
-            data: {
-                doctorId: inputDoctor.val(),
-            },
+            url: "/doctors/" + inputDoctor.val() + "/json",
             success: function (data) {
                 let doctor = JSON.parse(data).doctor;
                 previewDoctorName.innerHTML = 'Специалист: ' + doctor.surname + ' ' + doctor.name + ' ' + doctor.patronymic;
