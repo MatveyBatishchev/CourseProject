@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Резюме</title>
+  <div th:insert="blocks/webjars :: webjars"></div>
+  <link rel="stylesheet" th:href="@{/css/doctorProfile.css}">
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.23.2/dist/editor.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@1.7.0/dist/bundle.js"></script>
+</head>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+      let doctorId = /*[[${doctor.getId()}]]*/ 'doctorId';
+      let aboutDoctor = /*[[${doctor.getAboutDoctor()}]]*/ 'aboutDoctor';
+      let education = /*[[${doctor.getEducation()}]]*/ 'eduction';
+      let workPlaces = /*[[${doctor.getWorkPlaces()}]]*/ 'workPlaces';
+    /*]]>*/
+</script>
+<script type="text/javascript" th:src="@{/js/editResume.js}"></script>
+<body>
+<header th:insert="blocks/doctorSidebar :: doctorSidebar"></header>
+<!--Главный экран-->
+<div class="mainScreen">
+  <div class="container-xl px-4 mt-3 pb-4">
+    <div class="col-xl-12">
+      <div class="card mb-4">
+        <div class="card-header">Резюме</div>
+        <div class="card-body">
+          <!--Ряд О враче-->
+          <div class="row gx-3 mb-3">
+            <div class="col-md-7" style="width: 62% !important;">
+              <label class="small mb-1" for="inputAboutDoctor">О враче</label>
+              <div id="inputAboutDoctor"></div>
+            </div>
+          </div>
+          <!--Ряд образования-->
+          <div class="row gx-3 mb-3">
+            <div class="col-md-7" style="width: 62% !important;">
+              <label class="small mb-1" for="inputEducation">Образование</label>
+              <div id="inputEducation"></div>
+            </div>
+          </div>
+          <!--Ряд опыта работы-->
+          <div class="row gx-3 mb-3">
+            <div class="col-md-7" style="width: 62% !important;">
+              <label class="small mb-1" for="inputWorkPlaces">Опыт работы</label>
+              <div id="inputWorkPlaces"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="editResumeButton" role="button">Редактировать</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

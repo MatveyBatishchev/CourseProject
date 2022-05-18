@@ -7,7 +7,11 @@ import com.example.models.Patient;
 import com.example.models.Review;
 import com.example.models.Role;
 import com.example.repo.DoctorRepository;
+import com.example.util.BindingResultSerializer;
 import com.example.util.FileUploadUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -20,7 +24,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.SmartValidator;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,8 +41,9 @@ public class DoctorService {
     private final DoctorRepository doctorRepository;
     private final MailSender mailSender;
     private final PasswordEncoder passwordEncoder;
+    private final SmartValidator validator;
     private final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    private static final int pageSize = 8;
+    private static final int pageSize = 1;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -91,7 +98,6 @@ public class DoctorService {
         return modelAndView;
     }
 
-    // ?
     public Page<Doctor> findPageOfAllDoctors(Integer pageNumber) {
         return doctorRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by("id")));
     }
@@ -205,6 +211,27 @@ public class DoctorService {
         doctorRepository.save(doctor);
     }
 
+    public String editDoctor(String doctorJson) {
+        System.out.println(doctorJson);
+        ObjectMapper objMapper = new ObjectMapper();
+        objMapper.registerModule(new SimpleModule().addSerializer(BindingResult.class,new BindingResultSerializer()));
+        try {
+            Doctor doctor = objMapper.readValue(doctorJson, Doctor.class);
+            BindingResult bindingResult = new BindException(doctor, "doctor");
+            validator.validate(doctor, bindingResult);
+            if (bindingResult.hasErrors()) {
+                return objMapper.writeValueAsString(bindingResult);
+            }
+            else {
+                updateDoctor(doctor);
+                return "";
+            }
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     public ModelAndView editDoctor(Doctor doctor, BindingResult bindingResult, MultipartFile multipartFile, ModelAndView modelAndView) {
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("doctors/editById");
@@ -215,6 +242,14 @@ public class DoctorService {
             modelAndView.setViewName("redirect:/doctors/" + doctor.getId());
         }
         return modelAndView;
+    }
+
+    public void editDoctorResume(Long id, String aboutDoctor, String education, String workPlaces) {
+        Doctor doctor = findDoctorById(id);
+        doctor.setAboutDoctor(aboutDoctor);
+        doctor.setEducation(education);
+        doctor.setWorkPlaces(workPlaces);
+        doctorRepository.save(doctor);
     }
 
     public void updateDoctor(Doctor updatedDoctor) {

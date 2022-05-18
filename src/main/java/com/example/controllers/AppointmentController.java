@@ -4,7 +4,6 @@ import com.example.models.Patient;
 import com.example.services.AppointmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,7 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @GetMapping("/all")
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     public ModelAndView getAllAppointmentsView(ModelAndView modelAndView) {
         modelAndView.addObject("appointments", appointmentService.findAllAppointmentsAsc());
         modelAndView.setViewName("appointments/getAll");
@@ -67,7 +66,7 @@ public class AppointmentController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority({'ADMIN', 'USER', 'DOCTOR'})")
+//    @PreAuthorize("hasAnyAuthority({'ADMIN', 'USER', 'DOCTOR'})")
     @ResponseBody
     public void deleteAppointmentById(@PathVariable("id") Long id) {
         appointmentService.deleteAppointment(id);

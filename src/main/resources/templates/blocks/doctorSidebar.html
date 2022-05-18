@@ -1,0 +1,67 @@
+<div th:fragment="doctorSidebar">
+    <div class="flex-shrink-0 p-3 pt-4 sidebar">
+        <!--Заголовок-->
+        <div class="d-flex align-items-center justify-content-center pb-3 mb-3 border-bottom" style="border-color: white;">
+            <span class="sidebar-lable">Личный кабинет</span>
+        </div>
+        <!--Список разделов-->
+        <ul class="list-unstyled ps-0">
+            <li class="mb-1 sidebar-button">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#profile-collapse" aria-expanded="false">
+                    Профиль
+                </button>
+                <div class="collapse ms-3" id="profile-collapse" >
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a th:href="@{/doctors/{id}(id=${doctor.getId()})}" class="inside-button rounded">Общие данные</a></li>
+                        <li><a th:href="@{/doctors/{id}/resume/edit(id=${doctor.getId()})}" class="inside-button rounded">Резюме</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-1 sidebar-button">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#appointment-collapse" aria-expanded="false">
+                    Приёмы
+                </button>
+                <div class="collapse ms-3" id="appointment-collapse" >
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a class="inside-button rounded">Текущие приёмы</a></li>
+                        <li><a class="inside-button rounded">Новый приём</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-1 sidebar-button">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#schedules-collapse" aria-expanded="false">
+                    Расписания
+                </button>
+                <div class="collapse ms-3" id="schedules-collapse" style="">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a th:href="@{/schedules/doctor/{id}/view(id=${doctor.getId()})}" class="inside-button rounded">Календарь</a></li>
+                        <li><a href="/schedules/new" class="inside-button rounded">Новое расписание</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-1 sidebar-button">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#patients-collapse" aria-expanded="false">
+                    Пациенты
+                </button>
+                <div class="collapse ms-3" id="patients-collapse" style="">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a href="#" class="inside-button rounded">Ваши паценты</a></li>
+                        <li><a href="/patients/all/for-doctors" class="inside-button rounded">Поиск</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-1 sidebar-button">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#statistics-collapse" aria-expanded="false">
+                    Статистика
+                </button>
+                <div class="collapse ms-3" id="statistics-collapse" style="">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a href="#" class="inside-button rounded">Отзывы</a></li>
+                        <li><a href="#" class="inside-button rounded">Инфографика</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="border-top my-3"></li>
+        </ul>
+    </div>
+</div>

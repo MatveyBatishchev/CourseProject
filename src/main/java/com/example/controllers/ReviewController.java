@@ -3,7 +3,6 @@ package com.example.controllers;
 import com.example.models.Patient;
 import com.example.services.ReviewService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping("/moderation")
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     public ModelAndView getAllUnmoderatedReviews(ModelAndView modelAndView) {
         return reviewService.findAllReviewsView(modelAndView);
     }
@@ -29,7 +28,7 @@ public class ReviewController {
     }
 
     @PostMapping("/new")
-    @PreAuthorize("hasAuthority('USER')")
+//    @PreAuthorize("hasAuthority('USER')")
     @ResponseBody
     public String addNewReviewForDoctor(@AuthenticationPrincipal Patient patient, @RequestParam("reviewComment") String reviewComment,
                                         @RequestParam("doctorId") Long doctorId) {
@@ -37,14 +36,14 @@ public class ReviewController {
     }
 
     @PutMapping("/{id}/approve")
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseBody
     public void approvewReview(@PathVariable("id") Long reviewId) {
         reviewService.approveReviewById(reviewId);
     }
 
     @DeleteMapping("/{id}/delete")
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseBody
     public void deleteReview(@PathVariable("id") Long reviewId) {
         reviewService.deleteReviewById(reviewId);

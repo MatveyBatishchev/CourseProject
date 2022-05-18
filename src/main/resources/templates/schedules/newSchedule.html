@@ -3,91 +3,110 @@
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <title>Новое расписание</title>
+    <link rel="stylesheet" th:href="@{/css/doctorProfile.css}">
+    <link rel="stylesheet" th:href="@{/css/newAppointment.css}">
     <div th:insert="blocks/webjars :: webjars"></div>
 </head>
+<style>
+    .tippy-arrow {
+        color: #eaeaea;
+    }
+    .tippy-box {
+        background-color: #eaeaea !important;
+        color: #000000 !important;
+        border-radius: 10px !important;
+    }
+    .doctorBody{
+        position: center;
+        /*min-width: 615px;*/
+        max-width: 630px;
+        min-height: 180px;
+
+        border: 1px solid #000000;
+        box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+
+        margin-left: auto;
+        margin-right: auto;
+        overflow: hidden;
+    }
+</style>
 <script th:inline="javascript">
     /*<![CDATA[*/
-    $(document).ready(function () {
-        let disabledDays = [];
         let schedulesJson = /*[[${schedules}]]*/ 'default';
-        let schedules = JSON.parse(schedulesJson);
-        if (schedules != null && schedules.length !== 0) {
-            schedules.forEach(schedule => {
-                disabledDays.push(schedule.date);
-            });
-        }
-
-        $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
-        console.log($("#datepicker"));
-        $("#datepicker").datepicker({
-            dateFormat: 'dd-mm-yy',
-            minDate: 0,
-            numberOfMonths: 2,
-            beforeShowDay: disableAllTheseDays,
-            onSelect: function () {
-                $("#inputDate").val($("#datepicker").datepicker({dateFormat: 'dd-mm-yy'}).val());
-                console.log($("#inputDate").val());
-            }
-        });
-
-        function disableAllTheseDays(date) {
-            let sdate = $.datepicker.formatDate('dd-mm-yy', date)
-            if ($.inArray(sdate, disabledDays) !== -1) {
-                return [false];
-            }
-            return [true];
-        }
-
-    });
     /*]]>*/
 </script>
+<script type="text/javascript" th:src="@{/js/newSchedule.js}"></script>
 <body>
-<div class="wrapper">
-    <div class="content">
-        <header th:insert="blocks/header :: header"></header>
-        <div class="container mt-5">
+<header th:insert="blocks/doctorSidebar :: doctorSidebar"></header>
+<!--Главный экран-->
+<div class="mainScreen">
+    <div class="container mt-5 mb-5">
             <div class="card mb-4">
-                <div class="card-header">Запись на приём</div>
+                <div class="card-header">Создать расписание</div>
                 <div class="card-body">
-                    <form th:method="POST" th:action="@{/schedules/new}" th:object="${schedule}">
+                    <form id="newScheduleForm" action="javascript:0">
                         <!--Ряд даты-->
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputDate">Дата приёма</label>
+                                <input id="inputDate" type="hidden" th:name="scheduleDate">
                                 <div id="datepicker"></div>
-                                <input class="form-control" id="inputDate" type="text" th:name="scheduleDate" hidden>
                             </div>
                         </div>
                         <!--Ряд начала времени-->
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputStartTime">Начало времени приёмов</label>
-                                <input class="form-control" id="inputStartTime" type="time" th:name="startTime"
-                                       required>
+                                <input class="form-control" id="inputStartTime" type="time" min="08:00:00" max="23:00:00" th:name="startTime" required>
                             </div>
                         </div>
                         <!--Ряд конца времени-->
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputEndTime">Конец времени приёмов</label>
-                                <input class="form-control" id="inputEndTime" type="time" th:name="endTime" required>
+                                <input class="form-control" id="inputEndTime" type="time" min="08:00:00" max="20:00:00" th:name="endTime" required>
                             </div>
                         </div>
                         <!--Ряд времени консультирования-->
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
-                                <label class="small mb-1" for="inputExperience">Время приёма</label>
-                                <input class="form-control" id="inputExperience" type="number"
-                                       th:field="*{consultingTime}">
+                                <label class="small mb-1" for="inputConsultingTime">Длительность приёма</label>
+                                <input class="form-control" id="inputConsultingTime" type="number"
+                                       th:name="consultingTime" required>
                             </div>
                         </div>
-                        <input class="btn btn-primary" type="submit" value="Добавить"><br><br>
+                        <!--Ряд времени перерыва-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputBreakTime">Начало перерыва</label>
+                                <input class="form-control" id="inputBreakTime" type="time" min="08:00:00" max="23:00:00" th:name="breakTime" value="13:00" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputBreakDuration">Длительность перерыва (минуты)</label>
+                                <input class="form-control" id="inputBreakDuration" type="number" th:name="breakDuration" value="60" required>
+                            </div>
+                        </div>
+                        <!--Ряд смоделированных приёмов-->
+                        <div class="row gx-3 mb-3 mt-5">
+                            <div class="col-md-9 d-flex align-items-center justify-content-center">
+                                <div id="timetablesRow"></div>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-center justify-content-center" style="margin-left: -2rem;">
+                                <div class="card doctorBody px-3 text-center justify-content-center align-items-center" style="width: 300px; height: 200px;" id="editTimetableRow" hidden>
+                                    <div class="m-3">
+                                        <h4 class="themes" style="font-size: 20px">Вы можете редактировать каждый приём отдельно. (Длительность  приёма останется такой-же)</h4>
+                                        <i class="las la-pencil-alt la-3x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input class="btn btn-primary" id="newScheduleButton" type="button" value="Подтвердить"><br><br>
                     </form>
+                    <button class="btn btn-primary" style="margin-top: -1rem;" id="submitNewScheduleButton" type="button" hidden>Создать</button>
                 </div>
             </div>
         </div>
-    </div>
-    <footer th:insert="blocks/footer :: footer"></footer>
 </div>
 </body>
 </html>

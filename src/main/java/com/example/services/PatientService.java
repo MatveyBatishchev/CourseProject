@@ -1,6 +1,7 @@
 package com.example.services;
 
 import com.example.mappers.PatientMapper;
+import com.example.models.Doctor;
 import com.example.models.Patient;
 import com.example.models.Role;
 import com.example.repo.DoctorRepository;
@@ -39,7 +40,7 @@ public class PatientService {
     private final SmartValidator validator;
     private final PasswordEncoder passwordEncoder;
     private final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    private final static int pageSize = 4;
+    private final static int pageSize = 1;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -48,8 +49,9 @@ public class PatientService {
         return patientRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Пациент с id " + id + " не был найден!"));
     }
 
-    public ModelAndView findAllPatientsWithPageView(ModelAndView modelAndView) {
+    public ModelAndView findAllPatientsWithPageView(Doctor doctor, ModelAndView modelAndView) {
         Page<Patient> page = patientRepository.findAll(PageRequest.of(0, pageSize, Sort.by("id")));
+        modelAndView.addObject("doctor", doctor);
         modelAndView.addObject("patients", page.getContent());
         modelAndView.addObject("totalPages", page.getTotalPages());
         modelAndView.setViewName("patients/getAll");

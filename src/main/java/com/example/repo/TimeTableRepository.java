@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.time.LocalTime;
+import java.util.List;
 
 @Repository
 public interface TimeTableRepository extends JpaRepository<TimeTable, Long> {
@@ -19,4 +20,9 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Long> {
             "\t\tschedule.date>=:date and schedule.date<=:date and\n" +
             "\t\ttime_table.start_time=:time", nativeQuery = true)
     TimeTable findTimeTableIdByDateAndTimeAndDoctorId(@Param("date") Date date, @Param("time") LocalTime time, @Param("doctorId") Long doctorId);
+
+
+    @Query(value="Select * from time_table t inner join schedule s\n" +
+            "on t.schedule_id = s.id where doctor_id=:doctorId", nativeQuery = true)
+    List<TimeTable> findByDoctorId(@Param("doctorId") Long doctorId);
 }

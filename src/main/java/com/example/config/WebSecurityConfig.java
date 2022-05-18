@@ -3,7 +3,6 @@ package com.example.config;
 import com.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,17 +28,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers(HttpMethod.GET, "/recoverymed", "/recoverymed/**",
-                            "/doctors/*/resume", "/doctors/by-expanded-search",
-                            "/patients/new", "/patients/email-exists", "/patients/reset/*",
-                            "/patients/email-reset", "/appointments/new",
-                            "/appointments/*/success", "/appointments/*/exportPdf",
-                            "/doctors/*/json", "/doctors/by-speciality", "/reviews/doctor/*/page/*",
-                            "/schedules/doctor/*", "/schedules/*/timetables").permitAll()
-                    .antMatchers(HttpMethod.POST, "/patients/new", "/appointments/new", "/patients/reset/*").permitAll()
-                    .antMatchers("/css/**", "/fonts/**", "/js/**", "/webjars/**",
-                            "/applicationFiles/doctors/**", "/applicationFiles/designElements/**",
-                            "/applicationFiles/usersFiles/**").permitAll()
+//                    .antMatchers(HttpMethod.GET, "/recoverymed", "/recoverymed/**",
+//                            "/doctors/*/resume", "/doctors/by-expanded-search",
+//                            "/patients/new", "/patients/email-exists", "/patients/reset/*",
+//                            "/patients/email-reset", "/appointments/new",
+//                            "/appointments/*/success", "/appointments/*/exportPdf",
+//                            "/doctors/*/json", "/doctors/by-speciality", "/reviews/doctor/*/page/*",
+//                            "/schedules/doctor/*", "/schedules/*/timetables").permitAll()
+//                    .antMatchers(HttpMethod.POST, "/patients/new", "/appointments/new", "/patients/reset/*").permitAll()
+//                    .antMatchers("/css/**", "/fonts/**", "/js/**", "/webjars/**",
+//                            "/applicationFiles/doctors/**", "/applicationFiles/designElements/**",
+//                            "/applicationFiles/usersFiles/**").permitAll()
+                    .antMatchers("/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
