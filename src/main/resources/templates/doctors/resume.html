@@ -4,319 +4,216 @@
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <title th:text="${doctor.getSurname() + ' ' + doctor.getName() + ' ' + doctor.getPatronymic()}"></title>
     <div th:insert="blocks/webjars :: webjars"></div>
+    <link rel="stylesheet" th:href="@{/css/resume.css}">
     <script src="https://cdn.jsdelivr.net/npm/editorjs-html@3.4.0/build/edjsHTML.js"></script>
     <script type="text/javascript" th:src="@{/js/yearSuffix.js}"></script>
     <script type="text/javascript" th:src="@{/js/resumeJs.js}"></script>
 </head>
 <script th:inline="javascript">
     /*<![CDATA[*/
-        let doctorSpecialities = /*[[${doctor.getSpecialitiesLabels()}]]*/ 'doctorSpecialities';
-        let aboutDoctor = /*[[${doctor.getAboutDoctor()}]]*/ 'aboutDoctor';
-        let education = /*[[${doctor.getEducation()}]]*/ 'eduction';
-        let workPlaces = /*[[${doctor.getWorkPlaces()}]]*/ 'workPlaces';
-        let doctorId = /*[[${doctor.getId()}]]*/ 'doctorId';
-        let reviewsNumber = /*[[${reviewsNumber}]]*/ 'reviewsNumber';
+    let doctorSpecialities = /*[[${doctor.getSpecialitiesLabels()}]]*/ 'doctorSpecialities';
+    let aboutDoctor = /*[[${doctor.getAboutDoctor()}]]*/ 'aboutDoctor';
+    let education = /*[[${doctor.getEducation()}]]*/ 'eduction';
+    let workPlaces = /*[[${doctor.getWorkPlaces()}]]*/ 'workPlaces';
+    let doctorId = /*[[${doctor.getId()}]]*/ 'doctorId';
+    let reviewsNumber = /*[[${reviewsNumber}]]*/ 'reviewsNumber';
     /*]]>*/
 </script>
-<style>
-    .container {
-        font-family: 'FFormular';
-        font-style: normal;
-        color: black;
-    }
-
-    .reviewCard {
-        border: 1px solid rgba(212,212,212,0.93) !important;
-        border-radius: 10px !important;
-        padding: 0.3rem 1rem 0.3rem 1rem !important;
-    }
-
-    .underline {
-        width: 245px;
-        height: 1px;
-        background-color: rgba(113, 122, 129, 0.46);
-        margin-top: 4px;
-        border: none;
-    }
-
-    .card {
-        border: 1px solid black !important;
-        border-radius: 10px;
-    }
-
-    .reviewPhoto {
-        width: 100px;
-        height: 100px;
-        background: transparent;
-        border: 1px solid rgba(180, 180, 180, 0.96);
-        border-radius: 50%;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        object-fit: contain;
-    }
-
-    .grayCard {
-        border: none !important;
-        background: #ececec !important;
-        padding: 2rem 2rem 1.4rem 2rem !important;
-        font-size: 17px !important;
-    }
-
-    .linksCard {
-        border-radius: 0 !important;
-        border-left: 0 !important;
-        border-right: 0 !important;
-        border-top: 0 !important;
-    }
-
-    .row {
-        justify-content: start;
-        align-items: center;
-    }
-
-    .photo {
-        width: 200px;
-        height: 270px;
-        background: transparent;
-        border: 1px solid rgba(114, 113, 113, 0.96);
-        border-radius: 10px;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        object-fit: contain;
-    }
-
-
-    .container a {
-        color: black !important;
-    }
-
-    .tag {
-        height: 40px;
-        width: 140px !important;
-        font-size: 16px !important;
-        color: black !important;
-        border: 1px solid black !important;
-        background: white !important;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-    }
-
-    .tag:hover {
-        color: white !important;
-        background: #1f4326 !important;
-    }
-
-    .MyButton {
-        height: 33px !important;
-        font-size: 17px !important;
-        color: white !important;
-        background-color: #1f4326 !important;
-    }
-
-    img {
-        width: auto;
-        height: 270px;
-        max-width: 200%;
-        max-height: 120%;
-    }
-
-    span {
-        white-space:nowrap;
-    }
-
-    .imgMetro {
-        width: 25px;
-        height: 25px;
-    }
-
-    .spanStyle {
-        font-weight: 500 !important;
-    }
-
-    .blockVerticalLine {
-        margin: 0.5rem auto;
-        width: 100%;
-        height: 0;
-        background: #1f4326;
-        border-radius: 5px;
-        border: 2px solid #1f4326 !important;
-    }
-
-    .infoUl li {
-        list-style-type: disc;
-        position: relative;
-        padding: 8px 0 8px 25px;
-    }
-
-</style>
 <body>
-<div class="wrapper">
+<header th:replace="blocks/header :: header"></header>
+<div class="wrapper ">
     <div class="content">
-        <header th:replace="blocks/header :: header"></header>
-        <div class="container mt-5">
-            <!--Заголовок-->
-            <span style="font-size: 34px;" th:text="${doctor.getSurname() + ' ' + doctor.getName() + ' ' + doctor.getPatronymic()}"></span>
-            <!--Ссылки на части резюме-->
-            <div class="card linksCard col-md-7 mt-4 p-1">
-                <div class="row buttonFont">
-                    <div class="col-md-3">
-                        <a href="#">О враче</a>
-                    </div>
-                    <div class="col-md-3 ps-0">
-                        <a href="#">Образование</a>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#">Опыт работы</a>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#">Отзывы</a>
+        <div class="container-fluid">
+            <!--1-й блок Доктор-->
+            <div>
+                <div class="mb-3 blackLineUnderAppointment" style="margin-top: 60px"></div>
+                <!--Навигация-->
+                <div class="d-flex justify-content-center navResume">
+                    <div class="col-5 mt-2">
+                        <div class="row headlines text-center">
+                            <div class="col-md-3">
+                                <a href="#toDoctorDiv">О враче</a>
+                            </div>
+                            <div class="blackLineDividing"></div>
+                            <div class="col-md-3">
+                                <a href="#toEducationDiv">Образование</a>
+                            </div>
+                            <div class="blackLineDividing"></div>
+                            <div class="col-md-3">
+                                <a href="#toWorkPlacesDiv">Опыт работы</a>
+                            </div>
+                            <div class="blackLineDividing"></div>
+                            <div class="col-md-2">
+                                <a href="#toReviewDiv">Отзывы</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!--Общие данные-->
-            <div class="mt-2 p-4">
-                    <div class="row">
-                        <div class="col-3">
-                            <div class="photo"><img class="imgDoctor" th:if="${doctor.getImage() != null && !doctor.getImage().isEmpty()}"
-                                                    th:src="@{/applicationFiles/doctors/{id}/{image}(id=${doctor.getId()}, image=${doctor.getImage()})}" alt="doctorPhoto"/></div>
-                        </div>
-                        <div class="col-9">
-                            <div class="card">
-                                <div class="row p-3">
-                                    <!--Левая колонка-->
-                                    <div class="col" style="font-size: 18px;">
-                                        <!--Теги специальности-->
-                                        <div class="row col-md-12 ms-1 mt-1" id="doctorSpecialities">
-                                            <div class="col col-md-4 p-0">
-                                                <button class="button tag">Невролог</button>
-                                            </div>
-                                            <div class="col col-md-4 p-0">
-                                                <button class="button tag">Сомнолог</button>
-                                            </div>
-                                            <div class="col col-md-4 p-0">
-                                                <button class="button tag">Эпилептолог</button>
-                                            </div>
-                                        </div>
-                                        <!--Стаж-->
-                                        <div class="row mt-3 ms-1">
-                                            <div>
-                                                <span class="spanStyle">Врачебный стаж: </span>
-                                                <span style="font-size: 25px;" id="doctorExperience" th:text="${doctor.getExperience()}"></span>
-                                                <span id="yearPrefix"></span>
-                                            </div>
-                                        </div>
-                                        <!--Категория-->
-                                        <div class="row mt-4 ms-1">
-                                            <span class="spanStyle">Категория специалиста:</span>
-                                            <span class="mt-2" id="doctorCategory" th:text="${doctor.getCategory()}">кандидат медицинских наук, врач высшей категории</span>
-                                        </div>
-                                        <!--Адрес клиники-->
-                                        <div class="row mt-4 col-md-12">
-                                            <div class="col-md-11 ms-3 experienceRow">
-                                                <span class="mt-1 spanStyle">Работает в клиниках:</span>
-                                                <div class="card mt-2 p-2" style="border: 0 !important; background: rgba(245,245,245,0.87) !important; font-size: 17px !important;">
-                                                    <div class="mt-1 d-flex align-items-center"><img class="imgMetro me-2" src="/applicationFiles/designElements/metroIcon.png" alt="img"/>Электрозаводская</div>
-                                                    <div class="mt-1">Большая Семеновская ул, д. 38</div>
-                                                </div>
-                                            </div>
+                <!--Блок с доктором-->
+                <div class="d-flex justify-content-center">
+                    <div class="col-8 mt-5 resumeCover">
+                        <p class="themes text-center mb-4" style="font-size: 28px" th:text="${doctor.getSurname() + ' ' + doctor.getName() + ' ' + doctor.getPatronymic()}">Павлец Антон Михайловскйи</p>
+                        <div class="row d-flex justify-content-center" style="margin-top: 2rem;">
+                            <!--Photo-->
+                            <div class="col-3 doctorInfoBlocks">
+                                <div class="photoFrameSquareMain">
+                                    <img class="photoResume" th:if="${doctor.getImage() != null && !doctor.getImage().isEmpty()}"
+                                         th:src="@{/applicationFiles/doctors/{id}/{image}(id=${doctor.getId()}, image=${doctor.getImage()})}" alt="doctorPhoto"/>
+                                    <img class="photoResume" th:unless="${doctor.getImage() != null && !doctor.getImage().isEmpty()}"
+                                         th:src="@{/applicationFiles/designElements/doctorAvatar.png}" alt="doctorPhoto"/>
+                                </div>
+                            </div>
+                            <!--Info-->
+                            <div class="col-3 buttonFont doctorInfoBlocks" style="position: center">
+                                <!--Теги специальности-->
+                                <div class="mb-3" id="doctorSpecialities">
+                                    <button th:each="speciality : ${doctor.getSpecialities()}" class="btn borderButton mx-1 buttonFont" style="cursor: default" th:text="${speciality}"></button>
+                                </div>
+                                <!--Информация-->
+                                <div>
+                                    <!--Стаж-->
+                                    <div class="my-3">
+                                        <span class="spanStyle">Врачебный стаж: </span>
+                                        <span style="font-size: 25px;" id="doctorExperience"
+                                              th:text="${doctor.getExperience()}"></span>
+                                        <span id="yearPrefix"></span>
+                                    </div>
+                                    <!--Категория-->
+                                    <div class="my-2">
+                                        <span class="spanStyle">Категория специалиста:</span>
+                                        <div class="mt-2" id="doctorCategory"
+                                             th:text="${doctor.getCategory()}"></div>
+                                    </div>
+                                    <!--Адрес клиники-->
+                                    <div >
+                                        <span class="mt-1 spanStyle">Работает в клиниках:</span>
+                                        <div class="">
+                                            <div class="mt-1 d-flex align-items-center">
+                                                <img class="imgMetro me-2" src="/applicationFiles/designElements/metroIcon.png" width="20" height="20" alt="img"/>Электрозаводская</div>
+                                            <div class="mt-1">ул. Большая Семеновская, д. 38</div>
                                         </div>
                                     </div>
-                                    <!--Правая колонка-->
-                                    <div class="col">
-                                        <p>
-                                            При создании генератора мы использовали
-                                            небезизвестный универсальный код речей. При создании генератора мы использовали
-                                            небезизвестный универсальный код речей. Текст генерируется абзацами случайным
-                                            образом от двух до десяти предложений в абзаце, что позволяет сделать текст
-                                            более привлекательным и живым для визуально-слухового восприятия.
-                                        </p>
-                                        <div class="d-flex flex-column align-items-center">
-                                            <button class="button MyButton mt-1" style="width: 250px;">Записаться на приём</button>
-                                        </div>
-                                    </div>
+                                </div>
+                            </div >
+                            <div style="width: 100px !important;"></div>
+                            <!--Ключевые особенности-->
+                            <div class="col-2 doctorInfoBlocks">
+                                <div class="keyAdvantagesBlock text-center buttonFont mb-3" style="height: 185px; width: 340px">
+                                    <div class="spanStyle pt-3 mb-4">
+                                        <span>Ключевые особенности:</span></div>
+                                    <div class="px-4">Данный врач занимает первое место среди урологов в Москве</div>
+                                    <div class="mt-4 text-muted">По версии портала Tood.by</div>
+                                </div>
+                                <div>
+                                    <button class="button activeButton MyButton mt-1" style="width: 340px">Записаться на приём</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            <!--Тут появляется демоверсия формы записи-->
-
-            <!--О враче + специализация-->
-            <div class="card grayCard mt-5">
-                <span style="font-size: 28px;">О враче</span>
-                <div class="blockVerticalLine"></div>
-                <div class="mt-3" id="aboutDoctorDiv"></div>
             </div>
-            <!--Образование-->
-            <div class="card grayCard mt-5">
-                <span style="font-size: 28px;">Образование</span>
-                <div class="blockVerticalLine mb-3"></div>
+            <!--2-й блок о Враче-->
+            <!--дизайн элементы-->
+            <div class="trianglesBorder">
+                <img class="resumeTriangle2" th:src="@{/applicationFiles/designElements/resumeTriangle2.svg}" alt="">
+                <img class="resumeTriangle3" th:src="@{/applicationFiles/designElements/resumeTriangle3.svg}" alt="">
+            </div>
+            <div class="themes text-center mb-3" style="margin-top: 90px;" id="toDoctorDiv">О враче</div>
+            <!--Карточка-->
+            <div class="doctorBody container-fluid headlines " style="min-width: 1030px; background: white; padding: 20px 30px">
+                <div class="doctorAbilities" id="aboutDoctorDiv">
+                </div>
+                <p class="themes text-center" style="margin-top: 3.8rem;" id="toEducationDiv">Образование</p>
+                <div class="greenLineHorizontalDivider"></div>
                 <div class="mt-3" id="educationDiv"></div>
+                <div class="themes text-center" style="margin-top: 3.8rem;" id="toWorkPlacesDiv">Опыт работы</div>
+                <div class="greenLineHorizontalDivider mt-3"></div>
+                <div class="mt-3" id="workPlacesDiv">
+                </div>
             </div>
-            <!--Опыт работы-->
-            <div class="card grayCard mt-5">
-                <span style="font-size: 28px;">Опыт работы</span>
-                <div class="blockVerticalLine mb-3"></div>
-                <div class="mt-3" id="workPlacesDiv"></div>
-            </div>
-            <!--Отзывы-->
-            <div class="card mt-5" th:if="${doctorReviews.size() != 0}" style="border: 1px solid rgba(212,212,212,0.93) !important; padding: 1rem !important;">
-                <span style="font-size: 28px;">Отзывы</span>
-                <div class="blockVerticalLine mb-3"></div>
-                <!--Список отзывов-->
-                <div th:each="review, iStat : ${doctorReviews}" class="card mt-3 reviewCard">
-                    <!--Дата комментария-->
-                    <span class="text-muted" th:text="'Отзыв от ' + ${T(org.apache.commons.lang3.time.DateFormatUtils).format(review.getDate(), 'dd.MM.yyyy')}"></span>
-                    <div class="underline"></div>
-                    <div class="row col-md-12 mt-3">
-                        <!--Колонка фотографии-->
-                        <div class="col-md-1">
-                            <div class="reviewPhoto"><img src="/applicationFiles/designElements/messageIcon.png" alt="img"></div>
+            <div id="toReviewDiv"></div>
+            <!--3-й блок комментарии-->
+            <div th:if="${doctorReviews.size() != 0}">
+                <!--Надпись+Кнопка-->
+                <div class="d-flex align-items-center justify-content-center" style="margin: 50px 0 10px">
+                    <div class="col-5"></div>
+                    <div class="col-2 themes  text-center">Отзывы</div>
+                    <div class="col" style=" margin-left: -80px">
+                        <a href="#toLeaveReviewDiv" sec:authorize="isAuthenticated()" class="button activeButton MyButton mt-1 ms-3" style="width: 200px">Оставить отзыв</a>
+                    </div>
+                </div>
+                <div class="grayBlock2 pt-1" style="margin: 0 -1.5em 0">
+                    <!--Список отзывов-->
+                    <div th:each="review, iStat : ${doctorReviews}">
+                        <!--1 комментарий-->
+                        <div class="d-flex align-items-center my-5">
+                            <div class="greenCommentLineAside" style="left: 255px;"></div>
+                            <div class="greenCommentLineAside" style="left: 275px; height: 180px"></div>
+                            <div class="doctorBody container-fluid row py-3" style="max-width: 1030px; background: white">
+                                <!--Фото отзыва-->
+                                <div class="col-3 photoFrameSquare ms-3">
+                                    <img class="photoResume" th:src="@{/applicationFiles/designElements/comment.jpg}" alt="img">
+                                </div>
+                                <!--Комментарий-->
+                                <div class="col ms-4">
+                                    <span class="headlines" th:text="${review.getReviewerName}"></span><br>
+                                    <div class="row ms-0 mt-1 col-md-12 d-flex align-items-center">
+                                        <div class="col ps-0">
+                                            <label class="buttonFont text-muted my-1"></label>
+                                            <p class="regTexts" id="reviewContent" th:text="${review.getComment()}">
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Дата-->
+                                <div class="greenLineHorizontalDivider mt-4 mb-2" style="height: 2px; background: rgba(128,128,128,0.43);"></div>
+                                <div>
+                                    <span class="regTexts text-muted ms-4" th:text="'Отзыв от ' + ${T(org.apache.commons.lang3.time.DateFormatUtils).format(review.getDate(), 'dd.MM.yyyy')}"></span>
+                                </div>
+                            </div>
+                            <div class="greenCommentLineAside" style="left: -275px; height: 180px"></div>
+                            <div class="greenCommentLineAside" style="left: -255px;"></div>
                         </div>
-                        <!--Колонка комментария-->
-                        <div class="col-md-11 ps-4" >
-                            <span style="font-size: 23px !important;" th:text="${review.getReviewerName}"></span><br>
-                            <div class="row ms-0 mt-1 col-md-12 d-flex align-items-center">
-                                <div class="col ps-0">
-                                    <label class="mt-2 mb-2" for="reviewContent">Комментарий:</label>
-                                    <p id="reviewContent" th:text="${review.getComment()}" style="background: #f5f5f5; border: 0; border-radius: 10px; padding: 0.5rem;"></p>
+                    </div>
+                    <!--Кнопка показать еще-->
+                    <div id="moreReviewsPlaceholder"></div>
+                    <div class="d-flex justify-content-center mt-3 pb-4">
+                        <button class="btn btn-primary button" id="moreReviews" type="button">Показать ещё</button>
+                    </div>
+                </div>
+            </div>
+            <!--4-й блок оставить отзыв-->
+            <div class="" sec:authorize="isAuthenticated()" style="margin: 60px 0">
+                <div class="themes text-center" id="toLeaveReviewDiv">Оставить отзыв</div>
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div  class="my-4 col-6" style="margin-left: 2rem;">
+                        <!--Форма отзыва-->
+                        <div id="addReviewForm" class="doctorBody px-4 py-3" style="min-width: 1030px; background: white">
+                            <!--Имя-->
+                            <div class="row col-8 ps-0">
+                                <div class="col-4 buttonFont">Отображаемое имя:</div>
+                                <h4 class="col-4 headlines" style="margin-left: -1.8rem;" id="reviewerName" th:text="${#authentication.getPrincipal().getSurname() + ' ' + #authentication.getPrincipal().getName()}"></h4>
+                            </div>
+                            <!--Отзыв-->
+                            <div class="mt-3">
+                                <textarea class="form-control mt-2 text-start" id="reviewComment" maxlength="1000" placeholder="Ваш отзыв" style="height: 150px;"></textarea>
+                                <div id="reviewAlert"></div>
+                            </div>
+                            <!--Кнопка-->
+                            <div class="row mt-3">
+                                <div class="col-9 text-muted">
+                                    Ваш отзыв будет доступен для общественного просмотра, нажимая кнопку оставить отзыв, вы подверждаете свое согласие на обработку данных.
+                                </div>
+                                <div class="col" style="margin-left: 46px">
+                                    <button class="btn btn-primary button" id="submitAddReview" type="button">Отправить отзыв</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div id="moreReviewsPlaceholder"></div>
-                <div class="col-md-3 mt-3">
-                    <button class="btn btn-primary button" id="moreReviews" type="button">Показать ещё</button>
-                </div>
-            </div>
-            <!--Форма оставления отзыва-->
-            <div class="mt-5" sec:authorize="isAuthenticated()">
-                <span style="font-size: 28px;">Оставить отзыв</span>
-                <div class="card mt-3 reviewCard" style="padding: 1.5rem !important;">
-                    <div id="addReviewForm">
-                        <!--Имя-->
-                        <div class="row">
-                            <lable class="ps-0" for="reviewerName">Имя, которое будет отображаться в заголовке отзыва:</lable>
-                            <div class="col-md-4 ps-0 pt-1 mt-2">
-                                <span style="font-size: 23px;" id="reviewerName" th:text="${#authentication.getPrincipal().getSurname() + ' ' + #authentication.getPrincipal().getName()}"></span>
-                            </div>
-                        </div>
-                        <!--Отзыв-->
-                        <div class="row mt-3">
-                            <lable class="ps-0" for="reviewComment">Введите ваш отзыв:</lable>
-                            <textarea class="form-control mt-2 text-start" id="reviewComment" maxlength="1000" placeholder="Ваш отзыв"></textarea>
-                            <div id="reviewAlert"></div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-2 ps-0">
-                                <button class="btn btn-primary button" id="submitAddReview" type="button">Отправить отзыв</button>
-                            </div>
-                        </div>
+                    <!--Дизайн эллемент-->
+                    <div class="resumeTriangle4 col-2" style="">
+                        <img th:src="@{/applicationFiles/designElements/resumeTriangle4.svg}" alt="">
                     </div>
                 </div>
             </div>
@@ -324,5 +221,8 @@
     </div>
     <footer th:insert="blocks/footer :: footer"></footer>
 </div>
+<!--style-->
+<div class="grayBlock1"></div>
+<img class="resumeTriangle1" th:src="@{/applicationFiles/designElements/resumeTriangle1.svg}" alt="">
 </body>
 </html>

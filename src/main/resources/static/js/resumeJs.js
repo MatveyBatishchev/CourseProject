@@ -2,18 +2,6 @@ $(document).ready(function() {
     // Year prefix
     $("#yearPrefix").text(plural($("#doctorExperience").text()));
 
-    // Doctor specialities
-    if (doctorSpecialities.length !== 0) {
-        let specialitiesColumns = "";
-        for (let i = 0; i < doctorSpecialities.length; i++) {
-            if (i === 3) break;
-            specialitiesColumns += '<div class="col col-md-4 p-0">\n' +
-                '                                                <button class="button tag">' + doctorSpecialities[i] + '</button>\n' +
-                '                                            </div>';
-        }
-        $("#doctorSpecialities").html(specialitiesColumns);
-    }
-
     // ResumeParts render
     const edjsParser = edjsHTML();
     $("#aboutDoctorDiv").html(edjsParser.parse(JSON.parse(aboutDoctor)));
@@ -41,7 +29,9 @@ $(document).ready(function() {
                     doctorId: doctorId
                 },
                 success: function (data) {
-                    addReviewForm.html('<span style="text-align: center; font-size: 22px !important;">' + data + '</span>');
+                    addReviewForm.html(' <div class="regardsBlock" >\n' +
+                        '                                                    <p class="headlines">' + data + '</p>\n' +
+                        '                                                </div>');
                 },
                 error: function (error) {
                     console.log(error);
@@ -65,24 +55,34 @@ $(document).ready(function() {
                 let reviews = JSON.parse(data);
                 let reviewsHTML = "";
                 reviews.forEach(review => {
-                    reviewsHTML += '<div class="card mt-3 reviewCard">\n' +
-                        '                    <span class="text-muted">' + review.date + '</span>\n' +
-                        '                    <div class="underline"></div>\n' +
-                        '                    <div class="row col-md-12 mt-3">\n' +
-                        '                        <div class="col-md-1">\n' +
-                        '                            <div class="reviewPhoto"><img src="/applicationFiles/designElements/messageIcon.png" alt="img"></div>\n' +
-                        '                        </div>\n' +
-                        '                        <div class="col-md-11 ps-4" >\n' +
-                        '                            <span style="font-size: 23px !important;">' + review.patient.reviewerName + '</span><br>\n' +
-                        '                            <div class="row ms-0 mt-1 col-md-12 d-flex align-items-center">\n' +
-                        '                                <div class="col ps-0">\n' +
-                        '                                    <label class="mt-2 mb-2" for="reviewContent">Комментарий:</label>\n' +
-                        '                                    <p id="reviewContent" style="background: #f5f5f5; border: 0; border-radius: 10px; padding: 0.5rem;">' + review.comment + '</p>\n' +
+                    reviewsHTML += '<div class="d-flex align-items-center my-5">\n' +
+                        '                            <div class="greenCommentLineAside" style="left: 255px;"></div>\n' +
+                        '                            <div class="greenCommentLineAside" style="left: 275px; height: 180px"></div>\n' +
+                        '                            <div class="doctorBody container-fluid row py-3" style="max-width: 1030px; background: white">\n' +
+                        '                                <!--Фото отзыва-->\n' +
+                        '                                <div class="col-3 photoFrameSquare ms-3">\n' +
+                        '                                    <img class="photoResume" src="/applicationFiles/designElements/comment.jpg" alt="img">\n' +
+                        '                                </div>\n' +
+                        '                                <!--Комментарий-->\n' +
+                        '                                <div class="col ms-4">\n' +
+                        '                                    <span class="headlines">' + review.patient.reviewerName + '</span><br>\n' +
+                        '                                    <div class="row ms-0 mt-1 col-md-12 d-flex align-items-center">\n' +
+                        '                                        <div class="col ps-0">\n' +
+                        '                                            <label class="buttonFont text-muted my-1"></label>\n' +
+                        '                                            <p class="regTexts" id="reviewContent">' + review.comment + '\n' +
+                        '                                            </p>\n' +
+                        '                                        </div>\n' +
+                        '                                    </div>\n' +
+                        '                                </div>\n' +
+                        '                                <!--Дата-->\n' +
+                        '                                <div class="greenLineHorizontalDivider mt-4 mb-2" style="height: 2px; background: rgba(128,128,128,0.43);"></div>\n' +
+                        '                                <div>\n' +
+                        '                                    <span class="regTexts text-muted ms-4">Отзыв от: ' + review.date + '</span>\n' +
                         '                                </div>\n' +
                         '                            </div>\n' +
-                        '                        </div>\n' +
-                        '                    </div>\n' +
-                        '                </div>';
+                        '                            <div class="greenCommentLineAside" style="left: -275px; height: 180px"></div>\n' +
+                        '                            <div class="greenCommentLineAside" style="left: -255px;"></div>\n' +
+                        '                        </div>';
                 });
                 reviewsHTML += '<div id="moreReviewsPlaceholder"></div>';
                 $("#moreReviewsPlaceholder").replaceWith(reviewsHTML);

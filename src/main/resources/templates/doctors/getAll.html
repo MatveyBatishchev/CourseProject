@@ -46,7 +46,7 @@
 
     function getInsertedHtml(entities) {
         let tbodies = "";
-        tbodies += "<table class=\"table table-striped table-hover mt-5\">\n" +
+        tbodies += "<table class=\"table table-striped table-hover mb-0\">\n" +
             "                <thead>\n" +
             "                <tr>\n" +
             "                    <th scope=\"col\">ID</th>\n" +
@@ -87,15 +87,15 @@
             <!--Ряд фильтров и поисковых строк-->
             <div class="row gx-3 mb-0 mt-5">
                 <div class="col-md-6">
-                    <input class="form-control" id="searchInput" type="text" placeholder="Поиск">
+                    <input class="form-control buttonFont attrBlock h-auto" style="border-radius: 10px !important;" id="searchInput" type="text" placeholder="Поиск">
                 </div>
                 <div class="col-md-6">
-                    <button class="btn btn-primary" id="searchButton" type="button">Найти</button>
+                    <button class="btn btn-primary button buttonFont px-5 h-auto" id="searchButton" type="button">Найти</button>
                 </div>
             </div>
             <!--Таблица докторов-->
-            <div id="entityTable">
-                <table class="table table-striped table-hover mt-5">
+            <div id="entityTable" class="tableDiv mt-5">
+                <table class="table table-striped table-hover mb-0">
                 <thead>
                 <tr>
                     <th scope="col">ID</th>

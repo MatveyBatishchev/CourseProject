@@ -43,7 +43,7 @@ public class DoctorService {
     private final PasswordEncoder passwordEncoder;
     private final SmartValidator validator;
     private final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    private static final int pageSize = 1;
+    private static final int pageSize = 4;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -88,7 +88,7 @@ public class DoctorService {
         int count = 0;
         for (Review review : doctorById.getReviews()) {
             if (review.isApproved()) {
-                if (count < 1) reviews.add(review);
+                if (count < 3) reviews.add(review);
                 count++;
             }
         }

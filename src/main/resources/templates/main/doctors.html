@@ -4,277 +4,310 @@
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <title>Врачи</title>
     <div th:insert="blocks/webjars :: webjars"></div>
+    <link rel="stylesheet" th:href="@{/css/doctors.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Bellota+Text:ital@1&display=swap" rel="stylesheet">
     <script type="text/javascript" th:src="@{/js/yearSuffix.js}"></script>
 </head>
-<style>
-    .card {
-        display: flex !important;
-        width: 100% !important;
-    }
-
-    .m-tabs {
-        font-size: 19px;
-        line-height: 32px !important;
-    }
-
-    .m-tabs .card {
-        background-color: #e7e7e7 !important;
-        border: 0;
-        border-radius: 10px !important;
-    }
-
-    div {
-        display: block;
-    }
-
-    .m-tabs-inner_tab {
-        display: block;
-    }
-
-    .abc-list__cols {
-        column-count: 4;
-        margin: 0 0 10px;
-        padding: 20px;
-    }
-
-    .abc-list__item {
-        position: relative;
-        padding: 5px 0 0 45px;
-        margin: 0 0 20px;
-        z-index: 11;
-        box-sizing: border-box;
-    }
-
-    .abc-list__letter {
-        position: absolute;
-        top: 0;
-        left: 0;
-        font-weight: 700;
-        color: #243528;
-        font-size: 24px;
-        line-height: 25px;
-    }
-
-    .photo {
-        width: 134px;
-        height: 152px;
-
-        border: 1px solid #000000;
-        box-sizing: border-box;
-        border-radius: 10px;
-    }
-
-</style>
 <script>
     var totalPages = [[${totalPages}]];
 </script>
 <script type="text/javascript" th:src="@{/js/doctorsJs.js}"></script>
 <body>
+
+<!--Основной блок-->
 <div class="wrapper">
     <div class="content">
         <header th:replace="blocks/header :: header"></header>
-        <div class="container mt-5">
-            <h1>Врачи</h1>
-            <hr>
+        <!--Заголовок-->
+        <div style="margin-bottom: 3rem;">
+            <div class="themes  my-2 mt-5" style="text-align: center;">Врачи</div>
+            <div class=" mb-1 blackLineUnderAppointment"></div>
+            <div class=" mb-4 blackLineUnderAppointment"></div>
         </div>
-        <div class="container">
-            <div class="m-tabs">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="m-tabs__tab active">
-                            <div class="m-tabs-inner">
-                                <div class="m-tabs-inner_tab">
-                                    <div class="abc-list__cols">
-                                        <div class="abc-list__col">
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">А</div>
-                                                <a>Аллерголог</a><br>
-                                                <a style="margin-top: 3px">Андролог</a><br>
-                                                <a>Анестезиолог</a><br>
-                                                <a>Аритмолог</a><br>
-                                                <a>Артролог</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">В</div>
-                                                <a>Венеролог</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">Г</div>
-                                                <a>Гастроэнтеролог</a><br>
-                                                <a>Гематолог</a><br>
-                                                <a>Гемостазиолог</a><br>
-                                                <a>Генетик</a><br>
-                                                <a>Гепатолог</a><br>
-                                                <a>Гинеколог</a><br>
-                                                <a>Гирудотерапевт</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">Д</div>
-                                                <a>Дерматолог</a><br>
-                                                <a>Диетолог</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">И</div>
-                                                <a>Иммунолог</a><br>
-                                                <a>Инфекционист</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">К</div>
-                                                <a>Кардиолог</a><br>
-                                                <a>Косметолог</a><br>
-                                                <a>КТ-диагност</a><br>
-                                            </div>
-                                        </div>
-                                        <div class="abc-list__col">
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">Л</div>
-                                                <a>Логопед</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">М</div>
-                                                <a>Маммолог</a><br>
-                                                <a>Мануальный терапевт</a><br>
-                                                <a>Массажист</a><br>
-                                                <a>Мастер маникюра-педикюра</a><br>
-                                                <a>Миколог</a><br>
-                                                <a>МРТ-диагност</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">Н</div>
-                                                <a>Невролог</a><br>
-                                                <a>Нейрохирург</a><br>
-                                                <a>Нефролог</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">О</div>
-                                                <a>Онколог</a><br>
-                                                <a>Остеопат</a><br>
-                                                <a>Отоларинголог (ЛОР)</a><br>
-                                                <a>Офтальмолог (окулист)</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">П</div>
-                                                <a>Педиатр</a><br>
-                                                <a>Пластический хирург</a><br>
-                                                <a>Подолог</a><br>
-                                                <a>Проктолог</a><br>
-                                                <a>Психиатр</a><br>
-                                                <a>Психолог</a><br>
-                                                <a>Психотерапевт</a><br>
-                                                <a>Пульмонолог</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">Р</div>
-                                                <a>Реабилитолог</a><br>
-                                                <a>Ревматолог</a><br>
-                                                <a>Рентгенолог</a><br>
-                                                <a>Репродуктолог</a><br>
-                                                <a>Рефлексотерапевт</a><br>
-                                            </div>
-                                        </div>
-                                        <div class="abc-list__col">
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">С</div>
-                                                <a>Сексолог</a><br>
-                                                <a>Сердечно-сосудистый хирург</a><br>
-                                                <a>Сомнолог</a><br>
-                                                <a>Стоматолог</a><br>
-                                                <a>Сурдолог</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">Т</div>
-                                                <a>Терапевт</a><br>
-                                                <a>Травматолог-ортопед</a><br>
-                                                <a>Трансфузиолог</a><br>
-                                                <a>Трихолог</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">У</div>
-                                                <a>УЗ-диагност</a><br>
-                                                <a>Уролог</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">Ф</div>
-                                                <a>Физиотерапевт</a><br>
-                                                <a>Флеболог</a><br>
-                                                <a>Фониатр</a><br>
-                                                <a>Функциональный диагност</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">Х</div>
-                                                <a>Хирург</a><br>
-                                            </div>
-                                            <div class="abc-list__item">
-                                                <div class="abc-list__letter">Э</div>
-                                                <a>Эмбриолог</a><br>
-                                                <a>Эндокринолог</a><br>
-                                                <a>Эндокринолог-гинеколог</a><br>
-                                                <a>Эндоскопист</a><br>
-                                                <a>Эпилептолог</a><br>
-                                            </div>
-                                        </div>
-                                    </div>
+        <div class="container-fluid">
+            <!--Приветствие-->
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-4">
+                    <img th:src="@{/applicationFiles/designElements/allDoctorsPagePhoto.jpg}" alt="" style="width: 585px; height: 264px;">
+                </div>
+                <div class="col-4 ms-5 italicFont pt-4">
+                    <div class="mb-5">Эта страница выбора доктора</div>
+                    <div class="mb-3">Здесь вы можете выбрать специалиста по категории</div>
+                    <div>А также найти нужного врача по имени и специализации</div>
+                </div>
+            </div>
+            <!--Наши специалисты-->
+            <div >
+                <div class="themes text-center mb-4" style="margin-top:4em;">Наши специалисты</div>
+                <div class="doctorBody mb-5" style="max-width: 1200px; box-shadow: none; background: white;">
+                    <div class="container-fluid row mt-4 mb-4" style="cursor: default; --bs-gutter-x: 0rem;">
+                        <div class="col">
+                            <!--А-->
+                            <div>
+                                <div class="themes" >A</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Аллерголог</a>
+                                    <a class="abc-itemStyle">Андролог</a>
+                                    <a class="abc-itemStyle">Анестезиолог</a>
+                                    <a class="abc-itemStyle">Аритмолог</a>
+                                    <a class="abc-itemStyle">Артролог</a>
+                                </div>
+                            </div>
+                            <!--В-->
+                            <div>
+                                <div class="themes">В</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Венеролог</a>
+                                </div>
+                            </div>
+                            <!--Г-->
+                            <div>
+                                <div class="themes">Г</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Гастроэнтеролог</a>
+                                    <a class="abc-itemStyle">Гематолог</a>
+                                    <a class="abc-itemStyle">Гемостазиолог</a>
+                                    <a class="abc-itemStyle">Генетик</a>
+                                    <a class="abc-itemStyle">Гепатолог</a>
+                                    <a class="abc-itemStyle">Гинеколог</a>
+                                    <a class="abc-itemStyle">Гирудотерапевт</a>
+                                </div>
+                            </div>
+                            <!--Д-->
+                            <div>
+                                <div class="themes">Г</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Дерматолог</a>
+                                    <a class="abc-itemStyle">Диетолог</a>
+                                </div>
+                            </div>
+                            <!--И-->
+                            <div>
+                                <div class="themes">И</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Иммунолог</a>
+                                    <a class="abc-itemStyle">Инфекционист</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!--К-->
+                            <div>
+                                <div class="themes">К</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Кардиолог</a>
+                                    <a class="abc-itemStyle">Косметолог</a>
+                                    <a class="abc-itemStyle">КТ-диагност</a>
+                                </div>
+                            </div>
+                            <!--И-->
+                            <div>
+                                <div class="themes">Л</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Логопед</a>
+                                </div>
+                            </div>
+                            <!--М-->
+                            <div>
+                                <div class="themes">М</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Маммолог</a>
+                                    <a class="abc-itemStyle">Мануальный терапевт</a>
+                                    <a class="abc-itemStyle">Мастер маникюра-педикюра</a>
+                                    <a class="abc-itemStyle">Миколог</a>
+                                    <a class="abc-itemStyle">МРТ-диагност</a>
+                                </div>
+                            </div>
+                            <!--Н-->
+                            <div>
+                                <div class="themes">Н</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Невролог</a>
+                                    <a class="abc-itemStyle">Нейрохирург</a>
+                                    <a class="abc-itemStyle">Нефролог</a>
+                                </div>
+                            </div>
+                            <!--О-->
+                            <div>
+                                <div class="themes">О</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Онколог</a>
+                                    <a class="abc-itemStyle">Остеопат</a>
+                                    <a class="abc-itemStyle">Отоларинголог (ЛОР)</a>
+                                    <a class="abc-itemStyle">Офтальмолог (окулист)</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!--П-->
+                            <div>
+                                <div class="themes">П</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Педиатр</a>
+                                    <a class="abc-itemStyle">Пластический хирург</a>
+                                    <a class="abc-itemStyle">Подолог</a>
+                                    <a class="abc-itemStyle">Проктолог</a>
+                                    <a class="abc-itemStyle">Психиатр</a>
+                                    <a class="abc-itemStyle">Психолог</a>
+                                    <a class="abc-itemStyle">Психотерапевт</a>
+                                    <a class="abc-itemStyle">Пульмонолог</a>
+                                </div>
+                            </div>
+                            <!--Р-->
+                            <div>
+                                <div class="themes">Р</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Реабилитолог</a>
+                                    <a class="abc-itemStyle">Ревматолог</a>
+                                    <a class="abc-itemStyle">Рентгенолог</a>
+                                    <a class="abc-itemStyle">Репродуктолог</a>
+                                    <a class="abc-itemStyle">Рефлексотерапевт</a>
+                                </div>
+                            </div>
+                            <!--С-->
+                            <div>
+                                <div class="themes">С</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Сексолог</a>
+                                    <a class="abc-itemStyle">Сердечно-сосудистый хирург</a>
+                                    <a class="abc-itemStyle">Сомнолог</a>
+                                    <a class="abc-itemStyle">Стоматолог</a>
+                                    <a class="abc-itemStyle">Сурдолог</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!--Т-->
+                            <div>
+                                <div class="themes">Т</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Терапевт</a>
+                                    <a class="abc-itemStyle">Травматолог-ортопед</a>
+                                    <a class="abc-itemStyle">Трансфузиолог</a>
+                                    <a class="abc-itemStyle">Трихолог</a>
+                                </div>
+                            </div>
+                            <!--У-->
+                            <div>
+                                <div class="themes">У</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">УЗ-диагност</a>
+                                    <a class="abc-itemStyle">Уролог</a>
+                                </div>
+                            </div>
+                            <!--Ф-->
+                            <div>
+                                <div class="themes">Ф</div>
+                                <div class="abc-blockStyle regTexts abc-itemStyle">
+                                    <a class="abc-itemStyle">Физиотерапевт</a>
+                                    <a class="abc-itemStyle">Флеболог</a>
+                                    <a class="abc-itemStyle">Фониатр</a>
+                                    <a class="abc-itemStyle">Функциональный диагност</a>
+                                </div>
+                            </div>
+                            <!--Х-->
+                            <div>
+                                <div class="themes">Х</div>
+                                <div class="abc-blockStyle regTexts">
+                                    <a class="abc-itemStyle">Хирург</a>
+                                </div>
+                            </div>
+                            <!--Э-->
+                            <div>
+                                <div class="themes">Э</div>
+                                <div class="abc-blockStyle regTexts abc-itemStyle">
+                                    <a class="abc-itemStyle">Эмбриолог</a>
+                                    <a class="abc-itemStyle">Эндокринолог</a>
+                                    <a class="abc-itemStyle">Эндокринолог-гинеколог</a>
+                                    <a class="abc-itemStyle">Эндоскопист</a>
+                                    <a class="abc-itemStyle">Эпилептолог</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <h2 class="mt-5">Найти специалиста</h2>
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="row gx-3 mb-3">
-                        <div class="col-md-5">
-                            <input class="form-control" id="inputDoctorFullName" type="text" placeholder="Введите ФИО">
+            <!--Найти специалиста-->
+            <div>
+                <h2 class="themes text-center mb-4">Найти специалиста</h2>
+                <div class="doctorBody findDoctorBody mb-4" >
+                    <div class="" style="">
+                        <!--Inputs-->
+                        <div class="d-flex justify-content-center align-items-end">
+                            <div class="d-flex">
+                                <input class="attrBlock me-3 buttonFont" style="width: 462px" id="inputDoctorFullName" type="text"
+                                       placeholder="Введите ФИО">
+                                <select class="attrBlock buttonFont" style="width: 462px" id="inputDoctorSpeciality">
+                                    <option value="" selected>Выберите направление</option>
+                                    <option th:each="speciality : ${T(com.example.models.Speciality).values()}"
+                                            th:value="${{speciality}}" th:text="${speciality.label}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="d-flex" style="padding-left: 20px">
+                                <button class="btn btn-primary button activeButton" id="findDoctorButton" style="width: 150px;">Найти</button>
+                            </div>
                         </div>
-                        <div class="col-md-5">
-                            <select class="form-control" id="inputDoctorSpeciality">
-                                <option value="" selected>Выберите направление</option>
-                                <option th:each="speciality : ${T(com.example.models.Speciality).values()}"
-                                        th:value="${{speciality}}" th:text="${speciality.label}">
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-md-2 justify-content-end">
-                            <button class="btn btn-primary" id="findDoctorButton" style="width: 150px;">Найти</button>
-                        </div>
-                    </div>
-                    <div id="foundDoctors">
-                        <div class="row gx-3 mb-3" th:each="doctorsRow : ${doctors}">
-                            <div class="col-md-3" th:each="doctor : ${doctorsRow.value}">
-                                <div class="card" style="width: 18rem;">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="photo mt-2"></div>
-                                            </div>
-                                            <div class="col-md-6 pt-2">
-                                                <h5 class="card-title"
-                                                    th:text="${doctor.getSurname() + ' ' + doctor.getName() + ' ' + doctor.getPatronymic()}"></h5>
-                                                <p class="card-text mt-4 font-weight-underline"
-                                                   th:text="${#strings.setJoin(doctor.getSpecialities(), ', ')}"></p>
+                        <!--карточка-->
+                        <div id="foundDoctors" class="mt-4" style="margin-left: -12px">
+                            <!--каждого доктора-->
+                            <div class="row mb-1" th:each="doctorsRow : ${doctors}">
+                                <!--card-->
+                                <div class="col-3 mb-3" th:each="doctor : ${doctorsRow.value}">
+                                    <div class="doctorBody" style="width: 300px; height: 350px;">
+                                        <div class="container-fluid my-3">
+                                            <a th:href="@{/doctors/{id}/resume(id=${doctor.getId()})}" style="color: black">
+                                                <div class="row" style="height: 200px;">
+                                                    <div class="col-5 mt-2 photoFrameSquare">
+                                                        <img class="doctorPhotoInDoctors" th:if="${doctor.getImage() != null && !doctor.getImage().isEmpty()}"
+                                                             th:src="@{/applicationFiles/doctors/{id}/{image}(id=${doctor.getId()}, image=${doctor.getImage()})}"
+                                                             alt="doctorPhoto">
+                                                        <img class="doctorPhotoInDoctors" th:unless="${doctor.getImage() != null && !doctor.getImage().isEmpty()}"
+                                                             th:src="@{/applicationFiles/designElements/doctorAvatar.png}"
+                                                             alt="doctorPhoto">
+                                                    </div>
+                                                    <div class="col-6 buttonFont mt-2">
+                                                    <h5 style="word-wrap: break-word;"
+                                                        th:text="${doctor.getSurname() + ' ' + doctor.getName() + ' ' + doctor.getPatronymic()}"></h5>
+                                                    <div style="font-size: 19px;" th:text="${doctor.getCategory()}"></div>
+                                                    <div style="font-size: 19px; margin-top: 6px;" th:text="${'Стаж: ' + doctor.getExperienceWithPrefix()}"></div>
+                                                </div>
+                                                </div>
+                                                <div class="d-flex justify-content-center align-items-center doctorCardSpecialityTag" style="height: 60px;">
+                                                    <div class="buttonFont mt-2 pb-2 text-center" th:text="${#strings.setJoin(doctor.getSpecialities(), ', ')}"></div>
+                                                </div>
+                                            </a>
+                                            <!--Buttons-->
+                                            <div class="mt-3 mb-3">
+                                                <a th:href="@{/doctors/{id}(id=${doctor.getId()})}"
+                                                   class="btn btn-primary button " style="height: auto;">Записаться онлайн</a>
                                             </div>
                                         </div>
-                                        <p class="card-text mt-3"
-                                           th:text="${'Стаж: ' + doctor.getExperienceWithPrefix()}"></p>
-                                        <p class="card-text mt-1" th:text="${'Категория: ' + doctor.getCategory()}"></p>
-                                        <a href="#" class="btn btn-secondary mb-0">Подробнее</a>
-                                        <a th:href="@{/doctors/{id}(id=${doctor.getId()})}" class="btn btn-primary">Записаться
-                                            онлайн</a>
                                     </div>
                                 </div>
                             </div>
+                            <div id="moreDoctorsPlaceholder"></div>
                         </div>
-                        <div id="moreDoctorsPlaceholder"></div>
+                        <!--Показать еще-->
+                        <div class="d-flex justify-content-center">
+                            <button class=" btn btn-primary button mt-4 mb-2 px-4" id="moreDoctorsButton" role="button">Показать ещё</button>
+                        </div>
                     </div>
-                    <button class="btn btn-primary button mt-4 mb-2 px-4" id="moreDoctorsButton" role="button">Показать
-                        ещё
-                    </button>
                 </div>
             </div>
         </div>
     </div>
-<footer th:insert="blocks/footer :: footer"></footer>
+    <footer th:insert="blocks/footer :: footer"></footer>
 </div>
+<!--Style треугольники украшающие-->
+<div class="trianglesBorder">
+    <img class="triangle5" th:src="@{/applicationFiles/designElements/doctorsTriangle5.svg}" alt="">
+    <img class="triangle3" th:src="@{/applicationFiles/designElements/doctorsTriangle3.svg}" alt="">
+    <img class="triangle4" th:src="@{/applicationFiles/designElements/doctorsTriangle4.svg}" alt="">
+    <img class="triangle2" th:src="@{/applicationFiles/designElements/doctorsTriangle2.svg}" alt="">
+    <img class="triangle1" th:src="@{/applicationFiles/designElements/doctorsTriangle1.svg}" alt="">
+</div>
+
 </body>
 </html>

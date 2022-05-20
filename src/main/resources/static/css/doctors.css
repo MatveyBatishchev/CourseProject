@@ -1,0 +1,104 @@
+.italicFont {
+    font-family: 'Bellota Text';
+    font-size: 24px;
+    line-height: 26px;
+}
+/*Для таблицы с буквами*/
+.abc-blockStyle {
+    padding-left: 35px;
+    margin: -10px 0 30px;
+}
+.abc-itemStyle {
+    display: block;
+    color: black;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+.abc-itemStyle:hover {
+    color: #70a3cc;
+}
+/*Для модификациии doctorBody*/
+.findDoctorBody {
+    padding: 15px 40px;
+    max-width:1300px;
+    box-shadow: none;
+    border: 0;
+    background: #F4F4F4;
+}
+.photoFrameSquare {
+    width: 133px;
+    height: 160px;
+    border: 1px solid #e5e5e5;
+    box-sizing: border-box;
+    border-radius: 15px;
+    overflow: hidden;
+    padding: 0!important;
+}
+.doctorCardSpecialityTag {
+    background: #dd9919bd;
+    border-radius: 10px;
+    color: white;
+    padding: 5px 1.5rem 5px 1.5rem;
+}
+.doctorPhotoInDoctors {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+/*Style*/
+.triangle1 {
+    z-index: -1;
+    position: absolute;
+    width: 616px;
+    height: 319px;
+    left: 256px;
+    top: 230px;
+}
+.triangle2 {
+    z-index: -1;
+    position: absolute;
+    width: 1848.5px;
+    height: 601px;
+    left: -82.5px;
+    top: 90px;
+}
+.triangle3 {
+    z-index: -2;
+    position: absolute;
+    width: 1848.5px;
+    height: 601px;
+    left: -70px;
+    top: 790px;
+}
+.triangle4 {
+    z-index: -1;
+    position: absolute;
+    width: 616px;
+    height: 320px;
+    left: 870px;
+    top: 1092px;}
+.triangle5 {
+    z-index: -1;
+    position: absolute;
+    width: 616px;
+    height: 319.5px;
+    left: 0px;
+    top: 1100px;}
+.trianglesBorder {
+    /*Для того чтобы дизайн-эллы не вылезали за границы*/
+    position: absolute;
+    width: 100%;
+    height: 200%;
+    top:0;
+    left: 0;
+    visibility: visible;
+    overflow: hidden;
+    z-index: -100;
+}
+.blackLineUnderAppointment {
+    margin: 0 auto;
+    width: 510px;
+    height: 1px;
+    background-color: black;
+}

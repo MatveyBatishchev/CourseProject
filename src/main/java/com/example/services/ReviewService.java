@@ -23,8 +23,8 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final DoctorRepository doctorRepository;
-    private final Gson gson = new GsonBuilder().registerTypeAdapter(Patient.class, new PatientSerializer()).excludeFieldsWithoutExposeAnnotation().create();
-    private static final int pageSize = 4;
+    private final Gson gson = new GsonBuilder().registerTypeAdapter(Patient.class, new PatientSerializer()).setDateFormat("dd.MM.yyyy").excludeFieldsWithoutExposeAnnotation().create();
+    private static final int pageSize = 3;
 
     public ModelAndView findAllReviewsView(ModelAndView modelAndView) {
         modelAndView.addObject("reviews", reviewRepository.findByApprovedOrderByDateDesc(false));
@@ -44,7 +44,7 @@ public class ReviewService {
         review.setDoctor(doctorById);
         review.setPatient(patient);
         reviewRepository.save(review);
-        return "Спасибо за ваш отзыв. Вы помогаете нам становиться лучше!";
+        return "Спасибо за ваш отзыв, он был отправлен на модерацию. Вы помогаете нам становиться лучше!";
     }
 
     public String getDoctorsReviewsWithPageJson(int pageNumber, Long doctorId) {

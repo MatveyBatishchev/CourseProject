@@ -80,7 +80,8 @@
         <header th:insert="blocks/header :: header"></header>
         <div class="container mt-5 mr-2 ml-2">
             <h1>Список приёмов</h1>
-            <table class="table table-striped table-hover mt-4">
+            <div class="tableDiv mt-4">
+                <table class="table table-striped table-hover mb-0">
                 <caption>Список приёмов</caption>
                 <thead>
                 <tr>
@@ -105,6 +106,7 @@
                 </tr>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
     <footer th:insert="blocks/footer :: footer"></footer>

@@ -11,8 +11,8 @@
         <header th:insert="blocks/header :: header"></header>
         <div class="container mt-5 mr-2 ml-2">
             <h1>Список расписаний</h1>
-            <table class="table table-striped table-hover mt-4">
-                <caption>Список расписаний</caption>
+            <div class="tableDiv mt-5">
+                <table class="table table-striped table-hover mb-0">
                 <thead>
                 <tr>
                     <th scope="col">ID</th>
@@ -39,6 +39,7 @@
                 </tr>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
     <footer th:insert="blocks/footer :: footer"></footer>

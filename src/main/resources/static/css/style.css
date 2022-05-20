@@ -11,9 +11,7 @@
 }
 :focus,:active{outline: none;}
 a:focus,a:active{outline: none;}
-
 nav,footer,header,aside{display: block;}
-
 html,body{
     height: 100%;
     width: 100%;
@@ -25,7 +23,6 @@ html,body{
     -webkit-text-size-adjust: 100%;
 }
 input,button,textarea{font-family:inherit;}
-
 input::-ms-clear{display: none;}
 button{cursor: pointer;}
 button::-moz-focus-inner {padding:0;border:0;}
@@ -34,134 +31,13 @@ a:hover{text-decoration: none;}
 ul li{list-style: none;}
 img{vertical-align: top;}
 h1,h2,h3,h4,h5,h6{font-weight: 400;}
-/*--------------------*/
 /*default*/
-
-/*changing webkits*/
-body {
-    zoom: 90%;
-}
-/*custom borders*/
-.container-fluid{
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-}
-::-webkit-input-placeholder {
-    text-align: center;
-    color: black;
-}
-::-webkit-scrollbar {
-    height: 0.5rem;
-    width: 0.5rem;
-    background: #d3d3d3;
-    border-radius: 10rem ;
-}
-::-webkit-scrollbar-thumb{
-    background: #4d5d51;
-    border-radius: 10rem ;
-}
-input{
-    text-align: center;
-}
-/*disabled*/
-input:disabled {
-    text-align: center;
-    content: none;
-    background-color: #fafafa;
-    color: black;
-    /*background: #f8f8f8;*/
-}
-select:disabled {
-    -webkit-appearance: none;
-    content: none;
-    background-color: #fafafa;
-    /*background: #f8f8f8;*/
-}
-/*disabled*/
-select{
-    text-align: center;
-    color: black;
-}
-/*changing webkits*/
-
-/*Header footer*/
-.header{
-    height: 80px;
-    background: #243528;
-}
-.mainLabel {
-    font-family: 'FFormular';
-    font-style: normal;
-    font-weight: 300;
-    font-size: 28px;
-    color: white;
-}
-.nav-link {
-    margin-left: 1.4rem;
-    color: white;
-}
-.nav-link:hover{
-    color: white;
-}
-.nav-link::after{
-    content: '';
-    display: block;
-    width: 100%;
-    height: 1px;
-    background-color: white;
-    transform: scale(0);
-    transition: all.5s;
-}
-.nav-link:hover:after{
-    transform: scale(1);
-}
-/*Footer at the bottom*/
-.footer {
-    position: absolute;
-    width: 100%;
-    height: 7rem;
-    background: #243528;
-    left: 0;
-    bottom: 0;
-}
-
-.wrapper {
-    position: relative;
-    min-height: 100%;
-}
-.content {
-    padding-bottom: 10rem;
-}
-/*Modal*/
-.modalBack{
-    background: rgba(255, 255, 255, 0.96);
-    border-radius: 15px;
-}
-.modalField{
-    border: 0 ;
-    border-bottom: 1px solid #000;
-    border-radius: 0px;
-    background-color: rgba(0,0,0,0);
-    outline: 0;
-}
-/*Default alert*/
-.messageAlert{
-    margin-top: 15px;
-    background: #FFDE7C;
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-}
-.alert-dismissible .btn-close {
-    padding: 0.7rem 1rem !important;
-}
 
 /*FontsLink*/
 @font-face {
     font-family: 'FFormular';
     src: url('../fonts/Formular.eot');
     src: local('☺'), url('../fonts/Formular.woff') format('woff'), url('../fonts/Formular.ttf') format('truetype');
-
 }
 @font-face {
     font-family: 'FFormular-Light';
@@ -175,15 +51,8 @@ select{
     src: local('☺'), url('../fonts/Geometria.woff') format('woff'),
     url('../fonts/Geometria.ttf') format('truetype');
 }
-
 /*Fonts*/
-.top{
-    font-family: 'GGeometria';
-    font-style: normal;
-    font-size: 35px;
-    line-height: 44px;
-}
-.themes{/*themes &nav*/
+.themes{/*Большой Шрифт*/
     font-family: 'FFormular';
     font-style: normal;
     font-weight: 300;
@@ -191,22 +60,25 @@ select{
     line-height: 24px;
 }
 .spanStyle{
+    /*Оранжевые выделяшки*/
     font-weight: 600;
     color: #DD9919;
 }
 .headlines{
+    /*Средний шрифт*/
     font-family: 'FFormular';
     font-style: normal;
     font-weight: 300;
     font-size: 20px;
     line-height: 24px;
 }
-.navFont {
-    font-family: 'FFormular';
+.regTexts{
+    /*Обычный для текстов*/
+    font-family: 'GGeometria';
     font-style: normal;
-    font-weight: 300;
+    font-weight: 400;
     font-size: 19px;
-    line-height: 24px;
+    line-height: 25px;
 }
 .buttonFont{
     font-family: 'GGeometria';
@@ -215,14 +87,8 @@ select{
     font-size: 18px;
     line-height: 23px;
 }
-.regTexts{
-    font-family: 'GGeometria';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 19px;
-    line-height: 25px;
-}
 .aStyleText{
+    /*Для оранжевых ссылок*/
     color: #DD9919;
     box-sizing: border-box;
     font-family: 'GGeometria';
@@ -243,10 +109,77 @@ select{
     text-decoration: underline;
     text-decoration-style: solid
 }
-/*Fonts*/
 
-/*common*/
+/*Изменение Основных эллементов Html*/
+body {
+    zoom: 90%;
+}
+.container-fluid{
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+::-webkit-input-placeholder {
+    text-align: center;
+    color: #838383;
+}
+::-webkit-scrollbar {
+    height: 0.5rem;
+    width: 0.5rem;
+    background: #d3d3d3;
+    border-radius: 10rem ;
+}
+::-webkit-scrollbar-thumb{
+    background: #4d5d51;
+    border-radius: 3px ;
+}
+/*Inputs*/
+input{
+    text-align: center;
+}
+input:disabled {
+    text-align: center;
+    content: none;
+    background-color: #fafafa;
+    color: black;
+    /*background: #f8f8f8;*/
+}
+select:disabled {
+    -webkit-appearance: none;
+    content: none;
+    background-color: #fafafa;
+    /*background: #f8f8f8;*/
+}
+select{
+    text-align: center;
+    color: black;
+}
+/*Password input addon*/
+.textarea-addon {
+    border-bottom-left-radius: 0 !important;
+    background-color: #FFFFFF;
+    border-top-left-radius: 0 !important;
+}
+
+/*Предупредления*/
+.messageAlert{
+    /*Предупреждалка*/
+    margin-top: 15px;
+    background: #FFDE7C;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+.alert-dismissible .btn-close {
+    padding: 0.7rem 1rem !important;
+}
+.alert-dismissible .btn-close {
+    /*Кнопка закрытия alert-a*/
+    padding: 1.1rem 1rem;
+}
+
+/*Buttons*/
 .button{
+    /*Обычная кнопка*/
     height: 50px;
     background: #1F4326 !important;
     border-radius: 10px;
@@ -263,11 +196,10 @@ select{
     align-items: center;
 }
 .activeButton{
+    /*Выбранная кнопка*/
     color: white !important;
     background: #1f4326 !important;
 }
-/*select по центру можно убрать*/
-/*Delete Account, Change password*/
 .mutedButton {
     font-family: 'Geometria';
     font-style: normal;
@@ -283,22 +215,142 @@ select{
     text-decoration: underline;
     color: #9c9b9b;
 }
-/*Password input addon*/
-.textarea-addon {
-    border-bottom-left-radius: 0 !important;
-    background-color: #FFFFFF;
-    border-top-left-radius: 0 !important;
+
+/*Оформление блоков*/
+.attrBlock{
+    min-width: 150px;
+    height: 50px;
+    overflow: hidden;
+    background: white;
+
+    border: 1px solid #000000;
+    box-sizing: border-box;
+    border-radius: 5px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-/*Кнопка закрытия alert-a*/
-.alert-dismissible .btn-close {
-    padding: 1.1rem 1rem;
+.doctorBody{
+    position: center;
+    max-width: 630px;
+    min-height: 180px;
+
+    border: 1px solid #000000;
+    box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
 }
-/*Bootstrap modal*/
+.doctorPhoto{
+    width: 87px;
+    height: 87px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 50%;
+
+    object-fit: cover;
+    object-position: center;
+}
+.greenDoctorHeader{
+    width: 100%;
+    background: #1f4326;
+    height: 0.8rem;
+}
+
+/*Изменения Header footer*/
+.header{
+    /*Вид header*/
+    height: 80px;
+    background: #243528;
+}
+/*Header fonts*/
+.mainLabel {
+    /*Значок Recovery*/
+    font-family: 'FFormular';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 28px;
+    color: white;
+}
+.navFont{
+    /*Шрифт для кнопок Header*/
+    font-family: 'FFormular';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 19px;
+    line-height: 24px;
+}
+/*кнопки в header*/
+.nav-link{
+    margin-left: 1.4rem;
+    color: white;
+}
+.nav-link:hover{
+    color: white;
+}
+.nav-link::after{
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: white;
+    transform: scale(0);
+    transition: all.5s;
+}
+.nav-link:hover:after{
+    transform: scale(1);
+}
+.footer {
+    position: absolute;
+    width: 100%;
+    height: 7rem;
+    background: #243528;
+    left: 0;
+    bottom: 0;
+}
+/*Чтобы footer был внизу, вставляем его в эти блоки*/
+.wrapper {
+    position: relative;
+    min-height: 100%;
+}
+.content {
+    padding-bottom: 10rem;
+}
+/*Модальные окна используются при Login Registration*/
+.modalBack{
+    /*Задник*/
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 15px;
+}
+.modalField{
+    /*Поле с нижним подчерк*/
+    border: 0 ;
+    border-bottom: 1px solid #000;
+    border-radius: 0px;
+    background-color: rgba(0,0,0,0);
+    outline: 0;
+}
 .modal-backdrop {
+    /*Modal закрывается если *клик вне его*/
     width: 100% !important;
     height: 100% !important;
 }
 
-.bi {
-    cursor: pointer;
+/*Оформление таблиц*/
+.tableDiv {
+    border: 2px solid #d5d5d5;
+    border-radius: 11px;
+    overflow: hidden;
+}
+.tableDiv table {
+    font-size: 17px;
+}
+tbody {
+    background: #00800008;
+}
+.table>:not(:first-child) {
+    border-top: 0px solid currentColor;
 }
