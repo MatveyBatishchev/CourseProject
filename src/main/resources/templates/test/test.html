@@ -1,82 +1,130 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset='utf-8' />
-  <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-  <link rel="stylesheet" href="../../static/css/style.css">
-  <link rel="stylesheet" href="../../static/css/animatedBackground.css">
+  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+  <title>Новое расписание</title>
+  <div th:insert="blocks/webjars :: webjars"></div>
 </head>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  $(document).ready(function () {
+    let disabledDays = [];
+    let schedulesJson = /*[[${schedules}]]*/ 'default';
+    let schedules = JSON.parse(schedulesJson);
+    if (schedules != null && schedules.length !== 0) {
+      schedules.forEach(schedule => {
+        disabledDays.push(schedule.date);
+      });
+    }
+
+    $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
+    console.log($("#datepicker"));
+    $("#datepicker").datepicker({
+      dateFormat: 'dd-mm-yy',
+      minDate: 0,
+      numberOfMonths: 2,
+      beforeShowDay: disableAllTheseDays,
+      onSelect: function () {
+        $("#inputDate").val($("#datepicker").datepicker({dateFormat: 'dd-mm-yy'}).val());
+        console.log($("#inputDate").val());
+      }
+    });
+
+    function disableAllTheseDays(date) {
+      let sdate = $.datepicker.formatDate('dd-mm-yy', date)
+      if ($.inArray(sdate, disabledDays) !== -1) {
+        return [false];
+      }
+      return [true];
+    }
+
+  });
+  /*]]>*/
+</script>
 <body>
-<div class='page'>
-  The closer/bigger the object is, more blur is added.
-  <h2>
-    Floating SVG objects
-  </h2>
-  <br>
+
+<header th:insert="blocks/doctorSidebar :: doctorSidebar"></header>
+
+<!--Запись на прием-->
+<div class="mainScreen " style="padding: 20px">
+  <h2 class="my-4 mt-3" style="text-align: center;">Создать расписание</h2>
+  <div class="scheduleCover">
+    <form id="newScheduleForm" action="javascript:0">
+      <div class="">
+        <div style="text-align: center;">
+          <!--Ряд даты-->
+          <div class="mt-4"><!--Тут hidden вконце стоит -->
+            <div>
+              <label class="regTexts mb-2" for="inputDate">Выберите дату приёма</label>
+              <input id="inputDate" type="hidden" th:name="scheduleDate">
+              <div class="doctorBody" style="width: 604px" id="datepicker"></div>
+            </div>
+          </div>
+          <!--Начало времени приема-->
+          <div class="mt-5">
+            <div class="regTexts mb-2">Начало времени приема</div>
+            <input class="form-control attrBlock buttonFont m-auto" style="width: 465px;"
+                   id="inputStartTime"  type="time" min="08:00:00" max="23:00:00" th:name="startTime" required>
+          </div>
+          <!--Конец времени приема-->
+          <div class="mt-4">
+            <div class="regTexts mb-2">Конец времени приема</div>
+            <input class="form-control attrBlock buttonFont m-auto" style="width: 465px;"
+                   id="inputEndTime" type="time" min="08:00:00" max="20:00:00" th:name="endTime" required>
+          </div>
+          <!--Длительность приема-->
+          <div class="mt-4" ><!--Тут hidden вконце стоит -->
+            <div class="regTexts mb-2">Длительность приёма</div>
+            <input class="form-control attrBlock buttonFont m-auto" style="width: 465px;"
+                   id="inputConsultingTime" type="number"
+                   th:name="consultingTime" required>
+          </div>
+          <!--Перерыв-->
+          <div class="row breakBlock mb-5 mt-5">
+            <div class="themes mt-3">Перерыв</div>
+            <div class="col-1"></div>
+            <div class="col-5 d-flex justify-content-center ">
+              <div class="mt-2 mb-5">
+                <div class="regTexts mb-2">Начало времени приема</div>
+                <input class="form-control attrBlock buttonFont" style="width: 340px; margin: 0 auto;"
+                       id="inputBreakTime" type="time" min="08:00:00" max="23:00:00" th:name="breakTime" value="13:00" required>
+              </div>
+            </div>
+            <div class="col-5 d-flex justify-content-center">
+              <div class="mt-2 mb-5">
+                <div class="regTexts mb-2">Длительность времени приема</div>
+                <input class="form-control attrBlock buttonFont" style="width: 340px; margin: 0 auto;"
+                       id="inputBreakDuration" type="number" th:name="breakDuration" value="60" required>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Ряд готового приёма-->
+      <div class="row mb-3 mt-5 mb-4" style="margin-left: -70px;margin-right: -70px;">
+        <div class="col-8 d-flex align-items-center justify-content-center">
+          <div id="timetablesRow"></div>
+        </div>
+        <div class="col d-flex align-items-center justify-content-center" style="margin-left: -2rem;">
+          <div class="card doctorBody px-3 text-center justify-content-center align-items-center" style="width: 300px; height: 200px;"
+               id="editTimetableRow" hidden>
+            <div class="m-3">
+              <h4 class="themes" style="font-size: 20px">Вы можете редактировать каждый приём отдельно. (Длительность  приёма останется такой-же)</h4>
+              <i class="las la-pencil-alt la-3x"></i>
+              <!--Стили для кнопок-->
+              <!--                            <button class="m-auto btn btn-primary button">Подтвердить</button>-->
+              <!--                            <button class="m-auto btn borderButton mt-2">Удалить</button>-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Кнопка-->
+      <input class="d-flex justify-content-center m-auto btn btn-primary button px-4"
+             id="newScheduleButton" type="button" value="Подтвердить">
+    </form>
+    <button class="m-auto btn btn-primary button px-4" style="margin-top: -1rem;" id="submitNewScheduleButton" type="button" hidden>Создать</button>
+  </div>
 </div>
 
-<!--<svg width="237" class="svg" height="413" viewBox="0 0 237 413" fill="none" xmlns="http://www.w3.org/2000/svg">-->
-<!--  <path d="M237 205.875L-3.05176e-05 413L5.58803e-06 9.79838e-06L237 205.875Z" fill="#A8B4AA"/>-->
-<!--</svg>-->
-
-<!--<svg width="722" class="svg" height="246" viewBox="0 0 722 246" fill="none" xmlns="http://www.w3.org/2000/svg">-->
-<!--  <path d="M722 246L0 89.6225L722 0V246Z" fill="#DCE4DA"/>-->
-<!--</svg>-->
-
-<!--<svg width="573" class="svg" height="541" viewBox="0 0 573 541" fill="none" xmlns="http://www.w3.org/2000/svg">-->
-<!--  <path d="M572.634 0.417706L0.452245 236.834L202.005 540.54L572.634 0.417706Z" fill="#A8B4AA"/>-->
-<!--</svg>-->
-
-<!--<svg width="295" class="svg" height="312" viewBox="0 0 295 312" fill="none" xmlns="http://www.w3.org/2000/svg">-->
-<!--  <path d="M0 312L295 0V312H0Z" fill="#DCE4DA"/>-->
-<!--</svg>-->
-
-
-<div class="wrap">
-  <svg width="237" class="svg" height="413" viewBox="0 0 237 413" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M237 205.875L-3.05176e-05 413L5.58803e-06 9.79838e-06L237 205.875Z" fill="#A8B4AA"/>
-  </svg>
-
-  <svg width="722" class="svg" height="246" viewBox="0 0 722 246" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M722 246L0 89.6225L722 0V246Z" fill="#DCE4DA"/>
-  </svg>
-
-  <svg width="573" class="svg" height="541" viewBox="0 0 573 541" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M572.634 0.417706L0.452245 236.834L202.005 540.54L572.634 0.417706Z" fill="#A8B4AA"/>
-  </svg>
-
-  <svg width="295" class="svg" height="312" viewBox="0 0 295 312" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 312L295 0V312H0Z" fill="#DCE4DA"/>
-  </svg>
-
-  <svg width="722" class="svg" height="246" viewBox="0 0 722 246" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M722 246L0 89.6225L722 0V246Z" fill="#DCE4DA"/>
-  </svg>
-
-  <svg width="237" class="svg" height="413" viewBox="0 0 237 413" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M237 205.875L-3.05176e-05 413L5.58803e-06 9.79838e-06L237 205.875Z" fill="#A8B4AA"/>
-  </svg>
-
-  <svg width="573" class="svg" height="541" viewBox="0 0 573 541" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M572.634 0.417706L0.452245 236.834L202.005 540.54L572.634 0.417706Z" fill="#A8B4AA"/>
-  </svg>
-
-  <svg width="295" class="svg" height="312" viewBox="0 0 295 312" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 312L295 0V312H0Z" fill="#DCE4DA"/>
-  </svg>
-
-  <svg width="573" class="svg" height="541" viewBox="0 0 573 541" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M572.634 0.417706L0.452245 236.834L202.005 540.54L572.634 0.417706Z" fill="#A8B4AA"/>
-  </svg>
-
-  <svg width="573" class="svg" height="541" viewBox="0 0 573 541" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M572.634 0.417706L0.452245 236.834L202.005 540.54L572.634 0.417706Z" fill="#A8B4AA"/>
-  </svg>
-
-</div>
 </body>
 </html>

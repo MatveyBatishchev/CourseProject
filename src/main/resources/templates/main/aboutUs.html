@@ -4,17 +4,78 @@
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <title>О нас</title>
     <div th:insert="blocks/webjars :: webjars"></div>
+    <link rel="stylesheet" th:href="@{/css/aboutUs.css}">
 </head>
 <body>
+
 <div class="wrapper">
-    <div class="content">
-        <header th:replace="blocks/header :: header"></header>
-        <div class="container mt-5">
-            <h1>О нас</h1>
-            <hr>
+    <header th:replace="blocks/header :: header"></header>
+    <div class="content d-flex justify-content-center">
+        <div class="row  justify-content-center" style="--bs-gutter-x: 0; margin-left: -60px">
+            <div>
+                <h2 class="my-2 mt-5" style="text-align: center;">О клинике</h2>
+                <h4 class="spanStyle mt-2 mb-4" style="text-align: center;">С 2012 года</h4>
+            </div>
+            <!--Photo left-->
+            <div class="col-3" style="padding: 0 110px;">
+                <img th:src="@{/applicationFiles/designElements/directorsPhoto.png}" alt="">
+                <img style="margin-top: 13em" th:src="@{/applicationFiles/designElements/PhotoToPaste5.png}" alt="">
+                <h6>Снижение риска развития постоперационной травмы</h6>
+            </div>
+            <!--text-->
+            <div class="wordsWrapper col-6">
+                <div class="themes" style="line-height: 30px;">
+                    Клиника RecoveryMed - одна из наиболее известных медицинских центров для взрослых. Холдинг входит в топ частных клиник по оценкам Forbes, РБК, Vademecum и BusinesStat.
+                    </br></br>
+                    Мы ведём свою историю с 2012 года. Сейчас у нас работают 60 высококлассных специалистов и 24 ученых-инженера, которые каждый день стараются на благо наших клиентов и на развитие медицины.
+                    </br></br>
+                    В данный момент наша клиника лидирет в сфере изучение и лечения онкологических, сердечно сосудистых и мышечнх заболеваний.
+                    </br></br>
+                    Мы обеспечиваем наших специалистов высококдассным оборудованием, и все для того, чтобы наша помощь оказалась действенной и незамедлительной.
+                    </br></br>
+                    Батищев Матвей Романович</br>
+                    генеральный директор клиники «RecoveryMed»
+                </div>
+
+            </div>
+            <!--Photo right-->
+            <div class="col-3" style="margin-left: 50px">
+                <img style="margin-top: 2em" th:src="@{/applicationFiles/designElements/PhotoToPaste1.png}" alt="">
+                <h6>О нас пишут</h6>
+                <img style="margin-top: 4em" th:src="@{/applicationFiles/designElements/PhotoToPaste2.png}" alt="">
+                <h6>Ведущие специалисты RecoveryMed</h6>
+                <img style="margin-top: 4em" th:src="@{/applicationFiles/designElements/PhotoToPaste3.png}" alt="">
+                <h6>Утсановка анализа мышечной дисфункции E-cen-5</h6>
+            </div>
+            <div class="d-flex justify-content-center" style="margin-top: 90px">
+                <!--Photo left-->
+                <div class="col-3" style="padding: 0 110px;">
+                    <img style="margin-top: 10px" th:src="@{/applicationFiles/designElements/directorsPhoto2.png}" alt="">
+                </div>
+                <div class="wordsWrapper col-6">
+                    <div class="themes">
+                        Наша клиника смогла поднять уровень развития медицины в России на новый уровень, мы делаем все, чтобы и дальше продолжать работать в том же режиме!
+                        </br></br>
+                        Будьте здоровы!
+                        </br></br>
+                        Кошелев Данила Вадимович
+                        главный врач клиники «RecoveryMed»
+                    </div>
+                </div>
+                <!--Photo right-->
+                <div class="col-3" style="margin-left: 50px">
+                    <img style="margin-top: 10px" th:src="@{/applicationFiles/designElements/PhotoToPaste4.png}" alt="">
+                    <h6>Утсановка анализа мышечной дисфункции E-cen-5</h6>
+                </div>
+            </div>
         </div>
     </div>
     <footer th:insert="blocks/footer :: footer"></footer>
 </div>
+
+<!--style-->
+<img class="tris1" th:src="@{/applicationFiles/designElements/Tris1.svg}" alt="">
+<img class="tris2" th:src="@{/applicationFiles/designElements/Tris2.svg}" alt="">
+<img class="tris3" th:src="@{/applicationFiles/designElements/Tris3.svg}" alt="">
 </body>
 </html>

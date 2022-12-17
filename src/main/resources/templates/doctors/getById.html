@@ -1,98 +1,96 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Doctor profile</title>
-    <div th:insert="blocks/webjars :: webjars"></div>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <title>Профиль специалиста</title>
     <link rel="stylesheet" th:href="@{/css/doctorProfile.css}">
+    <link rel="stylesheet" th:href="@{/css/doctorProfilePage.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Bellota+Text:ital@1&display=swap" rel="stylesheet">
+    <div th:insert="blocks/webjars :: webjars"></div>
 </head>
 <body>
+
 <header th:insert="blocks/doctorSidebar :: doctorSidebar"></header>
-<!--Главный экран-->
-<div class="mainScreen">
-    <div class="container-xl px-4 mt-3 pb-4">
-        <div class="col-xl-12">
-            <div class="card mb-4">
-                <div class="card-header">Данные профиля</div>
-                <div class="card-body">
-                    <form>
-                        <!--Ряд показа фото-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <img class="img-fluid" width="50%" height="50%"
-                                     th:if="${doctor.getImage() != null && !doctor.getImage().isEmpty()}"
-                                     th:src="@{/applicationFiles/doctors/{id}/{image}(id=${doctor.getId()}, image=${doctor.getImage()})}">
-                            </div>
-                        </div>
-                        <!--Ряд имени-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputName">Имя</label>
-                                <input class="form-control" id="inputName" type="text"
-                                       th:value="${doctor.getName()}" disabled>
-                            </div>
-                        </div>
-                        <!--Ряд фамилии-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputSurname">Фамилия</label>
-                                <input class="form-control" id="inputSurname" type="text"
-                                       th:value="${doctor.getSurname()}" disabled>
-                            </div>
-                        </div>
-                        <!--Ряд отчества-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputPatronymic">Отчество</label>
-                                <input class="form-control" id="inputPatronymic" type="text"
-                                       th:value="${doctor.getPatronymic()}" disabled>
-                            </div>
-                        </div>
-                        <!--Ряд почты-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputEmail">Email</label>
-                                <input class="form-control" id="inputEmail" type="text"
-                                       th:value="${doctor.getEmail()}" disabled>
-                            </div>
-                        </div>
-                        <!--Ряд кабинета-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputCabinet">Кабинет</label>
-                                <input class="form-control" id="inputCabinet" type="text" th:value="${doctor.getCabinet()}" disabled>
-                            </div>
-                        </div>
-                        <!--Ряд стажа-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputExperience">Стаж</label>
-                                <input class="form-control" id="inputExperience" type="number"
-                                       th:value="${doctor.getExperience()}" disabled>
-                            </div>
-                        </div>
-                        <!--Ряд специальностей-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputSpecialities">Специальности</label>
-                                <input class="form-control" id="inputSpecialities" type="text"
-                                       th:value="${#strings.setJoin(doctor.getSpecialities(), ', ')}" disabled>
-                            </div>
-                        </div>
-                        <!--Ряд категории-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputCategory">Категория специалиста</label>
-                                <input class="form-control" id="inputCategory" type="text"
-                                       th:value="${doctor.getCategory()}" disabled>
-                            </div>
-                        </div>
-                    </form>
-                    <a class="btn btn-primary" role="button" th:href="@{/doctors/{id}/edit(id=${doctor.getId()})}">Редактировать</a>
+<div class="mainScreen pb-3">
+    <form>
+        <!--Photo-->
+        <div class="photoFrame" style="position: center;">
+            <img class="img-fluid"
+                 th:if="${doctor.getImage() != null && !doctor.getImage().isEmpty()}"
+                 th:src="@{/applicationFiles/doctors/{id}/{image}(id=${doctor.getId()}, image=${doctor.getImage()})}" alt="doctorImage">
+        </div>
+        <!--Information blocks-->
+        <div class="row justify-content-center" style= "--bs-gutter-x:0;">
+            <!--Левая таблица Личные данные-->
+            <div class="infoBlocks">
+                <p class="text-center italicFont">Личные данные</p>
+                <!--Ряд имени-->
+                <div class="d-flex mt-4 align-items-center modalField headlines mb-2">
+                    <div class="ms-2 me-4">Имя</div>
+                    <input class="form-control headlines mb-1" id="inputName" type="text"
+                           th:value="${doctor.getName()}" disabled>
+                </div>
+                <!--Ряд фамилии-->
+                <div class="d-flex mt-4 align-items-center modalField headlines mb-2">
+                    <div class="ms-2 me-4">Фамилия</div>
+                    <input class="form-control headlines  mb-1" id="inputSurname" type="text"
+                           th:value="${doctor.getSurname()}" disabled>
+                </div>
+                <!--Ряд отчества-->
+                <div class="d-flex mt-4 align-items-center modalField headlines mb-2">
+                    <div class="ms-2 me-4">Отчество</div>
+                    <input class="form-control headlines  mb-1" id="inputPatronymic" type="text"
+                           th:value="${doctor.getPatronymic()}" disabled>
+                </div>
+                <!--Ряд почты-->
+                <div class="d-flex mt-4 align-items-center headlines mb-2">
+                    <div class="ms-2 me-4">Email</div>
+                    <input class="form-control headlines mb-1" id="inputEmail" type="text"
+                           th:value="${doctor.getEmail()}" disabled>
+                </div>
+            </div>
+            <!--Правая таблица Информация о враче-->
+            <div class="infoBlocks">
+                <p class="text-center italicFont">Информация о враче</p>
+                <!--Ряд имени-->
+                <div class="d-flex mt-4 align-items-center modalField headlines mb-2">
+                    <div class="ms-2 me-4">Кабинет</div>
+                    <input class="form-control headlines  mb-1" id="inputCabinet" type="text"
+                           th:value="${doctor.getCabinet()}" disabled>
+                </div>
+                <!--Ряд специальностей-->
+                <div class="d-flex mt-4 align-items-center modalField headlines mb-2">
+                    <div class="ms-2 me-4">Специализация</div>
+                    <input class="form-control headlines  mb-1" id="inputSpecialities" type="text"
+                           th:value="${#strings.setJoin(doctor.getSpecialities(), ', ')}" disabled>
+                </div>
+                <!--Ряд стажа-->
+                <div class="d-flex mt-4 align-items-center modalField headlines mb-2">
+                    <div class="ms-2 me-4">Стаж</div>
+                    <input class="form-control headlines mb-1" id="inputExperience" type="number"
+                           th:value="${doctor.getExperience()}" disabled>
+                </div>
+                <!--Ряд категории-->
+                <div class="d-flex mt-4 align-items-center headlines mb-2">
+                    <div class="ms-2 me-4">Категория</div>
+                    <div class="textarea form-control headlines"  id="inputCategory" type="text" style="background: none!important; text-decoration: none; cursor: default"
+                         th:text="${doctor.getCategory()}"></div>
+                    <!--Для редактирования-->
+                    <!--                    <textarea class="form-control headlines " id="inputCategory" type="text"-->
+                    <!--                              th:value="${doctor.getCategory()}">Врач 1 категории, кандидат медицинских наук</textarea>-->
                 </div>
             </div>
         </div>
+    </form>
+    <!--Button-->
+    <div class="d-flex justify-content-center mt-3">
+        <a class="btn btn-primary button" style="width: 184px;" role="button" th:href="@{/doctors/{id}/edit(id=${doctor.getId()})}">Редактировать</a>
     </div>
 </div>
+
+<!--style-->
+<img class="doctorProfileTriangle1" th:src="@{/applicationFiles/designElements/doctorProfileTriangle1.svg}" alt="">
+<img class="doctorProfileTriangle2" th:src="@{/applicationFiles/designElements/doctorProfileTriangle2.svg}" alt="">
+
 </body>
 </html>

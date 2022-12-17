@@ -2,124 +2,123 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
-    <title>Редактировать профиль</title>
-    <div th:insert="blocks/webjars :: webjars"></div>
+    <title>Профиль специалиста</title>
     <link rel="stylesheet" th:href="@{/css/doctorProfile.css}">
+    <link rel="stylesheet" th:href="@{/css/doctorProfilePage.css}">
+    <link href="https://fonts.googleapis.com/css2?famly=Bellota+Text:ital@1&display=swap" rel="stylesheet">
+    <div th:insert="blocks/webjars :: webjars"></div>
+    <script type="text/javascript" th:src="@{/js/photoPreview.js}"></script>
 </head>
+<style>
+    .doctorProfileTriangle2 {
+        bottom: -80px !important;
+    }
+</style>
 <body>
 <header th:insert="blocks/doctorSidebar :: doctorSidebar"></header>
-<!--Главный экран-->
-<div class="mainScreen">
-    <div class="container-xl px-4 mt-3">
-        <div class="row">
-            <div class="col-xl-8">
-                <div class="card mb-4">
-                    <div class="card-header">Личные данные</div>
-                    <div class="card-body">
-                        <form th:method="PUT" th:action="@{/doctors/{id}(id=${doctor.getId()})}"
-                              th:object="${doctor}" enctype="multipart/form-data">
-                            <!--Ряд показа фото-->
-                            <div class="row gx-3 mb-3">
-                                <div class="col-md-6">
-                                    <img class="img-fluid" width="50%" height="50%"
-                                         th:if="${doctor.getImage() != null && !doctor.getImage().isEmpty()}"
-                                         th:src="@{/applicationFiles/doctors/{id}/{image}(id=${doctor.getId()}, image=${doctor.getImage()})}">
-                                </div>
-                            </div>
-                            <!--Ряд выбора файла фото-->
-                            <div class="row gx-3 mb-3">
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputImage">Фото профиля</label>
-                                    <input class="form-control" id="inputImage" type="file"
-                                           accept="image/png, image/jpeg, image/jpg" th:name="profileImage">
-                                </div>
-                            </div>
-                            <!--Ряд имя и фамилия и отчество-->
-                            <div class="row gx-3 mb-3">
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputName">Имя</label>
-                                    <input class="form-control" id="inputName" type="text" th:field="*{name}"
-                                           th:value="${doctor.getName()}">
-                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}"
-                                         th:errors="*{name}"></div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputSurname">Фамилия</label>
-                                    <input class="form-control" id="inputSurname" type="text" th:field="*{surname}"
-                                           th:value="${doctor.getSurname()}">
-                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('surname')}"
-                                         th:errors="*{surname}"></div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputPatronymic">Отчество</label>
-                                    <input class="form-control" id="inputPatronymic" type="text"
-                                           th:field="*{patronymic}" th:value="${doctor.getPatronymic()}">
-                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('patronymic')}"
-                                         th:errors="*{patronymic}"></div>
-                                </div>
-                            </div>
-                            <!--Ряд почты-->
-                            <div class="row gx-3 mb-3">
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputEmail">Email</label>
-                                    <input class="form-control" id="inputEmail" type="text"
-                                           th:value="${doctor.getEmail()}" disabled>
-                                </div>
-                            </div>
-                            <!--Ряд кабинета-->
-                            <div class="row gx-3 mb-3">
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputCabinet">Кабинет</label>
-                                    <input class="form-control" id="inputCabinet" type="text"
-                                           th:value="${doctor.getCabinet()}" th:field="*{cabinet}">
-                                </div>
-                            </div>
-                            <!--Ряд стажа и специальностей-->
-                            <div class="row gx-3 mb-3">
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputExperience">Стаж</label>
-                                    <input class="form-control" type="number" id="inputExperience"
-                                           th:field="*{experience}" th:value="${doctor.getExperience()}">
-                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('experience')}"
-                                         th:errors="*{experience}">Experience Error
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputSpecialities">Специальности</label>
-                                    <select class="form-control" id="inputSpecialities" th:field="*{specialities}"
-                                            multiple>
-                                        <option th:each="speciality : ${T(com.example.models.Speciality).values()}"
-                                                th:value="${{speciality}}" th:text="${speciality.label}">
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <!--Ряд категории-->
-                            <div class="row gx-3 mb-3">
-                                <div class="col-md-6">
-                                    <label class="small mb-1" for="inputCategory">Категория специалиста</label>
-                                    <input class="form-control" id="inputCategory" type="text"
-                                           th:field="*{category}" th:value="${doctor.getCategory()}">
-                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('category')}"
-                                         th:errors="*{category}"></div>
-                                </div>
-                            </div>
-                            <!--Спрятанные поля-->
-                            <input th:field="*{email}" th:value="${doctor.getEmail()}" hidden>
-                            <input th:field="*{image}" th:value="${doctor.getImage()}" hidden>
-                            <!--Ряд кнопок-->
-                            <div class="col-md-6">
-                                <input class="btn btn-primary" type="submit" value="Подтвердить"/>
-                                <input class="btn btn-danger" type="submit" form="deleteForm" value="Удалить">
-                            </div>
-                        </form>
-                        <form id="deleteForm" th:method="DELETE"
-                              th:action="@{/doctors/{id}(id=${doctor.getId()})}"></form>
-                    </div>
+<div class="mainScreen pb-3">
+    <form th:method="PUT" th:action="@{/doctors/{id}(id=${doctor.getId()})}"
+          th:object="${doctor}" enctype="multipart/form-data">
+        <!--Photo-->
+        <div>
+            <label for="file-input" class="photoFrame">
+                <img class="mainPhotoInput" id="profileImage"
+                     th:if="${doctor.getImage() != null && !doctor.getImage().isEmpty()}"
+                     th:src="@{/applicationFiles/doctors/{id}/{image}(id=${doctor.getId()}, image=${doctor.getImage()})}" alt="doctorImage">
+                <!--Icon-->
+                <div class="iconInput">
+                    <i class="las la-portrait la-5x"></i>
+                </div>
+            </label>
+            <input id="file-input" type="file" style="display: none;"
+                   accept="image/png, image/jpeg, image/jpg" th:name="profileImage"/>
+        </div>
+        <!--Information blocks-->
+        <div class="row justify-content-center" style= "--bs-gutter-x:0;">
+            <!--Левая таблица Личные данные-->
+            <div class="infoBlocks">
+                <p class="text-center italicFont">Личные данные</p>
+                <!--Ряд имени-->
+                <div class="d-flex mt-4 align-items-center modalField headlines mb-2">
+                    <div class="ms-2 me-4">Имя</div>
+                    <input class="form-control headlines mb-1" id="inputName" type="text" th:field="*{name}"
+                           th:value="${doctor.getName()}">
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}"
+                         th:errors="*{name}"></div>
+                </div>
+                <!--Ряд фамилии-->
+                <div class="d-flex mt-4 align-items-center modalField headlines mb-2">
+                    <div class="ms-2 me-4">Фамилия</div>
+                    <input class="form-control headlines  mb-1" id="inputSurname" type="text" th:field="*{surname}"
+                           th:value="${doctor.getSurname()}">
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('surname')}"
+                         th:errors="*{surname}"></div>
+                </div>
+                <!--Ряд отчества-->
+                <div class="d-flex mt-4 align-items-center modalField headlines mb-2">
+                    <div class="ms-2 me-4">Отчество</div>
+                    <input class="form-control headlines  mb-1" id="inputPatronymic" type="text" th:field="*{patronymic}"
+                           th:value="${doctor.getPatronymic()}">
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('patronymic')}"
+                         th:errors="*{patronymic}"></div>
+                </div>
+                <!--Ряд почты-->
+                <div class="d-flex mt-4 align-items-center headlines mb-2">
+                    <div class="ms-2 me-4">Email</div>
+                    <input class="form-control headlines mb-1" id="inputEmail" type="text" th:field="*{email}"
+                           th:value="${doctor.getEmail()}" disabled>
                 </div>
             </div>
+            <!--Правая таблица Информация о враче-->
+            <div class="infoBlocks">
+                <p class="text-center italicFont">Информация о враче</p>
+                <!--Ряд кабинета-->
+                <div class="d-flex mt-4 align-items-center modalField headlines mb-2">
+                    <div class="ms-2 me-4">Кабинет</div>
+                    <input class="form-control headlines  mb-1" id="inputCabinet" type="text" th:field="*{cabinet}"
+                           th:value="${doctor.getCabinet()}">
+                </div>
+                <!--Ряд специальностей-->
+                <div class="d-flex mt-4 align-items-center modalField headlines mb-2">
+                    <div class="ms-2 me-4">Специализация</div>
+                    <select class="form-control headlines  mb-1" id="inputSpecialities" th:field="*{specialities}"
+                            multiple>
+                        <option th:each="speciality : ${T(com.example.models.Speciality).values()}"
+                                th:value="${{speciality}}" th:text="${speciality.label}">
+                        </option>
+                    </select>
+                </div>
+                <!--Ряд стажа-->
+                <div class="d-flex mt-4 align-items-center modalField headlines mb-2">
+                    <div class="ms-2 me-4">Стаж</div>
+                    <input class="form-control headlines mb-1" id="inputExperience" type="number" th:field="*{experience}"
+                           th:value="${doctor.getExperience()}">
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('experience')}"
+                         th:errors="*{experience}"></div>
+                </div>
+                <!--Ряд категории-->
+                <div class="d-flex mt-4 align-items-center headlines mb-2">
+                    <div class="ms-2 me-4">Категория</div>
+                    <textarea class="form-control headlines"  id="inputCategory" type="text" style="text-decoration: none;"
+                              th:field="*{category}" th:text="${doctor.getCategory()}"></textarea>
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('category')}"
+                         th:errors="*{category}"></div>
+                </div>
+            </div>
+            <!--Спрятанные поля-->
+            <input th:field="*{email}" th:value="${doctor.getEmail()}" hidden>
+            <input th:field="*{image}" th:value="${doctor.getImage()}" hidden>
         </div>
-    </div>
+        <!--Button-->
+        <div class="d-flex justify-content-center mt-3">
+            <input class="btn btn-primary button" style="width: 184px;" type="submit" value="Подтвердить"/>
+        </div>
+    </form>
 </div>
+
+<!--style-->
+<img class="doctorProfileTriangle1" th:src="@{/applicationFiles/designElements/doctorProfileTriangle1.svg}" alt="">
+<img class="doctorProfileTriangle2" th:src="@{/applicationFiles/designElements/doctorProfileTriangle2.svg}" alt="">
+
 </body>
 </html>

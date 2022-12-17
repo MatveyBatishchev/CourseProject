@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
+
     Page<Review> findByDoctorIdAndApproved(Long doctorId, boolean approved, Pageable pageable);
 
     List<Review> findByApprovedOrderByDateDesc(boolean approved);

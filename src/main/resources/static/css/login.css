@@ -1,0 +1,34 @@
+.loginBlock {
+  width: 564px;
+  background: #f2f2f2;
+  border-radius: 22px;
+}
+.loginInput {
+  font-family: 'Formular';
+  font-style: normal;
+  font-size: 20px;
+  box-sizing: border-box;
+  height: 50px;
+  width: 435px;
+  background: #FFFFFF;
+  border-bottom: 5px solid #1F4326;
+  border-radius: 8px 8px 0px 0px;
+}
+.loginInputAddon {
+  height: 50px;
+  background: #FFFFFF;
+  border-bottom: 5px solid #1F4326;
+  border-radius: 8px 8px 0px 0px;
+}
+.loginInputAddon i {
+  font-size: 1.2rem;
+}
+.forgetPasswordLink {
+  font-family: 'Formular';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 23px;
+  color: #585858;
+}
+

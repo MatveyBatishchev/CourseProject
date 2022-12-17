@@ -5,31 +5,80 @@
     <title>Завершение записи</title>
     <div th:insert="blocks/webjars :: webjars"></div>
 </head>
+<style>
+    .photoFrameSquare {
+        width: 190px;
+        height: 250px;
+        border: 1px solid #e5e5e5;
+        box-sizing: border-box;
+        border-radius: 15px;
+        overflow: hidden;
+        padding: 0!important;
+    }
+    .doctorPhotoInSuccess {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+    .talonInfo {
+        font-size: 21px !important;
+    }
+</style>
 <body>
 <div class="wrapper">
     <div class="content">
         <header th:insert="blocks/header :: header"></header>
         <div class="container mt-5">
-            <h1>Вы успешно записались на приём!</h1>
-            <div class="card mb-2 mt-3">
-                <div class="card-header">Запись на приём к врачу</div>
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${'Специалист: ' + appointment.getDoctor().getSurname() + ' ' + appointment.getDoctor().getName() + ' ' + appointment.getDoctor().getPatronymic()}"></h5>
-                    <p class="card-text" th:text="${'Специальность: ' + #strings.setJoin(appointment.getDoctor().getSpecialities(), ', ')}"></p>
-                    <p class="card-text" th:text="${'Стаж: ' + appointment.getDoctor().getExperience()}"></p>
-                    <p class="card-text" th:text="${'Категория: ' + appointment.getDoctor().getCategory()}"></p>
+            <div class="themes my-2 mt-5 text-center" style="font-size: 30px;">Вы успешно записались на приём!</div>
+            <div class="">
+                <div class="mt-5 buttonFont" style="border: 2px solid #858585; border-radius: 1rem; padding: 1.5rem;">
+                    <h2>Ваш талон:</h2>
                     <hr>
-                    <p class="card-text" th:text="${'Время приёма: ' + #dates.format(appointment.getDate(), 'dd-MM-yyyy') + ' ' + appointment.getTime().format(T(java.time.format.DateTimeFormatter).ofPattern('HH:mm'))}"></p>
-                    <p class="card-text" th:text="${'Кабинет: ' + appointment.getDoctor().getCabinet()}"></p>
-                    <p class="card-text">«RecoveryMed» клиника на Большой Семёновской (м. Электрозаводская)</p>
+                    <div class="row mt-2 mb-2">
+                        <div class="col-md-3 d-flex justify-content-center align-items-center" style="border-right: 2px solid black">
+                            <div class="col-5 photoFrameSquare">
+                                <img class="doctorPhotoInSuccess" th:if="${appointment.getDoctor().getImage() != null && !appointment.getDoctor().getImage().isEmpty()}"
+                                     th:src="@{/applicationFiles/doctors/{id}/{image}(id=${appointment.getDoctor().getId()}, image=${appointment.getDoctor().getImage()})}"
+                                     alt="doctorPhoto">
+                                <img class="doctorPhotoInSuccess" th:unless="${appointment.getDoctor().getImage() != null && !appointment.getDoctor().getImage().isEmpty()}"
+                                     th:src="@{/applicationFiles/designElements/doctorAvatar.png}"
+                                     alt="doctorPhoto">
+                            </div>
+                        </div>
+                        <div class="ps-5 col-md-9">
+                            <div>
+                                <span style="color: #2c8f2a;">Специалист:&nbsp;&nbsp;</span><span class="talonInfo" th:text="${appointment.getDoctor().getSurname() + ' ' + appointment.getDoctor().getName() + ' ' + appointment.getDoctor().getPatronymic()}"></span>
+                            </div>
+                            <div class="mt-3">
+                                <span style="color: #2c8f2a;">Направление:&nbsp;&nbsp;</span><span class="talonInfo" th:text="${#strings.setJoin(appointment.getDoctor().getSpecialities(), ', ')}"></span>
+                            </div>
+                            <div class="mt-3">
+                                <span style="color: #2c8f2a;">Стаж:&nbsp;&nbsp;</span><span class="talonInfo" th:text="${appointment.getDoctor().getExperienceWithPrefix()}"></span>
+                            </div>
+                            <div class="mt-3">
+                                <span style="color: #2c8f2a;">Категория:&nbsp;&nbsp;</span><span class="talonInfo" th:text="${appointment.getDoctor().getCategory()}"></span>
+                            </div>
+                            <div class="mt-3">
+                                <span style="color: #2c8f2a;">Время приёма:&nbsp;&nbsp;</span><span class="talonInfo" th:text="${#dates.format(appointment.getDate(), 'dd-MM-yyyy') + '  ' + appointment.getTime().format(T(java.time.format.DateTimeFormatter).ofPattern('HH:mm'))}"></span>
+                            </div>
+                            <div class="mt-3">
+                                <span style="color: #2c8f2a;">Кабинет:&nbsp;&nbsp;</span><span class="talonInfo" th:text="${appointment.getDoctor().getCabinet()}"></span>
+                            </div>
+                            <div class="mt-3">
+                                <span style="color: #2c8f2a;">Адрес:&nbsp;&nbsp;</span><span class="talonInfo">«RecoveryMed» клиника на Большой Семёновской (м. Электрозаводская)</span>
+                            </div>
+                        </div>
+                    </div>
                     <hr>
-                  <p class="card-text">Файловая версия вашей записи:</p>
-                    <p class="card-text"><a th:text="${'talon_' + appointment.getId() + '.pdf'}" th:href="@{/appointments/{id}/exportPdf(id=${appointment.getId()})}"></a></p>
+                    <p>Файловая версия вашей записи:</p>
+                    <p><i class="las la-file la-1x"></i><a th:text="${'talon_' + appointment.getId() + '.pdf'}" th:href="@{/appointments/{id}/exportPdf(id=${appointment.getId()})}" style="color: #0035ff;"></a></p>
                 </div>
+                <p class="buttonFont mt-4">* Если у вас отстались вопросы в процессе записи позвоните на телефон 8 (999) 123-45-67 или свяжитесь по
+                    почте recoverymed.info@gmail.com</p>
+                <p class="buttonFont mt-4">* За день до приёма вам на телефон придёт СМС с напоминанием</p>
+                <a class="btn btn-primary button mt-4" style="width: 360px; height: 37px;" href="/recoverymed/">Вернутся на главную страницу</a>
             </div>
-            <p>Если у вас отстались вопросы в процессе записи позвоните на телефон 8 (999) 123-45-67 или свяжитесь по
-                почте recoverymed.info@gmail.com</p>
-            <a class="btn btn-primary mt-2" href="/recoverymed/">Вернутся на главную страницу</a>
         </div>
     </div>
     <footer th:insert="blocks/footer :: footer"></footer>

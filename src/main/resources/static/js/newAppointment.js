@@ -130,14 +130,14 @@ $(document).ready(function () {
         clickedButtonVal = $(this);
         clickedButtonText = $(this).html();
         $(this).addClass("activeButton");
-
+        console.log("HERERERER");
         $.ajax({
             type: "GET",
             url: "/doctors/" + inputDoctor.val() + "/json",
             success: function (data) {
                 let doctor = JSON.parse(data).doctor;
                 previewDoctorName.innerHTML = 'Специалист: ' + doctor.surname + ' ' + doctor.name + ' ' + doctor.patronymic;
-                previewDoctorPhoto.prop("src", "/applicationFiles/doctors/" + doctor.id + "/" + doctor.image);
+                // previewDoctorPhoto.prop("src", "/applicationFiles/doctors/" + doctor.id + "/" + doctor.image);
                 previewDoctorSpeciality.innerHTML = 'Специальность: ' + $("#inputSpeciality option:selected").text();
                 previewDoctorExperience.innerHTML = 'Стаж: ' + doctor.experience + ' ' + plural(doctor.experience);
                 previewDoctorCategory.innerHTML = "Категория: " + doctor.category;
@@ -172,7 +172,7 @@ $(document).ready(function () {
             data: {
                 doctorId: inputDoctor.val(),
                 date: inputSchedule.datepicker({dateFormat: 'dd-mm-yy'}).val(),
-                time: clickedButtonText,
+                time: (clickedButtonText.length === 4) ? '0' + clickedButtonText : clickedButtonText,
                 callbackInfo: inputSurname.val() + " " + inputName.val() + " " + inputTelephone.val()
             },
             success: function(data) {

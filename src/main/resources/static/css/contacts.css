@@ -1,0 +1,57 @@
+.bold{
+    font-weight: 500!important;
+}
+.doctorBody{
+    border-radius: 15px;
+    overflow: visible;
+    max-width: 1000px;
+    box-shadow: none;
+}
+.outsideBlock{
+    background: #ffffff;
+    width: 750px;
+    border: 2px solid black;
+    padding: 20px 0px 0px 30px;
+}
+.insideBlock{
+    position: relative;
+    right: 0px;
+    width: 425px;
+    height: 415px;
+    border: 0;
+    padding: 20px 0 0 60px;
+    margin: -70px 0 -20px;
+}
+
+/*style*/
+.trisCont1{
+    position: absolute;
+    z-index: -1;
+    width: 139px;
+    height: 139px;
+    left: 320px;
+    top: 130px;
+}
+.trisCont2{
+    position: absolute;
+    z-index: -1;
+    width: 196px;
+    height: 196px;
+    left: 1170px;
+    top: 150px;
+}
+.trisCont3{
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    left: 400px;
+    top: 560px;
+}
+.trisCont4{
+    position: absolute;
+    z-index: -1;
+    width: 196px;
+    height: 196px;
+    left: 1503px;
+    bottom: -250px;
+}

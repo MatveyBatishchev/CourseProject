@@ -204,7 +204,7 @@ public class DoctorService {
         doctor.setRoles(Collections.singleton(Role.DOCTOR));
         if (doctor.getPassword() == null || doctor.getPassword().isEmpty()) {
 //            String doctorPassword = generatePassword();
-            String doctorPassword = "Kruto2002!";
+            String doctorPassword = "password";
             doctor.setPassword(passwordEncoder.encode(doctorPassword));
 //            sendPassword(doctor.getEmail(), doctor.getName(), doctorPassword);
         }

@@ -320,12 +320,12 @@ select{
     padding-bottom: 10rem;
 }
 /*Модальные окна используются при Login Registration*/
-.modalBack{
+.modalBack {
     /*Задник*/
     background: rgba(255, 255, 255, 0.96);
     border-radius: 15px;
 }
-.modalField{
+.modalField {
     /*Поле с нижним подчерк*/
     border: 0 ;
     border-bottom: 1px solid #000;
@@ -353,4 +353,12 @@ tbody {
 }
 .table>:not(:first-child) {
     border-top: 0px solid currentColor;
+}
+
+/*Линии для заголовка - логин, регистрация, запись на приём*/
+div.headVerticalLine {
+    margin: 0 auto;
+    width: 510px;
+    height: 0;
+    border: 1px solid #000000 !important;
 }

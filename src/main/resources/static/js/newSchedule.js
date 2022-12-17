@@ -3,6 +3,7 @@ $(document).ready(function () {
     let inputDate = $("#inputDate");
     let disabledDays = [];
     let schedules = JSON.parse(schedulesJson);
+    console.log(schedules);
     if (schedules != null && schedules.length !== 0) {
         schedules.forEach(schedule => {
             disabledDays.push(schedule.date);
@@ -57,7 +58,7 @@ $(document).ready(function () {
                         timetables = JSON.parse(data);
                         let s = '<div class="row justify-content-center buttonFont mt-2 mb-2">';
                         for (let i = 0; i < timetables.length; i++) {
-                            if (i % 6 === 0 && i !== 0)
+                            if (i % 5 === 0 && i !== 0)
                                 s += '</div><div class="row justify-content-center buttonFont mb-2">';
                             let sec = timetables[i].startTime[1];
                             if (sec <= 9)
@@ -102,8 +103,8 @@ $(document).ready(function () {
             '                    <input class="form-control ms-3" style="width: 65px;" id="editMinutesForm" type="number" min="0" max="59" value="' + minutes + '">\n' +
             '                </div>\n' +
             '                 <div class="row mt-2">\n' +
-            '                    <button class="btn btn-primary" id="submitEditTimetable">Подтвердить</button>\n' +
-            '                    <button class="btn btn-danger mt-2" id="submitDeleteTimetable">Удалить</button>\n' +
+            '                    <button class="btn btn-primary button" style="height: 40px;" id="submitEditTimetable">Подтвердить</button>\n' +
+            '                    <button class="btn btn-danger button mt-2" style="background: gray !important; height: 40px;" id="submitDeleteTimetable">Удалить</button>\n' +
             '                </div></div>');
 
         $("#submitEditTimetable").on('click', function() {

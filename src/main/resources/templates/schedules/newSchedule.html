@@ -4,33 +4,11 @@
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <title>Новое расписание</title>
     <link rel="stylesheet" th:href="@{/css/doctorProfile.css}">
+    <link rel="stylesheet" th:href="@{/css/newSchedule.css}">
     <link rel="stylesheet" th:href="@{/css/newAppointment.css}">
     <div th:insert="blocks/webjars :: webjars"></div>
+    <link rel="stylesheet" th:href="@{/css/datepickerStyle.css}">
 </head>
-<style>
-    .tippy-arrow {
-        color: #eaeaea;
-    }
-    .tippy-box {
-        background-color: #eaeaea !important;
-        color: #000000 !important;
-        border-radius: 10px !important;
-    }
-    .doctorBody{
-        position: center;
-        /*min-width: 615px;*/
-        max-width: 630px;
-        min-height: 180px;
-
-        border: 1px solid #000000;
-        box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.3);
-        border-radius: 10px;
-
-        margin-left: auto;
-        margin-right: auto;
-        overflow: hidden;
-    }
-</style>
 <script th:inline="javascript">
     /*<![CDATA[*/
         let schedulesJson = /*[[${schedules}]]*/ 'default';
@@ -39,74 +17,86 @@
 <script type="text/javascript" th:src="@{/js/newSchedule.js}"></script>
 <body>
 <header th:insert="blocks/doctorSidebar :: doctorSidebar"></header>
-<!--Главный экран-->
-<div class="mainScreen">
-    <div class="container mt-5 mb-5">
-            <div class="card mb-4">
-                <div class="card-header">Создать расписание</div>
-                <div class="card-body">
-                    <form id="newScheduleForm" action="javascript:0">
-                        <!--Ряд даты-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputDate">Дата приёма</label>
-                                <input id="inputDate" type="hidden" th:name="scheduleDate">
-                                <div id="datepicker"></div>
+<!--Запись на прием-->
+<div class="mainScreen " style="padding: 20px">
+    <h2 class="my-4 mt-3" style="text-align: center;">Создать расписание</h2>
+    <div class="scheduleCover">
+        <form id="newScheduleForm" action="javascript:0">
+            <div class="">
+                <div style="text-align: center;">
+                    <!--Ряд даты-->
+                    <div class="mt-4"><!--Тут hidden вконце стоит -->
+                        <div class="d-flex flex-column justify-content-center align-items-center">
+                            <label class="regTexts mb-2" for="inputDate">Выберите дату приёма</label>
+                            <input id="inputDate" type="hidden" th:name="scheduleDate">
+                            <div style="width: 604px" id="datepicker"></div>
+                        </div>
+                    </div>
+                    <!--Начало времени приема-->
+                    <div class="mt-5">
+                        <div class="regTexts mb-2">Начало времени приема</div>
+                        <input class="form-control attrBlock buttonFont m-auto" style="width: 465px;"
+                               id="inputStartTime"  type="time" min="08:00:00" max="23:00:00" th:name="startTime" required>
+                    </div>
+                    <!--Конец времени приема-->
+                    <div class="mt-4">
+                        <div class="regTexts mb-2">Конец времени приема</div>
+                        <input class="form-control attrBlock buttonFont m-auto" style="width: 465px;"
+                               id="inputEndTime" type="time" min="08:00:00" max="20:00:00" th:name="endTime" required>
+                    </div>
+                    <!--Длительность приема-->
+                    <div class="mt-4" ><!--Тут hidden вконце стоит -->
+                        <div class="regTexts mb-2">Длительность приёма</div>
+                        <input class="form-control attrBlock buttonFont m-auto" style="width: 465px;"
+                               id="inputConsultingTime" type="number"
+                               th:name="consultingTime" required>
+                    </div>
+                    <!--Перерыв-->
+                    <div class="row breakBlock mb-5 mt-5">
+                        <div class="themes mt-3">Перерыв</div>
+                        <div class="col-1"></div>
+                        <div class="col-5 d-flex justify-content-center ">
+                            <div class="mt-2 mb-5">
+                                <div class="regTexts mb-2">Начало времени приема</div>
+                                <input class="form-control attrBlock buttonFont" style="width: 340px; margin: 0 auto;"
+                                       id="inputBreakTime" type="time" min="08:00:00" max="23:00:00" th:name="breakTime" value="13:00" required>
                             </div>
                         </div>
-                        <!--Ряд начала времени-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputStartTime">Начало времени приёмов</label>
-                                <input class="form-control" id="inputStartTime" type="time" min="08:00:00" max="23:00:00" th:name="startTime" required>
+                        <div class="col-5 d-flex justify-content-center">
+                            <div class="mt-2 mb-5">
+                                <div class="regTexts mb-2">Длительность времени приема</div>
+                                <input class="form-control attrBlock buttonFont" style="width: 340px; margin: 0 auto;"
+                                       id="inputBreakDuration" type="number" th:name="breakDuration" value="60" required>
                             </div>
                         </div>
-                        <!--Ряд конца времени-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputEndTime">Конец времени приёмов</label>
-                                <input class="form-control" id="inputEndTime" type="time" min="08:00:00" max="20:00:00" th:name="endTime" required>
-                            </div>
-                        </div>
-                        <!--Ряд времени консультирования-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputConsultingTime">Длительность приёма</label>
-                                <input class="form-control" id="inputConsultingTime" type="number"
-                                       th:name="consultingTime" required>
-                            </div>
-                        </div>
-                        <!--Ряд времени перерыва-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputBreakTime">Начало перерыва</label>
-                                <input class="form-control" id="inputBreakTime" type="time" min="08:00:00" max="23:00:00" th:name="breakTime" value="13:00" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="inputBreakDuration">Длительность перерыва (минуты)</label>
-                                <input class="form-control" id="inputBreakDuration" type="number" th:name="breakDuration" value="60" required>
-                            </div>
-                        </div>
-                        <!--Ряд смоделированных приёмов-->
-                        <div class="row gx-3 mb-3 mt-5">
-                            <div class="col-md-9 d-flex align-items-center justify-content-center">
-                                <div id="timetablesRow"></div>
-                            </div>
-                            <div class="col-md-3 d-flex align-items-center justify-content-center" style="margin-left: -2rem;">
-                                <div class="card doctorBody px-3 text-center justify-content-center align-items-center" style="width: 300px; height: 200px;" id="editTimetableRow" hidden>
-                                    <div class="m-3">
-                                        <h4 class="themes" style="font-size: 20px">Вы можете редактировать каждый приём отдельно. (Длительность  приёма останется такой-же)</h4>
-                                        <i class="las la-pencil-alt la-3x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <input class="btn btn-primary" id="newScheduleButton" type="button" value="Подтвердить"><br><br>
-                    </form>
-                    <button class="btn btn-primary" style="margin-top: -1rem;" id="submitNewScheduleButton" type="button" hidden>Создать</button>
+                    </div>
                 </div>
             </div>
-        </div>
+            <!--Ряд готового приёма-->
+            <div class="row mb-3 mt-5 mb-4" style="margin-left: -70px; margin-right: -70px;">
+                <div class="col-8 d-flex align-items-center justify-content-center">
+                    <div id="timetablesRow"></div>
+                </div>
+                <div class="col d-flex align-items-center justify-content-center" style="margin-left: -2rem;">
+                    <div class="card doctorBody px-3 text-center justify-content-center align-items-center" style="width: 300px; height: 200px;"
+                         id="editTimetableRow" hidden>
+                        <div class="m-3">
+                            <h4 class="themes" style="font-size: 20px">Вы можете редактировать каждый приём отдельно. (Длительность  приёма останется такой-же)</h4>
+                            <i class="las la-pencil-alt la-3x"></i>
+                            <!--Стили для кнопок-->
+                            <!--                            <button class="m-auto btn btn-primary button">Подтвердить</button>-->
+                            <!--                            <button class="m-auto btn borderButton mt-2">Удалить</button>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Кнопка-->
+            <input class="justify-content-center m-auto btn btn-primary button px-4"
+                   id="newScheduleButton" type="button" value="Подтвердить">
+        </form>
+        <button class="m-auto btn btn-primary button px-4" style="margin-top: -1rem;" id="submitNewScheduleButton" type="button" hidden>Создать</button>
+    </div>
 </div>
+
 </body>
 </html>

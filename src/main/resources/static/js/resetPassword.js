@@ -5,7 +5,7 @@ $(document).ready(function () {
         if (validateEmail(resetEmail)) {
             checkEmailExist(resetEmail);
         } else {
-            $("#errorPlaceholder").html('<div class="mt-2 alert alert-danger alert-dismissible fade show" role="alert">Недопустимое значение email-a!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+            $("#errorPlaceholder").html('<div class="mt-2 alert alert-danger alert-dismissible fade show buttonFont" role="alert">Недопустимое значение email-a!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
             $("#submitResetPassword").prop("disabled", false);
         }
     });
@@ -36,7 +36,7 @@ function sendResetPassword(data, resetEmail) {
                 resetEmail: resetEmail
             },
             success: function (data) {
-                $("#resetPasswordModalBody").html('<p>' + data + '</p>');
+                $("#resetPasswordModalBody").html('<p class="buttonFont">' + data + '</p>');
                 $("#resetPasswordModalFooter").html('');
                 setTimeout(function () {
                     $('#resetPasswordModal').modal("hide");
@@ -47,7 +47,7 @@ function sendResetPassword(data, resetEmail) {
             }
         });
     } else {
-        $("#errorPlaceholder").html('<div class="mt-2 alert alert-danger alert-dismissible fade show" role="alert">Пользователь с данные email-ом не был найден!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+        $("#errorPlaceholder").html('<div class="mt-2 alert alert-danger alert-dismissible fade show buttonFont" role="alert">Пользователь с данные email-ом не был найден!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
         $("#submitResetPassword").prop("disabled", false);
     }
 }

@@ -47,6 +47,9 @@ ul li {
     align-items: center;
     margin-left: -0.5rem;
 }
+.btin-toggle:hover {
+    color: white !important;
+}
 .btn-toggle::before {
     width: 1.25em;
     line-height: 0;
@@ -56,6 +59,7 @@ ul li {
 }
 .mainScreen {
     margin-left: 290px;
+    padding-top: 20px;
 }
 
 .codex-editor__redactor {

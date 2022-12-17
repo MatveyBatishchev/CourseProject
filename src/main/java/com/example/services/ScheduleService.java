@@ -80,7 +80,7 @@ public class ScheduleService {
 
     public ModelAndView findDoctorSchedulesView(Doctor doctor, ModelAndView modelAndView, String viewName) {
         if (doctor != null) {
-            modelAndView.addObject("schedules", gson.toJson(doctor.getSchedules()));
+            modelAndView.addObject("schedules", gson.toJson(scheduleRepository.findByDoctorId(doctor.getId())));
             modelAndView.addObject("doctor", doctor);
             modelAndView.setViewName(viewName);
         }

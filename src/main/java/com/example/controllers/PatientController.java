@@ -4,6 +4,7 @@ import com.example.models.Doctor;
 import com.example.models.Patient;
 import com.example.services.PatientService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -21,7 +22,7 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping("/all/for-doctors")
-//    @PreAuthorize("hasAnyAuthority({'ADMIN','DOCTOR'})")
+    @PreAuthorize("hasAnyAuthority({'ADMIN','DOCTOR'})")
     public ModelAndView getAllPatientsWithPageView(@AuthenticationPrincipal Doctor doctor,
                                                    ModelAndView modelAndView) {
         return patientService.findAllPatientsWithPageView(doctor, modelAndView);
@@ -33,13 +34,13 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-//    @PreAuthorize("#id == authentication.principal.id or hasAnyAuthority({'ADMIN','DOCTOR'})")
+    @PreAuthorize("#id == authentication.principal.id or hasAnyAuthority({'ADMIN','DOCTOR'})")
     public ModelAndView getPatientByIdView(@PathVariable("id") Long id, ModelAndView modelAndView) {
         return patientService.findPatientById(id, modelAndView, "patients/getById");
     }
 
     @GetMapping("/{id}/edit")
-//    @PreAuthorize("(#id == authentication.principal.id and hasAuthority({'USER'})) or hasAuthority({'ADMIN'})")
+    @PreAuthorize("(#id == authentication.principal.id and hasAuthority({'USER'})) or hasAuthority({'ADMIN'})")
     public ModelAndView getEditPatientByIdView(@PathVariable("id") Long id, ModelAndView modelAndView) {
         return patientService.findPatientById(id, modelAndView, "patients/editById");
     }
@@ -55,14 +56,14 @@ public class PatientController {
     }
 
     @GetMapping("/all/page/{pageNumber}")
-//    @PreAuthorize("hasAnyAuthority({'ADMIN','DOCTOR'})")
+    @PreAuthorize("hasAnyAuthority({'ADMIN','DOCTOR'})")
     @ResponseBody
     public String getPatientsWithPageJson(@PathVariable("pageNumber") Integer pageNumber) {
         return patientService.findPatientsWithPageJson(pageNumber);
     }
 
     @GetMapping("/by-search")
-//    @PreAuthorize("hasAnyAuthority({'ADMIN','DOCTOR'})")
+    @PreAuthorize("hasAnyAuthority({'ADMIN','DOCTOR'})")
     @ResponseBody
     public String getPatientBySearchWithPageJson(@RequestParam("search") String search, @RequestParam("pageNumber") Integer pageNumber) {
         return patientService.findPatientBySearchWithPageJson(search, pageNumber);
@@ -82,7 +83,7 @@ public class PatientController {
     }
 
     @GetMapping("/compare-passwords")
-//    @PreAuthorize("#id == authentication.principal.id and hasAuthority({'USER'})")
+    @PreAuthorize("#id == authentication.principal.id and hasAuthority({'USER'})")
     @ResponseBody
     public String comparePasswordsJson(@RequestParam("providedPassword") String providedPassword, @RequestParam("patientId") Long id) {
         return patientService.comparePasswords(providedPassword, id);
@@ -95,7 +96,7 @@ public class PatientController {
     }
 
     @PostMapping("/confirmEmail/{id}")
-//    @PreAuthorize("#patient.id == authentication.principal.id and hasAuthority('USER')")
+    @PreAuthorize("#patient.id == authentication.principal.id and hasAuthority('USER')")
     @ResponseBody
     public String sendConfirmationEmail(@PathVariable("id") Patient patient) {
         patientService.sendConfirmationEmail(patient.getEmail(), patient.getName(), patient.getActivationCode());
@@ -110,7 +111,7 @@ public class PatientController {
     }
 
     @PostMapping("/send-deleteCode")
-//    @PreAuthorize("#patientEmail == authentication.principal.username and hasAuthority('USER')")
+    @PreAuthorize("#patientEmail == authentication.principal.username and hasAuthority('USER')")
     @ResponseBody
     public String sendDeleteConfirmationMail(@RequestParam("patientEmail") String patientEmail,
                                              @RequestParam("confirmationCode") String confirmationCode) {
@@ -120,21 +121,21 @@ public class PatientController {
     }
 
     @PostMapping("/save-newPassword")
-//    @PreAuthorize("#id == authentication.principal.id and hasAuthority('USER')")
+    @PreAuthorize("#id == authentication.principal.id and hasAuthority('USER')")
     @ResponseBody
     public String setNewPassword(@RequestParam("providedPassword") String providedPassword, @RequestParam("patientId") Long id) {
         return patientService.saveNewPassword(providedPassword, id);
     }
 
     @PutMapping("/{id}")
-//    @PreAuthorize("(#patient.id == authentication.principal.id and hasAuthority('USER')) or hasAuthority('ADMIN')")
+    @PreAuthorize("(#patient.id == authentication.principal.id and hasAuthority('USER')) or hasAuthority('ADMIN')")
     public ModelAndView editPatientById(@ModelAttribute("patient") @Valid Patient patient, BindingResult bindingResult,
                                         @RequestParam("profileImage") MultipartFile multipartFile, ModelAndView modelAndView) {
         return patientService.editPatient(patient, bindingResult, multipartFile, modelAndView);
     }
 
     @DeleteMapping("/{id}")
-//    @PreAuthorize("(#id == authentication.principal.id and hasAuthority('USER')) or hasAuthority('ADMIN')")
+    @PreAuthorize("(#id == authentication.principal.id and hasAuthority('USER')) or hasAuthority('ADMIN')")
     @ResponseBody
     public String deletePatientById(@PathVariable("id") Long id) {
         patientService.deletePatientById(id);

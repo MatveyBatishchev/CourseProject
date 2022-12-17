@@ -1,0 +1,76 @@
+/*Slider*/
+.carouselIndicatorsAdvertising{
+    /*margin-top: ;*/
+    height: 30px;
+    position: relative!important;
+    margin-left: 0 auto!important;
+    left: 0!important;
+    background: #1f4326;
+    display: flex ;
+    align-items: center;
+
+    width: 1762px!important;
+    bottom: 0px!important;
+}
+.carouselIndicators{
+    height: 13px!important;
+    width: 13px!important;
+    margin: 0 10px 0!important;
+}
+.aboutClinicBlock{
+    width: 110%;
+    height: content-box;
+    border: 2px solid #1F4326;
+    border-radius: 10px;
+    padding: 20px 20px 10px;
+    margin: 20px 0px 30px;
+}
+.mainClickers{
+    /*Стиль для Наших услуг и специалистов*/
+    background-color: white;
+    width: 1120px;
+    height: 302px;
+
+    border-radius: 15px;
+    overflow: hidden;
+}
+.callUsCover{
+    /*Стиль для блока позвоните нам*/
+    background: white;
+    padding: 20px;
+    width: 1200px;
+    border: 3px solid #614308;
+    border-radius: 15px;
+}
+/*style*/
+.triangleMain1{
+    z-index: -1;
+    position: absolute;
+    width: 381px;
+    height: 400px;
+    left: 0px;
+    top: 0px;
+}
+.triangleMain2{
+    z-index: -1;
+    position: absolute;
+    width: 637px;
+    height: 673px;
+    right: 0px;
+    top: 0px;
+
+}
+.patternBack{
+    height: 310px;
+    background-image: url('Pattern.svg');
+    background-repeat: repeat;
+}
+.content {
+    padding-bottom: 7rem !important;
+}
+.whiteClicker {
+    background-image: url('mainWhiteClickerDecoration.svg')
+}
+.aboutClinicFont {
+    font-size: 26px;
+}

@@ -5,183 +5,164 @@
     <title>Главная страница</title>
     <div th:insert="blocks/webjars :: webjars"></div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
+<style>
+    .nav-link:hover {
+        background: none !important;
+    }
+    a:hover {
+        text-decoration: none !important;
+    }
+</style>
 <body>
 <div class="wrapper">
     <div class="content">
-<header th:replace="blocks/header :: header"></header>
-<main>
-    <section class="py-5 text-center container">
-        <div class="row py-lg-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="fw-light">Album example</h1>
-                <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
-                <p>
-                    <a href="/doctors/new" class="btn btn-primary my-2">Добавить доктора</a>
-                    <a href="/doctors/all" class="btn btn-secondary my-2">Все доктора</a>
-                    <a href="/patients/all" class="btn btn-secondary my-2">Все пациенты</a>
-                    <a href="/doctors/1/resume" class="btn btn-secondary my-2">Resume</a>
-                </p>
+        <header th:replace="blocks/header :: header"></header>
+        <!--Приветствие-->
+        <div>
+            <div class="d-flex justify-content-center" style= "margin: 7em 0 0">
+                <div class="themes col-4" style="margin-right: 5em">
+                    <h1>RecoveryMed</h1>
+                    <div class="mt-5 ">Монументальная клиника,</br>
+                        построенная на доверии наших пациентов!</br></br></br>
+                        Уже много лет наша клиника оказывает услуги по лечению и выхаживанию тяжело больных пациентов.</br>
+                        Наши врачи, окажут лечение и проконсультируют по любому вопросу.</br></br></br>
+                        С нами вы можете быть уверены, <span class="spanStyle" style="font-weight: 100;">вам помогут!</span>
+                    </div>
+                </div>
+                <img th:src="@{/applicationFiles/designElements/buildingPhoto.jpg}" alt="">
+            </div>
+            <div>
+                <img class="triangleMain1" th:src="@{/applicationFiles/designElements/mainTriangle1.svg}" alt="">
+                <img class="triangleMain2" th:src="@{/applicationFiles/designElements/mainTriangle2.svg}" alt="">
             </div>
         </div>
-    </section>
-    <div class="album py-5 bg-light">
-        <div class="container">
-
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-
-                        <div class="card-body">
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                </div>
-                                <small class="text-muted">9 mins</small>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <!--Слайдер-->
+        <div class="mt-5 mb-4">
+            <div class="patternBack d-flex justify-content-center">
+                <div class="container mt-5">
+                    <div id="carousel" class="carousel slide" data-ride="carousel">
+                        <!--Катринки-->
+                        <div class="carousel-inner d-flex align-items-center" style="">
+                            <div class="item active">
+                                <img th:src="@{/applicationFiles/designElements/specialAdvertising.png}" alt="">
+                            </div>
+                            <div class="item">
+                                <img th:src="@{/applicationFiles/designElements/specialAdvertising2.png}" alt="">
+                            </div>
+                            <div class="item">
+                                <img th:src="@{/applicationFiles/designElements/specialAdvertising3.png}" alt="">
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-
-                        <div class="card-body">
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                </div>
-                                <small class="text-muted">9 mins</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-
-                        <div class="card-body">
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                </div>
-                                <small class="text-muted">9 mins</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-
-                        <div class="card-body">
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                </div>
-                                <small class="text-muted">9 mins</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-
-                        <div class="card-body">
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                </div>
-                                <small class="text-muted">9 mins</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-
-                        <div class="card-body">
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                </div>
-                                <small class="text-muted">9 mins</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-
-                        <div class="card-body">
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                </div>
-                                <small class="text-muted">9 mins</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-
-                        <div class="card-body">
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                </div>
-                                <small class="text-muted">9 mins</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-
-                        <div class="card-body">
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                </div>
-                                <small class="text-muted">9 mins</small>
-                            </div>
-                        </div>
+                        <!--Кнопки -->
+                        <ol class="carousel-indicators carouselIndicatorsAdvertising mt-4">
+                            <li data-target="#carousel" data-slide-to="0" class="carouselIndicators active"></li>
+                            <li data-target="#carousel" data-slide-to="1" class="carouselIndicators"></li>
+                            <li data-target="#carousel" data-slide-to="2" class="carouselIndicators"></li>
+                        </ol>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-</main>
+        <!--О клинике-->
+        <div class="d-" style="margin-top: 100px">
+            <div class="text-center">
+                <h1>О клинике</h1>
+                <h3 class="spanStyle">C 2012 года</h3>
+            </div>
+            <div class="d-flex " style="margin-top: 20px">
+                <img th:src="@{/applicationFiles/designElements/mainTriangleAboutClinic.svg}" alt="" style="margin-right: 8.8em">
+                <div class="col-2">
+                    <div class="aboutClinicBlock text-center themes">
+                        <p>Успешно работаем на протяжении </p>
+                        <p class="spanStyle mt-5 aboutClinicFont">10 лет</p>
+                    </div>
+                    <div class="aboutClinicBlock text-center themes">
+                        <p>Вошли в список лучших клиник в Москве</p>
+                        <p class="spanStyle mt-4 aboutClinicFont">В 2021 г.</p>
+                    </div>
+                </div>
+                <div class="col-2" style="margin:0 90px 0">
+                    <div class="aboutClinicBlock text-center themes">
+                        <p>С нами выздоровели более</p>
+                        <p class="spanStyle mt-5 aboutClinicFont">1 млн. людей</p>
+                    </div>
+                    <div class="aboutClinicBlock text-center themes">
+                        <p>Обладаем самым передовым</p>
+                        <p class="spanStyle mt-5 aboutClinicFont">оборудованием</p>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="aboutClinicBlock themes">
+                        <p>Лидируем в области изучения и лечения </p>
+                        <p class="spanStyle mt-4" style="font-weight: 500;">Онкологических</br></br>
+                            Сердечно-</br>сосудистых</br></br>
+                            Мышечных</br></br>
+                            Инфекционных</br></br>
+                            Заболеваний</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Наши специалисты-->
+        <h2 class="text-center mt-5">Наши специалисты</h2>
+        <div class="mt-5 d-flex">
+            <a href="/recoverymed/doctors" style="; text-decoration: none">
+                <div class="mainClickers row" style="--bs-gutter-x: 0; margin-left: 20.7em; margin-right: 7.2em">
+                    <div class="col-7 me-5">
+                        <img th:src="@{/applicationFiles/designElements/allDoctorsPagePhoto.jpg}" width="800" alt="">
+                    </div>
+                    <div class="col d-flex justify-content-center align-items-center whiteClicker">
+                        <h3 style="margin-top: -38px; font-size: 28px">Выбрать специалиста</h3>
+                    </div>
+                </div>
+
+            </a>
+            <img class="" th:src="@{/applicationFiles/designElements/mainTriangleDoctors.svg}" alt="">
+        </div>
+
+        <!--Наши Услуги-->
+        <h2 class="text-center mt-5">Наши услуги</h2>
+        <div class="mt-5 d-flex">
+            <img th:src="@{/applicationFiles/designElements/mainTriangleAboutClinic.svg}" alt="">
+            <a href="/recoverymed/services" style="; text-decoration: none">
+                <div class="mainClickers row" style="--bs-gutter-x: 0; margin-left: 7.2em">
+                    <div class="col-7 me-5">
+                        <img th:src="@{/applicationFiles/designElements/onAppointment.jpg}" width="700" alt="">
+                    </div>
+                    <div class="col d-flex justify-content-center align-items-center whiteClicker">
+                        <h3 style="font-size: 28px; margin-top: -200px;">Заказать услугу</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!--Свяжитесь с нами-->
+        <div class="patternBack d-flex align-items-center justify-content-center" style="margin-top: 5em; height: 500px">
+            <div class="callUsCover row">
+                <div class="col-2"></div>
+                <div class="col-6 headlines">
+                    <h2 class="spanStyle mb-5">Еще остались вопросы?</h2>
+                    <p>Задайте их нам по телефону и мы с радостью вам поможем!</p>
+                    <p class="mt-5">Наш телефон</p>
+                    <h1 class="spanStyle">+7 999 12-14 157</h1>
+                    <div class="" style="margin-top: 40px">Мы будем рады вас видеть!</div>
+                </div>
+                <div class="col-2">
+                    <img th:src="@{/applicationFiles/designElements/callUsPhoto.jpg}" alt="">
+                </div>
+                <div class="col-2"></div>
+            </div>
+        </div>
+
     </div>
-<footer th:insert="blocks/footer :: footer"></footer>
+    <footer th:insert="blocks/footer :: footer"></footer>
 </div>
 </body>
 </html>

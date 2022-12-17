@@ -1,0 +1,94 @@
+/*Profile*/
+.italicFont{
+    font-family: 'Bellota Text';
+    font-size: 24px;
+    line-height: 26px;
+}
+.photoFrame{
+    position: relative;
+    height: 15rem;
+    width: 15rem;
+
+    background: transparent;
+    border: 1px solid #000000;
+    border-radius: 50%;
+    margin: 10px auto;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+.mainPhotoInput{
+    background: transparent;
+    /*position: absolute;*/
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-position: center;
+}
+.infoBlocks{
+    background: #F4F4F4;
+    border-radius: 5px;
+    width: 550px !important;
+    margin: 40px 60px;
+    padding: 20px 40px 10px 40px !important;
+}
+.form-control{
+    background: #ffffff !important;
+    /*text-decoration: underline 1px;*/
+    width: 240px;
+    min-height: 50px;
+    margin-left: auto;
+    border: none;
+}
+input:disabled{
+    background: none!important;
+    text-decoration: none;
+}
+
+/*Style*/
+.doctorProfileTriangle1{
+    z-index: -1;
+    position: absolute;
+    width: 1546px;
+    height: 473.5px;
+    right: 0px;
+    top: -25px;
+}
+.doctorProfileTriangle2{
+    z-index: -1;
+    position: absolute;
+    width: 913.5px;
+    height: 229px;
+    left: 280px;
+    bottom: 0px;
+}
+.modalField {
+    border-bottom: 2px solid black !important;
+    padding-bottom: 2px;
+}
+.iconInput{
+    color: black;
+    background: rgb(221, 221, 221);
+
+    height: 50%;
+    width: 50%;
+    border-radius: 50%;
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: 0.5s;
+}
+.iconInput:hover{
+    opacity: 1;
+}
+.img-fluid {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-position: center;
+}

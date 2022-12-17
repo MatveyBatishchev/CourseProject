@@ -1,0 +1,34 @@
+.wordsWrapper{
+    width: 606px;
+
+    background: #ECECEC;
+    border-radius: 15px;
+    padding: 30px 40px 10px;
+}
+
+/*Style*/
+.tris1{
+    z-index: -1;
+    position: absolute;
+    width: 520px;
+    height: 741px;
+    left: -14.5px;
+    top: -30px;
+}
+.tris2{
+    z-index: -1;
+    position: absolute;
+    width: 646.5px;
+    height: 635.5px;
+    left: 1052px;
+    top: 535px;
+}
+.tris3{
+    z-index: -2;
+    position: absolute;
+    width: 127px;
+    height: 891px;
+    left: -22.5px;
+    top: 744.5px;
+
+}

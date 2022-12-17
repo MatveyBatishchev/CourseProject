@@ -4,16 +4,62 @@
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <title>Контакты</title>
     <div th:insert="blocks/webjars :: webjars"></div>
+    <link rel="stylesheet" th:href="@{/css/contacts.css}">
 </head>
 <body>
-<div class="wrapper">
-    <div class="content">
-        <header th:replace="blocks/header :: header"></header>
-        <div class="container mt-5">
-            <h1>Контакты</h1>
+<div class="wrapper" style="height: 1102px!important;">
+    <header th:replace="blocks/header :: header"></header>
+    <!--Надпись Контакты-->
+    <div>
+        <h2 style="text-align: center;margin: 100px 0 30px;">Контакты</h2>
+    </div>
+    <div class="content d-flex justify-content-center">
+        <div class="doctorBody outsideBlock">
+            <h4 class="bold">Если у вас возникли вопросы обязательно свяжитесь с нами:</h4>
+            <div class="d-flex align-items-end mt-4">
+                <h4>Адрес:</h4>
+                <h5>  Россия, 125009, г. Москва, Вознесенский пер., д. 22</h5>
+            </div>
+            <div class="d-flex align-items-end mt-2">
+                <h4>Телефон:</h4>
+                <h5>  +7 499 225 9252</h5>
+            </div>
+            <div class="d-flex align-items-end mt-2">
+                <h4>Email:</h4>
+                <h5>  ic@develop.mos.ru</h5>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                    <div>
+                        </br>
+                        <img th:src="@{/applicationFiles/designElements/RecoveryMed.svg}" alt=""></br></br>
+                        <img th:src="@{/applicationFiles/designElements/Inn1.png}" alt=""></br></br>
+                        <img th:src="@{/applicationFiles/designElements/Inn2.png}" alt=""></br></br>
+                    </div>
+                    <div class="d-flex" style="margin: 20px 100px">
+                        <img class="me-3" th:src="@{/applicationFiles/designElements/image-iconF.png}" alt="">
+                        <img class="mx-3" th:src="@{/applicationFiles/designElements/image-iconInst.png}" alt="">
+                        <img class="mx-3" th:src="@{/applicationFiles/designElements/image-iconVK.png}" alt="">
+                    </div>
+                </div>
+                <div class="col-7">
+                    <div class="doctorBody insideBlock" >
+                        <div><h4 class="bold">Местоположение на карте:</h4></div>
+                        <div>
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3242.5404706505396!2d37.71064490859066!3d55.78122834376652!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46b54ad610abc8a5%3A0xc42703145fe53a8d!2z0JzQvtGB0LrQvtCy0YHQutC40Lkg0L_QvtC70LjRgtC10YXQvdC40YfQtdGB0LrQuNC5INGD0L3QuNCy0LXRgNGB0LjRgtC10YI!5e0!3m2!1sru!2sru!4v1653140482413!5m2!1sru!2sru" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <footer th:insert="blocks/footer :: footer"></footer>
 </div>
+
+<!--style-->
+<img class="trisCont1" th:src="@{/applicationFiles/designElements/contactsTriangle1.svg}" alt="">
+<img class="trisCont2" th:src="@{/applicationFiles/designElements/contactsTriangle2.svg}" alt="">
+<img class="trisCont3" th:src="@{/applicationFiles/designElements/contactsTriangle3.svg}" alt="">
+<img class="trisCont4" th:src="@{/applicationFiles/designElements/contactsTriangle4.svg}" alt="">
 </body>
 </html>

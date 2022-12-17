@@ -40,7 +40,7 @@ public class PatientService {
     private final SmartValidator validator;
     private final PasswordEncoder passwordEncoder;
     private final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    private final static int pageSize = 1;
+    private final static int pageSize = 4;
 
     @Value("${upload.path}")
     private String uploadPath;

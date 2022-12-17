@@ -1,57 +1,61 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Резюме</title>
-  <div th:insert="blocks/webjars :: webjars"></div>
-  <link rel="stylesheet" th:href="@{/css/doctorProfile.css}">
-  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.23.2/dist/editor.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@1.7.0/dist/bundle.js"></script>
+    <meta charset="UTF-8">
+    <title>Резюме</title>
+    <div th:insert="blocks/webjars :: webjars"></div>
+    <link rel="stylesheet" th:href="@{/css/doctorProfile.css}">
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.23.2/dist/editor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@1.7.0/dist/bundle.js"></script>
 </head>
 <script th:inline="javascript">
     /*<![CDATA[*/
-      let doctorId = /*[[${doctor.getId()}]]*/ 'doctorId';
-      let aboutDoctor = /*[[${doctor.getAboutDoctor()}]]*/ 'aboutDoctor';
-      let education = /*[[${doctor.getEducation()}]]*/ 'eduction';
-      let workPlaces = /*[[${doctor.getWorkPlaces()}]]*/ 'workPlaces';
+    let doctorId = /*[[${doctor.getId()}]]*/ 'doctorId';
+    let aboutDoctor = /*[[${doctor.getAboutDoctor()}]]*/ 'aboutDoctor';
+    let education = /*[[${doctor.getEducation()}]]*/ 'eduction';
+    let workPlaces = /*[[${doctor.getWorkPlaces()}]]*/ 'workPlaces';
     /*]]>*/
 </script>
 <script type="text/javascript" th:src="@{/js/editResume.js}"></script>
+<style>
+    .editResumeCard {
+        border: 2px solid black;
+        border-radius: 1rem;
+        padding: 2rem;
+
+    }
+    .codex-editor__redactor {
+        padding: 20px;
+        margin: auto !important;
+        width: 1000px;
+        font-family: 'GGeometria';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 23px;
+    }
+    .ce-block__content {
+        max-width: none;
+    }
+</style>
 <body>
 <header th:insert="blocks/doctorSidebar :: doctorSidebar"></header>
 <!--Главный экран-->
 <div class="mainScreen">
-  <div class="container-xl px-4 mt-3 pb-4">
-    <div class="col-xl-12">
-      <div class="card mb-4">
-        <div class="card-header">Резюме</div>
-        <div class="card-body">
-          <!--Ряд О враче-->
-          <div class="row gx-3 mb-3">
-            <div class="col-md-7" style="width: 62% !important;">
-              <label class="small mb-1" for="inputAboutDoctor">О враче</label>
-              <div id="inputAboutDoctor"></div>
-            </div>
-          </div>
-          <!--Ряд образования-->
-          <div class="row gx-3 mb-3">
-            <div class="col-md-7" style="width: 62% !important;">
-              <label class="small mb-1" for="inputEducation">Образование</label>
-              <div id="inputEducation"></div>
-            </div>
-          </div>
-          <!--Ряд опыта работы-->
-          <div class="row gx-3 mb-3">
-            <div class="col-md-7" style="width: 62% !important;">
-              <label class="small mb-1" for="inputWorkPlaces">Опыт работы</label>
-              <div id="inputWorkPlaces"></div>
-            </div>
-          </div>
-          <button class="btn btn-primary" id="editResumeButton" role="button">Редактировать</button>
+    <div class="container d-flex justify-content-center align-items-center pb-5 mt-3 m-5">
+        <div class="editResumeCard d-flex flex-column justify-content-center align-items-center">
+            <!--Ряд О враче-->
+            <label class="buttonFont" style="font-size: 21px" for="inputAboutDoctor">О враче</label>
+            <div class="mt-3" id="inputAboutDoctor"></div>
+            <!--Ряд образования-->
+            <label class="mt-5 buttonFont" style="font-size: 21px" for="inputEducation">Образование</label>
+            <div class="mt-3" id="inputEducation"></div>
+            <!--Ряд опыта работы-->
+            <label class="mt-5 buttonFont" style="font-size: 21px" for="inputWorkPlaces">Опыт работы</label>
+            <div class="mt-3" id="inputWorkPlaces"></div>
+            <button class="btn mt-4 btn-primary button" id="editResumeButton" role="button">Редактировать</button>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 </body>
 </html>

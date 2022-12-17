@@ -18,7 +18,7 @@ public class ScheduleController {
 
     // not used
     @GetMapping("/all")
-//    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ModelAndView getAllSchedulesView(ModelAndView modelAndView) {
         return scheduleService.findAllSchedulesView(modelAndView);
     }
@@ -74,7 +74,7 @@ public class ScheduleController {
     }
 
     @PostMapping("/new")
-//    @PreAuthorize("hasAuthority('DOCTOR')")
+    @PreAuthorize("hasAuthority('DOCTOR')")
     @ResponseBody
     public String addNewSchedule(@AuthenticationPrincipal Doctor doctor,
                                  @RequestParam("scheduleJson") String scheduleJson,

@@ -1,0 +1,27 @@
+.loginInput {
+  width: 500px !important;
+}
+.form-check-input:checked {
+  background: #1f4326;
+  border-color: #1f4326;
+}
+body {
+  overflow-x: hidden;
+}
+/*Style*/
+.triangle1 {
+  z-index: -1;
+  position: absolute;
+  width: 2139px;
+  height: 601px;
+  left: -200px;
+  top: 167px;
+}
+.triangle2 {
+  z-index: -1;
+  position: absolute;
+  width: 2139px;
+  height: 601px;
+  left: -200px;
+  top: 635px;
+}

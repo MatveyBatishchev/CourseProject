@@ -53,7 +53,6 @@
   position: absolute;
   margin-left: 58.5%;
   opacity: 0;
-  visibility: hidden;
   transition: all.7s;
   transition-delay: 0.5s;
 }
@@ -62,13 +61,11 @@
   transition: all.7s;
   transition-delay: 0.5s;
   scale: 100;
-  visibility: visible;
   opacity: 1;
 }
 
 .thirdBlock{
   opacity: 0;
-  visibility: hidden;
   transition: all.7s;
   transition-delay: 0.5s;
 }
